@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { 
   ArrowRight, 
@@ -26,12 +24,6 @@ const DIGITAL_WORKFORCE_IMAGE = "https://private-us-east-1.manuscdn.com/sessionF
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    message: ""
-  });
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -41,11 +33,7 @@ export default function Home() {
     setMobileMenuOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Form submission would integrate with GHL here
-    alert("Thank you for your interest! We'll be in touch within 24 hours.");
-  };
+  // Form submission is now handled by GHL iframe
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -468,46 +456,23 @@ export default function Home() {
               <Card className="bg-card border-border">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-bold mb-6">Schedule Your Free AI Audit</h3>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <Input
-                        placeholder="Your Name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="bg-background border-border"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Input
-                        type="email"
-                        placeholder="Email Address"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="bg-background border-border"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Input
-                        placeholder="Company Name"
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        className="bg-background border-border"
-                      />
-                    </div>
-                    <div>
-                      <Textarea
-                        placeholder="Tell us about your biggest operational challenge..."
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="bg-background border-border min-h-[120px]"
-                      />
-                    </div>
-                    <Button type="submit" size="lg" className="w-full glow-cyan glow-cyan-hover">
-                      Get My Free AI Audit <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </form>
+                  <iframe
+                    src="https://api.myersdigitalconsulting.com/widget/form/bJwjXi1z7vI6Lc0IWk9H"
+                    style={{ width: '100%', height: '600px', border: 'none', borderRadius: '3px' }}
+                    id="inline-bJwjXi1z7vI6Lc0IWk9H" 
+                    data-layout="{'id':'INLINE'}"
+                    data-trigger-type="alwaysShow"
+                    data-trigger-value=""
+                    data-activation-type="alwaysActivated"
+                    data-activation-value=""
+                    data-deactivation-type="neverDeactivate"
+                    data-deactivation-value=""
+                    data-form-name="Form 5"
+                    data-height="undefined"
+                    data-layout-iframe-id="inline-bJwjXi1z7vI6Lc0IWk9H"
+                    data-form-id="bJwjXi1z7vI6Lc0IWk9H"
+                    title="Form 5"
+                  />
                 </CardContent>
               </Card>
             </motion.div>
