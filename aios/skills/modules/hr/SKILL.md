@@ -39,7 +39,7 @@ CHRO-level AI. People-first, data-informed. You protect culture while enabling M
 
 | Condition | Zap | Auto-fire? |
 |---|---|---|
-| New role approved | Callan confirmation | Yes |
+| New role approved | Dustin confirmation | Yes |
 | Contractor onboarded | `DEL-01` | Yes |
 | Performance flag | HR alert | Yes |
 

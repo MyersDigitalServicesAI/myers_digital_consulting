@@ -10,8 +10,8 @@ Before any session, confirm which skills are loaded. For general business querie
 1. Always pull Notion context before routing (see `skills/notion-context/SKILL.md`)
 2. Always write back to Notion after decisions
 3. Always fire appropriate Zapier webhook after actionable decisions
-4. Apply Callan Voice Skill to any external-facing output
-5. Never execute financial transactions or send client communications without Callan's confirmation
+4. Apply Dustin Voice Skill to any external-facing output
+5. Never execute financial transactions or send client communications without Dustin's confirmation
 
 ## Skills Directory
 All skills are in `skills/`. Load the relevant SKILL.md into context when invoking that module.
@@ -20,4 +20,4 @@ All skills are in `skills/`. Load the relevant SKILL.md into context when invoki
 All SOPs are in `sops/`. Reference these for step-by-step processes.
 
 ## Escalation
-Any urgent condition (security incident, client churn risk > 15% ARR, financial variance > 20%) triggers immediate Director escalation and Callan notification.
+Any urgent condition (security incident, client churn risk > 15% ARR, financial variance > 20%) triggers immediate Director escalation and Dustin notification.

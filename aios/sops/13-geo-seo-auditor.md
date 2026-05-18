@@ -10,7 +10,7 @@
 Audit client websites and GBP listings for Google and AI search visibility gaps, and generate a 90-day action plan.
 
 ## Trigger
-Client needs a visibility analysis, or Callan is prospecting a new service business.
+Client needs a visibility analysis, or Dustin is prospecting a new service business.
 
 ## Input Requirements
 - Business website URL

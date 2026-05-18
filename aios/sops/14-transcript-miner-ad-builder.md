@@ -11,7 +11,7 @@ Extract high-converting content hooks from call transcripts and build newsletter
 
 ## Trigger
 - **Scheduled**: 9:00 AM daily if new transcripts available
-- **On-demand**: Callan requests content from a specific call
+- **On-demand**: Dustin requests content from a specific call
 
 ## Input Requirements
 - Sales call or meeting transcript (text or audio-to-text)
@@ -20,11 +20,11 @@ Extract high-converting content hooks from call transcripts and build newsletter
 
 ## Steps
 
-1. Load skills: `skills/custom/transcript-miner-ad-builder/SKILL.md` + `skills/custom/callan-voice-skill/SKILL.md`
+1. Load skills: `skills/custom/transcript-miner-ad-builder/SKILL.md` + `skills/custom/dustin-voice-skill/SKILL.md`
 2. Provide transcript to Claude
 3. Claude mines transcript and scores hooks
 4. Claude builds all three content types from top hooks
-5. Filter all output through Callan Voice Skill
+5. Filter all output through Dustin Voice Skill
 6. Review and approve before publishing
 7. Save approved content to Google Drive `/Content Library/[Month]`
 8. Post to `#content` Slack channel for scheduling

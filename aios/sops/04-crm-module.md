@@ -35,7 +35,7 @@ Score each active client using the churn risk rubric in `skills/modules/crm/SKIL
 - Clients with score > 80 → immediate intervention
 - Clients with score 60-80 → proactive outreach
 - Renewals due < 30 days → renewal sequence
-- Upsell candidates → Callan notification
+- Upsell candidates → Dustin notification
 
 ### 4. Fire Automations
 - Score > 60 → Churn intervention sequence
@@ -53,4 +53,4 @@ Format per `skills/modules/crm/SKILL.md` output format.
 ## Escalation Criteria
 - Any client with churn score > 80 → Director escalation
 - MRR decline 2 months in a row → Director escalation
-- NRR < 100% → Director brief to Callan
+- NRR < 100% → Director brief to Dustin

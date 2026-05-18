@@ -30,7 +30,7 @@ Any directive involving reporting, trends, or business health overview.
 3. Identify top 3 trends (positive and negative)
 4. Surface 1 cross-module insight (e.g., "Marketing leads up but pipeline coverage down — follow-up gap?")
 5. Recommend 2 focus areas for the coming week
-6. Email to Callan + post to Slack
+6. Email to Dustin + post to Slack
 
 ## Anomaly Detection (DAT-SOP-03)
 **Continuous via DAT-02**
@@ -42,4 +42,4 @@ Anomaly triggers:
 - 0 new leads in 5+ business days
 - 3+ failed Zapier automations in 24 hours
 
-Response: Director escalation + Callan notification.
+Response: Director escalation + Dustin notification.

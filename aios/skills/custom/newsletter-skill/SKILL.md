@@ -2,8 +2,8 @@
 name: myers-digital-newsletter
 description: >
   Structures newsletters from mined content using Myers Digital's company style. Trained on
-  Callan's newsletter format. Use when Callan needs to build a newsletter from extracted content,
-  transcripts, or a topic. Always filter output through Callan Voice Skill.
+  Dustin's newsletter format. Use when Dustin needs to build a newsletter from extracted content,
+  transcripts, or a topic. Always filter output through Dustin Voice Skill.
 ---
 
 # Newsletter Skill
@@ -51,4 +51,4 @@ You build Myers Digital newsletters that turn ideas and mined content into high-
 - Total length: 250-400 words (mobile-first)
 - No more than 2-3 sentences per paragraph
 - Subject line A/B: always provide 2 options
-- Filter through Callan Voice Skill before delivery
+- Filter through Dustin Voice Skill before delivery

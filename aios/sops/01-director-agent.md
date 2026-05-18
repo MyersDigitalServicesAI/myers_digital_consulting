@@ -10,7 +10,7 @@
 The Director Agent is the entry point for every AIOS interaction. It routes directives to the correct module(s), synthesizes multi-module responses, and manages escalations.
 
 ## Trigger
-Any Callan input to the AIOS system.
+Any Dustin input to the AIOS system.
 
 ## Steps
 
@@ -47,13 +47,13 @@ Director fires the appropriate Zapier webhook. Result logs to `AIOS — Automati
 ## Escalation Criteria
 | Condition | Response |
 |---|---|
-| Security anomaly | Immediate escalation, log, notify Callan |
-| Financial variance > 20% | Finance module brief + Callan Slack |
-| Client churn risk > 60 score | CRM intervention + Callan notification |
-| Legal deadline < 72 hours | Legal module brief + Callan notification |
+| Security anomaly | Immediate escalation, log, notify Dustin |
+| Financial variance > 20% | Finance module brief + Dustin Slack |
+| Client churn risk > 60 score | CRM intervention + Dustin notification |
+| Legal deadline < 72 hours | Legal module brief + Dustin notification |
 
 ## What the Director Never Does
 - Execute financial transactions directly
-- Send client communications without Callan's confirmation
+- Send client communications without Dustin's confirmation
 - Bypass module routing
 - Contradict a prior logged decision without flagging

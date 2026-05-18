@@ -18,7 +18,7 @@ Zapier is the **execution engine**. All AIOS automation flows through Zapier via
 ## Architecture
 
 ```
-Callan's Directive
+Dustin's Directive
       ↓
 Claude (Director) — routes and decides
       ↓
@@ -48,7 +48,7 @@ Result → logged back to AIOS Automation Log
 
 | Zap | Trigger | Actions |
 |---|---|---|
-| `SAL-01` Lead Captured | Website form submit | Add to GHL → Slack notify Callan → Notion log |
+| `SAL-01` Lead Captured | Website form submit | Add to GHL → Slack notify Dustin → Notion log |
 | `SAL-02` Discovery Call Booked | Calendar booking | Confirmation sequence → Prep brief → Notion |
 | `SAL-03` Proposal Sent | Director approval | Track in CRM → Follow-up sequence → Notion |
 | `SAL-04` Deal Closed Won | CRM stage change | Onboarding trigger → Finance notify → Slack celebrate |
@@ -60,7 +60,7 @@ Result → logged back to AIOS Automation Log
 | `FIN-01` Invoice Created | Director trigger | Create in system → Email client → Notion log |
 | `FIN-02` Payment Received | Stripe webhook | Update MRR in Notion → Slack notify → Log |
 | `FIN-03` Budget Variance Alert | KPI > 20% variance | Slack alert → Notion flag → Director escalation |
-| `FIN-04` Monthly P&L | Scheduled (1st) | Synthesize → Email Callan → Notion log |
+| `FIN-04` Monthly P&L | Scheduled (1st) | Synthesize → Email Dustin → Notion log |
 
 ### MARKETING ZAPS
 
@@ -84,7 +84,7 @@ Result → logged back to AIOS Automation Log
 |---|---|---|
 | `DAT-01` Daily KPI Digest | Scheduled 7am | Pull KPIs → Synthesize → Slack digest |
 | `DAT-02` Anomaly Detected | Threshold crossed | Notion flag → Slack → Director escalation |
-| `DAT-03` Weekly Report | Monday 8am | Full report → Email Callan |
+| `DAT-03` Weekly Report | Monday 8am | Full report → Email Dustin |
 
 ---
 
@@ -112,4 +112,4 @@ Result → logged back to AIOS Automation Log
 1. Zapier sends failure to `#aios-alerts` Slack channel
 2. AIOS logs failure to Notion Automation Log (Status = "Failed")
 3. Priority = "urgent" → Director auto-escalation
-4. Retry logic: 3 attempts before Callan notification
+4. Retry logic: 3 attempts before Dustin notification

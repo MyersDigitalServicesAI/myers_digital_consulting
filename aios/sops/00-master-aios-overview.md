@@ -1,7 +1,7 @@
 # SOP-00 — Myers Digital AIOS Master Overview
 
 **Version**: 1.0
-**Owner**: Callan Myers
+**Owner**: Dustin Myers
 **Status**: Active
 **Last Reviewed**: 2026-05-18
 
@@ -25,7 +25,7 @@ AIOS (AI Operating System) is the intelligence infrastructure that runs Myers Di
 2. **Notion first** — Before any action, pull context from Notion. After any action, write back to Notion.
 3. **Zapier executes** — Claude decides. Notion logs. Zapier does.
 4. **Modules are specialists** — Each module is a C-suite-level specialist. Respect domain boundaries.
-5. **Callan is Level 9** — Full access to all modules including Security. No approval gates for Callan.
+5. **Dustin is Level 9** — Full access to all modules including Security. No approval gates for Dustin.
 
 ---
 
@@ -33,7 +33,7 @@ AIOS (AI Operating System) is the intelligence infrastructure that runs Myers Di
 
 | Time | Automated Action |
 |---|---|
-| 7:00 AM | Analytics Daily Digest fires (DAT-01) — Callan gets Slack summary |
+| 7:00 AM | Analytics Daily Digest fires (DAT-01) — Dustin gets Slack summary |
 | 9:00 AM | Transcript Miner runs if new transcripts detected |
 | Monday 8:00 AM | Weekly Report fires (DAT-03) — full business review |
 | 1st of Month | Monthly P&L report (FIN-04) + Client reports (DEL-04) |
@@ -42,7 +42,7 @@ AIOS (AI Operating System) is the intelligence infrastructure that runs Myers Di
 
 ## Quick Command Reference
 
-| Callan Says | AIOS Routes To |
+| Dustin Says | AIOS Routes To |
 |---|---|
 | "How's the business?" | Analytics → all modules → Director synthesis |
 | "Who's at risk of churning?" | CRM Module |
@@ -52,7 +52,7 @@ AIOS (AI Operating System) is the intelligence infrastructure that runs Myers Di
 | "Mine this transcript for content" | Transcript Miner & Ad Builder |
 | "Audit [client] website" | GEO/SEO Auditor |
 | "Extract tasks from this meeting" | Meeting Transcript Task Creator |
-| "Write this email in my voice" | Callan Voice Skill |
+| "Write this email in my voice" | Dustin Voice Skill |
 | "Build a newsletter about [topic]" | Newsletter Skill |
 | "Turn this into ads" | Scroll-Stopper Ad Skill |
 | "Categorize these transactions" | Bookkeeping Categorizer |
@@ -63,10 +63,10 @@ AIOS (AI Operating System) is the intelligence infrastructure that runs Myers Di
 
 | Scenario | Action |
 |---|---|
-| Security incident | Immediate Callan notification + Security Module |
+| Security incident | Immediate Dustin notification + Security Module |
 | Financial variance > 20% | Finance Module + Director escalation |
-| Client churn risk > 15% ARR | CRM Module + Callan Slack |
-| Legal deadline < 72 hours | Legal Module + Callan notification |
+| Client churn risk > 15% ARR | CRM Module + Dustin Slack |
+| Legal deadline < 72 hours | Legal Module + Dustin notification |
 | GHL system outage | Operations Module + client comms |
 
 ---

@@ -55,7 +55,7 @@ Track separately. MRR is the primary health metric.
 |---|---|---|
 | Budget variance > 20% | `FIN-03` | Yes |
 | Payment received | `FIN-02` | Yes |
-| Invoice requested | `FIN-01` | On Callan confirmation |
+| Invoice requested | `FIN-01` | On Dustin confirmation |
 | Monthly close | `FIN-04` | Scheduled |
 
 ---
