@@ -2,6 +2,28 @@ import Anthropic from "@anthropic-ai/sdk";
 import axios from "axios";
 import type { BaseAgent } from "../base-agent.ts";
 
+// Direct Slack API path — fires when SLACK_BOT_TOKEN is set, bypassing Zapier webhook
+async function slackDirectMessage(
+  channel: string,
+  text: string,
+): Promise<{ success: boolean; error?: string }> {
+  const token = process.env.SLACK_BOT_TOKEN;
+  if (!token) return { success: false, error: "SLACK_BOT_TOKEN not set" };
+
+  try {
+    const res = await axios.post(
+      "https://slack.com/api/chat.postMessage",
+      { channel, text, unfurl_links: false },
+      { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } },
+    );
+    if (!res.data.ok) throw new Error(res.data.error ?? "Slack API error");
+    return { success: true };
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { success: false, error: msg };
+  }
+}
+
 // Zapier webhook registry — each Zap has a named URL in env
 // Format: ZAPIER_WEBHOOK_<ZAP_NAME_UPPERCASE_UNDERSCORED>
 // e.g., ZAPIER_WEBHOOK_NEW_LEAD_GHL → DEL-01
@@ -94,12 +116,22 @@ async function notifyDustin(
     message: string;
   };
 
-  const channel =
-    urgency === "high" ? "notify-dustin-sms" : "notify-dustin-slack";
+  const timestamp = new Date().toISOString();
+  const emoji = urgency === "high" ? "🚨" : urgency === "medium" ? "⚠️" : "ℹ️";
+  const slackText = `${emoji} *AIOS Alert — ${urgency.toUpperCase()}*\n${message}\n_${timestamp}_`;
 
+  // Primary: direct Slack API if SLACK_BOT_TOKEN is configured
+  const slackChannel =
+    process.env.SLACK_NOTIFY_CHANNEL ?? process.env.SLACK_CHANNEL_ID ?? "#general";
+  const direct = await slackDirectMessage(slackChannel, slackText);
+  if (direct.success) return { success: true, channel: slackChannel, urgency, via: "slack-direct" };
+
+  // Fallback: Zapier webhook
+  const zapChannel =
+    urgency === "high" ? "notify-dustin-sms" : "notify-dustin-slack";
   return zapierFire({
-    zap: channel,
-    payload: { urgency, message, timestamp: new Date().toISOString() },
+    zap: zapChannel,
+    payload: { urgency, message, timestamp },
   });
 }
 
