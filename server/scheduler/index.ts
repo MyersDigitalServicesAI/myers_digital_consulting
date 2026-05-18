@@ -10,6 +10,7 @@ import { createMarketingAgent } from "../agents/modules/marketing.ts";
 import { createContentCalendarAgent } from "../agents/custom/content-calendar.ts";
 import { createAdPerformanceAgent } from "../agents/custom/ad-performance.ts";
 import { createSocialMediaManagerAgent } from "../agents/custom/social-media-manager.ts";
+import { createCostBreakdownAgent } from "../agents/custom/cost-breakdown.ts";
 
 async function runSafe(name: string, fn: () => Promise<void>): Promise<void> {
   try {
@@ -50,6 +51,16 @@ export function startScheduler(): void {
       const marketing = createMarketingAgent();
       await marketing.run(
         "It's Tuesday — newsletter draft day. Check Notion Module Memory for the highest-scoring hook mined this week. Use it as the foundation for this week's newsletter. Load the newsletter-writer agent context. Generate a complete draft following the 7-part framework with 2 subject line variants (A/B). Save it for Dustin's Wednesday review.",
+      );
+    });
+  });
+
+  // --- MONDAY: 7:00 AM — Weekly cost breakdown report (runs before weekly business report) ---
+  cron.schedule("0 7 * * 1", async () => {
+    await runSafe("Weekly Cost Report", async () => {
+      const costAgent = createCostBreakdownAgent();
+      await costAgent.run(
+        "Generate the weekly AIOS cost breakdown report. Pull the full cost model for all 22 agents. Calculate total daily and monthly spend, identify the top 5 cost drivers, flag any agent with cost-per-run over $0.50, and check if total daily cost exceeds the $5.00 alert threshold. Write a KPI Snapshot to Notion with the total daily cost metric. Notify Dustin via Slack with the summary and any optimization opportunities.",
       );
     });
   });
@@ -130,6 +141,7 @@ export function startScheduler(): void {
   });
 
   console.log("[Scheduler] Schedules registered:");
+  console.log("  • Monday 7 AM     — Cost breakdown report");
   console.log("  • 7:00 AM daily   — Analytics digest");
   console.log("  • 9:00 AM daily   — Transcript miner");
   console.log("  • Tuesday 10 AM   — Newsletter draft");

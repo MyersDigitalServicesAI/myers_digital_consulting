@@ -27,3 +27,4 @@ export { createMetaAdsManagerAgent } from "./custom/meta-ads-manager.ts";
 export { createGoogleAdsManagerAgent } from "./custom/google-ads-manager.ts";
 export { createContentCalendarAgent } from "./custom/content-calendar.ts";
 export { createAdPerformanceAgent } from "./custom/ad-performance.ts";
+export { createCostBreakdownAgent } from "./custom/cost-breakdown.ts";

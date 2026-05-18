@@ -12,6 +12,7 @@ import { createSocialMediaManagerAgent } from "../agents/custom/social-media-man
 import { createMetaAdsManagerAgent } from "../agents/custom/meta-ads-manager.ts";
 import { createAdPerformanceAgent } from "../agents/custom/ad-performance.ts";
 import { createContentCalendarAgent } from "../agents/custom/content-calendar.ts";
+import { createCostBreakdownAgent } from "../agents/custom/cost-breakdown.ts";
 
 export function createWebhookRouter(): Router {
   const router = Router();
@@ -294,6 +295,23 @@ export function createWebhookRouter(): Router {
         );
       } catch (err) {
         console.error("[Webhook] ads/meta-alert error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/cost/breakdown — On-demand cost analysis for all 22 agents
+  router.post("/cost/breakdown", async (req: Request, res: Response) => {
+    const { detailed = false } = req.body as { detailed?: boolean };
+    res.json({ received: true });
+
+    setImmediate(async () => {
+      try {
+        const costAgent = createCostBreakdownAgent();
+        await costAgent.run(
+          `Generate an on-demand AIOS cost breakdown report. Analyze all 22 agents — cost per run, daily cost, and monthly projection. Identify top cost drivers and any agents over the $0.50/run threshold. ${detailed ? "Include specific optimization recommendations with implementation steps for the top 3 cost reduction opportunities." : ""} Write results to Notion KPI Snapshots and notify Dustin with the full summary.`,
+        );
+      } catch (err) {
+        console.error("[Webhook] cost/breakdown error:", err);
       }
     });
   });

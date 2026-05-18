@@ -57,7 +57,7 @@ export class DirectorAgent extends BaseAgent {
       {
         name: "route_to_agent",
         description:
-          "Delegate a specific task to a specialist module agent (CRM, Finance, Marketing, Operations, Analytics, HR, Legal, Security) or a custom skill agent (transcript-miner, sales-call-coach, newsletter-writer, scroll-stopper-ad, bookkeeping, geo-seo-auditor, meeting-transcript, social-media-manager, meta-ads-manager, google-ads-manager, content-calendar, ad-performance). The agent will execute the task and return results.",
+          "Delegate a specific task to a specialist module agent (CRM, Finance, Marketing, Operations, Analytics, HR, Legal, Security) or a custom skill agent (transcript-miner, sales-call-coach, newsletter-writer, scroll-stopper-ad, bookkeeping, geo-seo-auditor, meeting-transcript, social-media-manager, meta-ads-manager, google-ads-manager, content-calendar, ad-performance, cost-breakdown). The agent will execute the task and return results.",
         input_schema: {
           type: "object" as const,
           properties: {
@@ -87,6 +87,7 @@ export class DirectorAgent extends BaseAgent {
                 "google-ads-manager",
                 "content-calendar",
                 "ad-performance",
+                "cost-breakdown",
               ],
               description: "Which specialist agent to dispatch this task to",
             },
