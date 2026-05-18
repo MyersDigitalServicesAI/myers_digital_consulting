@@ -1,13 +1,13 @@
-# SOP-17 — Callan Voice Skill
+# SOP-17 — Dustin Voice Skill
 
 **Version**: 1.0
-**Skill**: Callan Voice
+**Skill**: Dustin Voice
 **Status**: Active
 
 ---
 
 ## Purpose
-Filter all written outputs through Callan Myers' personal brand voice for authenticity and consistency.
+Filter all written outputs through Dustin Myers' personal brand voice for authenticity and consistency.
 
 ## Trigger
 Any output that will be published, sent to clients, or represent Myers Digital externally.
@@ -23,10 +23,10 @@ Any output that will be published, sent to clients, or represent Myers Digital e
 
 ## Steps
 
-1. Load skill: `skills/custom/callan-voice-skill/SKILL.md`
+1. Load skill: `skills/custom/dustin-voice-skill/SKILL.md`
 2. Provide draft content to Claude
-3. Claude applies Callan's voice — eliminating avoidances, adding specificity, tightening sentences
-4. Review: does it sound like Callan wrote it?
+3. Claude applies Dustin's voice — eliminating avoidances, adding specificity, tightening sentences
+4. Review: does it sound like Dustin wrote it?
 5. Publish or send
 
 ## Voice Quick Test
@@ -39,4 +39,4 @@ Before publishing, check:
 - [ ] Reads like a smart, direct human — not a marketing bot
 
 ## Training
-The Callan Voice Skill was trained on 10 hours of Callan's actual writing and speaking patterns. If a new document significantly changes Callan's style preferences, update the AVOIDANCES and PHRASING PATTERNS sections in `skills/custom/callan-voice-skill/SKILL.md`.
+The Dustin Voice Skill was trained on 10 hours of Dustin's actual writing and speaking patterns. If a new document significantly changes Dustin's style preferences, update the AVOIDANCES and PHRASING PATTERNS sections in `skills/custom/dustin-voice-skill/SKILL.md`.

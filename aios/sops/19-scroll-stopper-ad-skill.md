@@ -10,13 +10,13 @@
 Convert newsletters and mined transcript content into paid ad creative for Meta, LinkedIn, and Google.
 
 ## Trigger
-Newsletter is published, new content hooks are mined, or Callan needs new ad creative.
+Newsletter is published, new content hooks are mined, or Dustin needs new ad creative.
 
 ## Content → Ad Pipeline
 1. Newsletter published (SOP-18)
 2. Newsletter's top hook/story becomes ad primary text
 3. Two ad variants built: one framework from playbook + one contrarian
-4. Callan reviews and selects winner to test
+4. Dustin reviews and selects winner to test
 5. Launch in ad platform
 6. Track performance → feed results back to content strategy
 
@@ -25,8 +25,8 @@ Newsletter is published, new content hooks are mined, or Callan needs new ad cre
 1. Load skill: `skills/custom/scroll-stopper-ad-skill/SKILL.md`
 2. Provide source content (newsletter or transcript hook)
 3. Claude builds 2 ad variants using different frameworks
-4. Apply Callan Voice Skill to both
-5. Callan selects variant to test
+4. Apply Dustin Voice Skill to both
+5. Dustin selects variant to test
 6. Log ad creative to Google Drive `/Ads/[Month]`
 7. Launch in ad platform
 8. Track CTR and CPL → log to Notion KPI Snapshots

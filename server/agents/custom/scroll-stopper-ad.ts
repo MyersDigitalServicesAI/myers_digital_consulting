@@ -15,7 +15,7 @@ export class ScrollStopperAdAgent extends BaseAgent {
       {
         name: "save_ad_creative",
         description:
-          "Save finished ad variants to Notion for Callan's review and selection before launch.",
+          "Save finished ad variants to Notion for Dustin's review and selection before launch.",
         input_schema: {
           type: "object" as const,
           properties: {
@@ -47,7 +47,7 @@ export class ScrollStopperAdAgent extends BaseAgent {
         action: "ad_creative_saved",
         creative_id: `AD-${Date.now()}`,
         ...input,
-        status: "Awaiting Callan Selection",
+        status: "Awaiting Dustin Selection",
       }),
     );
   }

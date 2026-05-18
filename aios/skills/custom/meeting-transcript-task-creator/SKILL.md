@@ -2,7 +2,7 @@
 name: myers-digital-meeting-transcript-task-creator
 description: >
   Parses meeting transcripts, extracts action items, assigns owners, formats tasks, and auto-lands
-  them in Notion and optionally Google Calendar. Use whenever Callan shares a meeting transcript
+  them in Notion and optionally Google Calendar. Use whenever Dustin shares a meeting transcript
   or recording summary and needs tasks extracted. Triggers on any transcript input.
 ---
 

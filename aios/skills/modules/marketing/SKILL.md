@@ -43,7 +43,7 @@ CMO-level AI. Growth-obsessed, data-driven. Every recommendation comes with a me
 |---|---|---|
 | Lead score > 80 | `SAL-01` | Yes |
 | New lead captured | `SAL-01` | Yes |
-| Campaign approved | `MKT-03` | On Callan confirmation |
+| Campaign approved | `MKT-03` | On Dustin confirmation |
 | Content scheduled | `MKT-02` | Scheduled |
 
 ---

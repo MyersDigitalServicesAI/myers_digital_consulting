@@ -10,7 +10,7 @@
 Categorize Myers Digital business expenses, flag deductions, and identify personal/business mixing issues.
 
 ## Trigger
-Callan shares credit card or bank transactions for categorization.
+Dustin shares credit card or bank transactions for categorization.
 
 ## Input Format
 Provide transactions in any of these formats:
@@ -31,7 +31,7 @@ Minimum data per transaction: Date | Merchant | Amount
 7. Log monthly summary to Notion `AIOS — KPI Snapshots` (expense totals by category)
 
 ## Monthly Bookkeeping Rhythm
-- **1st of month**: Callan exports last month's transactions
+- **1st of month**: Dustin exports last month's transactions
 - **2nd of month**: Run through Bookkeeping Categorizer
 - **3rd of month**: Review flags and confirm
 - **5th of month**: Finance Module uses confirmed data for monthly P&L (FIN-04)

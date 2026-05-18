@@ -34,8 +34,8 @@ const ZAP_REGISTRY: Record<string, string> = {
   "DAT-02-weekly-digest": "ZAPIER_WEBHOOK_DAT_02",
   "DAT-03-anomaly-alert": "ZAPIER_WEBHOOK_DAT_03",
   // Notifications
-  "notify-callan-sms": "ZAPIER_WEBHOOK_NOTIFY_SMS",
-  "notify-callan-slack": "ZAPIER_WEBHOOK_NOTIFY_SLACK",
+  "notify-dustin-sms": "ZAPIER_WEBHOOK_NOTIFY_SMS",
+  "notify-dustin-slack": "ZAPIER_WEBHOOK_NOTIFY_SLACK",
 };
 
 async function zapierFire(
@@ -76,7 +76,7 @@ async function zapierFire(
   }
 }
 
-async function notifyCallan(
+async function notifyDustin(
   input: Record<string, unknown>,
 ): Promise<unknown> {
   const { urgency, message } = input as {
@@ -85,7 +85,7 @@ async function notifyCallan(
   };
 
   const channel =
-    urgency === "high" ? "notify-callan-sms" : "notify-callan-slack";
+    urgency === "high" ? "notify-dustin-sms" : "notify-dustin-slack";
 
   return zapierFire({
     zap: channel,
@@ -116,9 +116,9 @@ export const ZAPIER_TOOLS: Anthropic.Tool[] = [
     },
   },
   {
-    name: "notify_callan",
+    name: "notify_dustin",
     description:
-      "Send an urgent notification to Callan Myers. Use for decisions requiring human approval, escalations, or high-priority alerts.",
+      "Send an urgent notification to Dustin Myers. Use for decisions requiring human approval, escalations, or high-priority alerts.",
     input_schema: {
       type: "object" as const,
       properties: {
@@ -148,5 +148,5 @@ export function registerZapierTools(agent: BaseAgent): void {
   };
 
   a.registerTool(ZAPIER_TOOLS[0], zapierFire);
-  a.registerTool(ZAPIER_TOOLS[1], notifyCallan);
+  a.registerTool(ZAPIER_TOOLS[1], notifyDustin);
 }

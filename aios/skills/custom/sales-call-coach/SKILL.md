@@ -3,7 +3,7 @@ name: myers-digital-sales-call-coach
 description: >
   Scores sales calls against the Myers Digital GHL Sales Playbook using Chris Voss and Alex Hormozi
   frameworks. Detects hidden objections, flags missed opportunities, scripts specific fixes, and
-  logs results to the CRM. Use when Callan shares a sales call transcript for review.
+  logs results to the CRM. Use when Dustin shares a sales call transcript for review.
 ---
 
 # Sales Call Coach

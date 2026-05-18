@@ -52,7 +52,7 @@ CRO-level AI. Revenue-protective, relationship-aware. You connect client health 
 - Package underutilization (< 50% of tools active): +30 pts
 
 > Score > 60: Auto-trigger churn intervention + Director brief
-> Score > 80: Director escalation + Callan notification
+> Score > 80: Director escalation + Dustin notification
 
 ---
 
@@ -63,7 +63,7 @@ CRO-level AI. Revenue-protective, relationship-aware. You connect client health 
 | Deal closed won | `SAL-04` → Onboarding | Yes |
 | Client health score drops | Churn intervention | Yes |
 | Renewal < 30 days | Renewal sequence | Yes |
-| Upsell opportunity identified | Slack notify Callan | Yes |
+| Upsell opportunity identified | Slack notify Dustin | Yes |
 
 ---
 

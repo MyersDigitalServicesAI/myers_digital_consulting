@@ -3,7 +3,7 @@
 **Version**: 1.0
 **Module**: Security
 **Status**: Active
-**Access**: Callan (Level 9) only
+**Access**: Dustin (Level 9) only
 
 ---
 
@@ -22,13 +22,13 @@ Any security incident, access anomaly, or security review request. Director acce
 
 ### Level 2 (Medium) — Suspected Breach
 - Log immediately
-- Slack alert to Callan
+- Slack alert to Dustin
 - Director brief with findings
 - 4-hour resolution target
 
 ### Level 3 (High) — Confirmed Breach
 - Log immediately
-- Immediate Callan notification (Slack + call if needed)
+- Immediate Dustin notification (Slack + call if needed)
 - Lock affected access
 - Activate incident response playbook
 - `SEC-03` Zapier: team notification
@@ -43,11 +43,11 @@ Any security incident, access anomaly, or security review request. Director acce
 
 | System | Who Has Access | Review Frequency |
 |---|---|---|
-| GHL Agency Account | Callan only | Monthly |
-| Client Sub-Accounts | Callan + assigned contractor | Per project |
-| Notion AIOS | Callan | Monthly |
-| Zapier | Callan | Monthly |
-| Stripe | Callan | Monthly |
+| GHL Agency Account | Dustin only | Monthly |
+| Client Sub-Accounts | Dustin + assigned contractor | Per project |
+| Notion AIOS | Dustin | Monthly |
+| Zapier | Dustin | Monthly |
+| Stripe | Dustin | Monthly |
 
 ## Quarterly Security Review
 1. Audit all tool access lists

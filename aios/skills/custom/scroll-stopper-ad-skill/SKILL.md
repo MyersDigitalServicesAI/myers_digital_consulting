@@ -2,7 +2,7 @@
 name: myers-digital-scroll-stopper-ad
 description: >
   Converts newsletters and mined content into scroll-stopping ad variants for Meta, LinkedIn,
-  and Google. Produces primary text, headline, and CTA for each ad. Use when Callan needs
+  and Google. Produces primary text, headline, and CTA for each ad. Use when Dustin needs
   ad creative from existing content or from a transcript hook.
 ---
 

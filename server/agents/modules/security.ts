@@ -15,7 +15,7 @@ export class SecurityAgent extends BaseAgent {
       {
         name: "create_incident",
         description:
-          "Create a security incident record and trigger the 4-level response protocol. Level 1-2: log only. Level 3: notify Callan. Level 4: immediate escalation + lockdown.",
+          "Create a security incident record and trigger the 4-level response protocol. Level 1-2: log only. Level 3: notify Dustin. Level 4: immediate escalation + lockdown.",
         input_schema: {
           type: "object" as const,
           properties: {
@@ -44,7 +44,7 @@ export class SecurityAgent extends BaseAgent {
           level,
           status: "created",
           auto_escalated: level >= 3,
-          callan_notified: level >= 3,
+          dustin_notified: level >= 3,
           note:
             level === 4
               ? "LEVEL 4: Immediate containment protocol initiated"

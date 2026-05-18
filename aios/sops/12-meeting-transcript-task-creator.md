@@ -10,7 +10,7 @@
 Extract tasks, decisions, and follow-ups from meeting transcripts and auto-land them in Notion.
 
 ## Trigger
-Callan shares a transcript, meeting notes, or recording summary.
+Dustin shares a transcript, meeting notes, or recording summary.
 
 ## Input Requirements
 - Raw transcript (text paste, uploaded file, or Google Meet/Zoom auto-transcript link)
@@ -22,7 +22,7 @@ Callan shares a transcript, meeting notes, or recording summary.
 1. Load skill: `skills/custom/meeting-transcript-task-creator/SKILL.md`
 2. Provide transcript text to Claude
 3. Claude extracts: tasks, owners, deadlines, decisions, open loops
-4. Review extracted tasks for accuracy (Callan confirms)
+4. Review extracted tasks for accuracy (Dustin confirms)
 5. Confirmed tasks land in Notion `AIOS — Task Board`
 6. Hard-deadline tasks create Google Calendar events
 

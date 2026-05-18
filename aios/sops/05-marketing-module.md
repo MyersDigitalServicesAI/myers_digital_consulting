@@ -28,7 +28,7 @@ AIOS — Module Memory WHERE Module = "marketing" AND Date > -14d
 
 ### 3. Campaign Review
 - Review active campaigns against performance benchmarks
-- Flag underperformers for Callan decision
+- Flag underperformers for Dustin decision
 - Identify high-performing content to amplify
 
 ### 4. Content Opportunities
@@ -37,7 +37,7 @@ AIOS — Module Memory WHERE Module = "marketing" AND Date > -14d
 - Route to Newsletter Skill if newsletter is due
 
 ### 5. Fire Automations
-- Hot lead (score > 80) → `SAL-01` + Callan notification
+- Hot lead (score > 80) → `SAL-01` + Dustin notification
 - Scheduled content → `MKT-02`
 
 ### 6. Output and Write Back

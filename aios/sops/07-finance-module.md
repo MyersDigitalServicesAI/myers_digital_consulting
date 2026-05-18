@@ -33,13 +33,13 @@ Any directive involving revenue, expenses, invoicing, cash flow, or financial an
 3. Record setup fees separately from recurring
 4. Categorize all business expenses (route to Bookkeeping Categorizer)
 5. Update Notion KPI Snapshots with final monthly numbers
-6. Generate P&L summary for Callan
-7. `FIN-04` Zapier fires — email summary to Callan
+6. Generate P&L summary for Dustin
+7. `FIN-04` Zapier fires — email summary to Dustin
 
 ## Invoice Creation (FIN-SOP-02)
-1. Callan requests invoice via Director
+1. Dustin requests invoice via Director
 2. Finance Module confirms: client name, package, amount, due date
-3. Callan confirms
+3. Dustin confirms
 4. `FIN-01` Zapier fires: create invoice + email client
 5. Log to Notion Decision Log
 

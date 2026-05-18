@@ -47,11 +47,11 @@ Every Zap's last step: POST result back to AIOS via webhook, which logs to `AIOS
 | 1 | `SAL-01` Lead Captured | Immediate revenue impact |
 | 2 | `SAL-04` Deal Closed Won | Triggers client onboarding |
 | 3 | `DEL-01` New Client Onboarded | Starts GHL setup |
-| 4 | `DAT-01` Daily KPI Digest | Callan's morning briefing |
+| 4 | `DAT-01` Daily KPI Digest | Dustin's morning briefing |
 | 5 | `FIN-02` Payment Received | MRR tracking |
 
 ## Error Handling
 - Failed Zaps → `#aios-alerts` Slack channel
 - Failed Zaps → Notion `Automation Log` Status = "Failed"
-- Priority "urgent" failures → Director auto-escalation + Callan DM
+- Priority "urgent" failures → Director auto-escalation + Dustin DM
 - Retry logic: 3 attempts, then human notification

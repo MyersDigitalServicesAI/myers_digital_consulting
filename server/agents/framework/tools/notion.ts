@@ -205,7 +205,7 @@ export const NOTION_TOOLS: Anthropic.Tool[] = [
         owner: {
           type: "string",
           description:
-            "Who owns this decision (e.g., 'Director Agent', 'Callan')",
+            "Who owns this decision (e.g., 'Director Agent', 'Dustin')",
         },
         outcome: {
           type: "string",

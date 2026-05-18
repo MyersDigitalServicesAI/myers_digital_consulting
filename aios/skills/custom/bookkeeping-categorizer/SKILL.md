@@ -3,7 +3,7 @@ name: myers-digital-bookkeeping-categorizer
 description: >
   Processes credit card transactions and bank statements, categorizes business expenses,
   flags deductible items and personal misuse, and self-improves monthly by updating category
-  rules based on new transactions. Use when Callan shares transactions for categorization.
+  rules based on new transactions. Use when Dustin shares transactions for categorization.
 ---
 
 # Bookkeeping Categorizer
@@ -34,7 +34,7 @@ You are Myers Digital's financial operations agent. You categorize transactions 
 Read each transaction: date, merchant, amount, card/account.
 
 ### Step 2: CATEGORIZE
-Match to Myers Digital expense categories. For ambiguous merchants, use context clues or flag for Callan review.
+Match to Myers Digital expense categories. For ambiguous merchants, use context clues or flag for Dustin review.
 
 ### Step 3: FLAG
 - **Deduction flags**: Mark high-value deductibles (home office, equipment, professional development)
@@ -43,7 +43,7 @@ Match to Myers Digital expense categories. For ambiguous merchants, use context 
 - **Large transaction flags**: Any single transaction > $500
 
 ### Step 4: SELF-IMPROVE
-After Callan confirms corrections, update the category memory rules for that merchant.
+After Dustin confirms corrections, update the category memory rules for that merchant.
 
 ## Output Format
 

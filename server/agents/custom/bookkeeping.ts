@@ -33,7 +33,7 @@ export class BookkeepingAgent extends BaseAgent {
             flags: {
               type: "array",
               items: { type: "string" },
-              description: "Items flagged for Callan review",
+              description: "Items flagged for Dustin review",
             },
           },
           required: ["month", "transactions"],

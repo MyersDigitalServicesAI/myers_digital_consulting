@@ -10,7 +10,7 @@
 Score sales calls against the Myers Digital GHL Sales Playbook, identify missed opportunities, and script specific fixes.
 
 ## Trigger
-Callan shares a sales call transcript or recording for review.
+Dustin shares a sales call transcript or recording for review.
 
 ## Input Requirements
 - Call transcript (text) or recording (auto-transcribed)

@@ -18,7 +18,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  New client signed — coordinate onboarding across 3 departments
   SKILL:     aios/skills/director/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, route_to_agent]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, route_to_agent]
 
   TASK GIVEN TO AGENT:
   "Summit Roofing just signed the Growth package. Coordinate onboarding: provision GHL sub-account, generate setup fee invoice, create CRM record."
@@ -38,14 +38,14 @@
   **Actions taken**:
   - Logged decision to Notion Decision Log
   - Fired DEL-03 kickoff checklist Zap
-  - Notified Callan via Slack
+  - Notified Dustin via Slack
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅  AGENT: CRM  │  CLIENT MANAGEMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Client health score and pipeline status update
   SKILL:     aios/skills/modules/crm/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, update_ghl_pipeline]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, update_ghl_pipeline]
 
   TASK GIVEN TO AGENT:
   "Run health check on Summit Roofing. Assess churn risk, update pipeline stage, fire appropriate GHL automations."
@@ -79,7 +79,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Monthly P&L and MRR calculation
   SKILL:     aios/skills/modules/finance/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, generate_invoice, calculate_mrr]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, generate_invoice, calculate_mrr]
 
   TASK GIVEN TO AGENT:
   "Generate May 2026 finance report. Calculate MRR by package tier, total revenue, net profit, and flag any overdue invoices."
@@ -88,7 +88,7 @@
   1. 📖 notion_read
   2. 📖 notion_read
   3. 📝 notion_write
-  4. 🔔 notify_callan
+  4. 🔔 notify_dustin
 
   OUTPUT:
   **Monthly Finance Report — May 2026**
@@ -112,14 +112,14 @@
   - ⚠️ Contractor payments due this week: $2,400 (3 contractors)
   - 📈 MRR target $20K — currently 72% there
   
-  **Action**: P&L written to Notion KPI Snapshots. Callan notified via Slack.
+  **Action**: P&L written to Notion KPI Snapshots. Dustin notified via Slack.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅  AGENT: MARKETING  │  GROWTH
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Weekly marketing performance review
   SKILL:     aios/skills/modules/marketing/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, schedule_content]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, schedule_content]
 
   TASK GIVEN TO AGENT:
   "Review week of May 12 marketing metrics. Assess newsletter performance, LinkedIn reach, and lead pipeline from content."
@@ -150,7 +150,7 @@
   
   **Next Actions**
   - Newsletter draft due Tuesday (hook: "The 5-minute response rule")
-  - 2 new Meta ad variants ready for Callan review
+  - 2 new Meta ad variants ready for Dustin review
   - Transcript miner scheduled for Monday 9 AM
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -158,7 +158,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  GHL onboarding status check — Growth package Day 3
   SKILL:     aios/skills/modules/operations/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, create_ghl_subaccount, check_onboarding_status]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, create_ghl_subaccount, check_onboarding_status]
 
   TASK GIVEN TO AGENT:
   "Check Summit Roofing onboarding progress. Update milestone tracker, flag any blockers, schedule next check-in."
@@ -197,10 +197,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Monday morning KPI digest with anomaly detection
   SKILL:     aios/skills/modules/analytics/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, generate_kpi_snapshot, detect_anomaly]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, generate_kpi_snapshot, detect_anomaly]
 
   TASK GIVEN TO AGENT:
-  "Generate Monday May 18 daily KPI snapshot. Check for anomalies vs 7-day baseline. Notify Callan with digest."
+  "Generate Monday May 18 daily KPI snapshot. Check for anomalies vs 7-day baseline. Notify Dustin with digest."
 
   TOOL CALLS MADE (6 calls):
   1. 📖 notion_read
@@ -208,7 +208,7 @@
   3. 🔧 generate_kpi_snapshot
   4. 🔧 detect_anomaly
   5. 📝 notion_write
-  6. 🔔 notify_callan
+  6. 🔔 notify_dustin
 
   OUTPUT:
   **Daily KPI Digest — Monday May 18, 2026**
@@ -228,14 +228,14 @@
   
   **Highlight**: Lead volume +35% above 7-day average. Attribute to LinkedIn post "She had 1,800 contacts" going semi-viral (2,341 impressions).
   
-  **Action Required**: None. Callan notified with digest.
+  **Action Required**: None. Dustin notified with digest.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅  AGENT: HR  │  TEAM
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Contractor onboarding — GHL Specialist
   SKILL:     aios/skills/modules/hr/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, onboard_contractor]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, onboard_contractor]
 
   TASK GIVEN TO AGENT:
   "Onboard Alex Rivera as GHL Specialist at $45/hr. Send contract, collect W-9, create Notion profile, assign first project."
@@ -270,14 +270,14 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Non-standard contract clause — client requesting refund terms
   SKILL:     aios/skills/modules/legal/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, flag_legal_review]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, flag_legal_review]
 
   TASK GIVEN TO AGENT:
   "TechServ Solutions is requesting a 30-day cancellation with 50% refund clause. Assess risk, flag for review, draft recommendation."
 
   TOOL CALLS MADE (3 calls):
   1. 🔧 flag_legal_review
-  2. 🔔 notify_callan
+  2. 🔔 notify_dustin
   3. 🗂️ log_decision
 
   OUTPUT:
@@ -298,14 +298,14 @@
   
   **⚠️ NOTE**: This analysis is for tracking purposes only. Consult qualified legal counsel before responding to the client.
   
-  **Action**: Callan notified. Flag logged. Draft counter-proposal ready for review.
+  **Action**: Dustin notified. Flag logged. Draft counter-proposal ready for review.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅  AGENT: SECURITY  │  SECURITY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Suspicious login attempt on GHL agency account
   SKILL:     aios/skills/modules/security/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, create_incident]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, create_incident]
 
   TASK GIVEN TO AGENT:
   "3 failed logins from Tor exit node detected on GHL agency account. Assess threat level, log incident, recommend response."
@@ -313,7 +313,7 @@
   TOOL CALLS MADE (3 calls):
   1. 🔧 create_incident
   2. 🗂️ log_decision
-  3. 🔔 notify_callan
+  3. 🔔 notify_dustin
 
   OUTPUT:
   **Security Incident Report — Level 2**
@@ -323,10 +323,10 @@
   **Status**: Active investigation
   
   **Description**
-  Unusual login activity detected on GHL agency account: 3 failed login attempts from an unrecognized IP (185.220.101.x — known Tor exit node) followed by successful login from Callan's usual location.
+  Unusual login activity detected on GHL agency account: 3 failed login attempts from an unrecognized IP (185.220.101.x — known Tor exit node) followed by successful login from Dustin's usual location.
   
   **Assessment**
-  - Likely scenario: credential stuffing attempt, blocked. Callan's login is legitimate.
+  - Likely scenario: credential stuffing attempt, blocked. Dustin's login is legitimate.
   - No data accessed by attacker
   - No GHL sub-accounts compromised
   
@@ -337,14 +337,14 @@
   - ⏳ Recommend: Enable 2FA on all team GHL logins this week
   - ⏳ Recommend: Rotate agency API keys as precaution
   
-  **Callan notification**: Sent (Slack). No immediate action required — awareness only.
+  **Dustin notification**: Sent (Slack). No immediate action required — awareness only.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅  AGENT: TRANSCRIPTMINER  │  CONTENT INTELLIGENCE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Mine sales call for hooks and content assets
   SKILL:     aios/skills/custom/transcript-miner-ad-builder/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, save_hook]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, save_hook]
 
   TASK GIVEN TO AGENT:
   "Mine the May 16 sales call transcript. Score all hooks 1-10. Save 7+ scoring hooks to Notion. Queue top hook for newsletter."
@@ -391,10 +391,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Score and coach a sales call with scripted fixes
   SKILL:     aios/skills/custom/sales-call-coach/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, save_coaching_report]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, save_coaching_report]
 
   TASK GIVEN TO AGENT:
-  "Score Callan's May 15 discovery call using the 6-category rubric. Provide scripted word-for-word fixes for top 3 improvement areas."
+  "Score Dustin's May 15 discovery call using the 6-category rubric. Provide scripted word-for-word fixes for top 3 improvement areas."
 
   TOOL CALLS MADE (2 calls):
   1. 🔧 save_coaching_report
@@ -402,7 +402,7 @@
 
   OUTPUT:
   **Sales Call Coaching Report**
-  **Rep**: Callan Myers | **Date**: May 15, 2026
+  **Rep**: Dustin Myers | **Date**: May 15, 2026
   **Overall Score**: 74/100
   
   ---
@@ -441,10 +441,10 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Write Tuesday newsletter from top-scored hook
   SKILL:     aios/skills/custom/newsletter-skill/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, save_newsletter_draft]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, save_newsletter_draft]
 
   TASK GIVEN TO AGENT:
-  "Write this week's newsletter using the '$47K recovered in 23 days' hook. 7-part framework, 2 subject line variants, Callan's voice, under 300 words."
+  "Write this week's newsletter using the '$47K recovered in 23 days' hook. 7-part framework, 2 subject line variants, Dustin's voice, under 300 words."
 
   TOOL CALLS MADE (3 calls):
   1. 📖 notion_read
@@ -493,21 +493,21 @@
   
   → If you want to see what a reactivation campaign looks like for your business, reply "REACTIVATE" and I'll send you the framework.
   
-  — Callan
+  — Dustin
   
   ---
   **Word count**: 287 | **CTA**: Reply "REACTIVATE"
-  **Status**: Awaiting Callan Review (Wednesday)
+  **Status**: Awaiting Dustin Review (Wednesday)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅  AGENT: SCROLLSTOPPERAD  │  PAID ADS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Build 2 Meta ad variants from newsletter hook
   SKILL:     aios/skills/custom/scroll-stopper-ad-skill/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, save_ad_creative]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, save_ad_creative]
 
   TASK GIVEN TO AGENT:
-  "Build 2 Meta ad variants from the missed-call cost hook. One Revenue Gap framework, one Speed Problem. Both in Callan's voice."
+  "Build 2 Meta ad variants from the missed-call cost hook. One Revenue Gap framework, one Speed Problem. Both in Dustin's voice."
 
   TOOL CALLS MADE (3 calls):
   1. 📖 notion_read
@@ -557,14 +557,14 @@
   
   **Recommendation**: Test Variant B first — the hook is more specific and the proof point (78%) stops the scroll.
   
-  **Status**: Saved — awaiting Callan's selection before launch
+  **Status**: Saved — awaiting Dustin's selection before launch
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✅  AGENT: BOOKKEEPING  │  FINANCE OPS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Categorize April transactions and flag deductions
   SKILL:     aios/skills/custom/bookkeeping-categorizer/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, export_categorized_transactions]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, export_categorized_transactions]
 
   TASK GIVEN TO AGENT:
   "Categorize April 2026 transactions. Flag deductibles, identify personal/business mixing, export for QBO import."
@@ -572,7 +572,7 @@
   TOOL CALLS MADE (3 calls):
   1. 📖 notion_read
   2. 🔧 export_categorized_transactions
-  3. 🔔 notify_callan
+  3. 🔔 notify_dustin
 
   OUTPUT:
   **Bookkeeping Categorization Report — April 2026**
@@ -597,7 +597,7 @@
   
   ---
   
-  **Flags for Callan Review**
+  **Flags for Dustin Review**
   1. **Amazon — $89.99**: Unclear if business or personal. *Action needed: confirm*
   2. **Restaurant — $183**: Listed guest on receipt? *Add client name to confirm meal deduction*
   3. **Adobe Creative Cloud — $54.99**: New subscription — confirm business use
@@ -609,7 +609,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Full GEO+SEO audit for a local service business
   SKILL:     aios/skills/custom/geo-seo-auditor/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, save_seo_audit]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, save_seo_audit]
 
   TASK GIVEN TO AGENT:
   "Run complete audit for Blue Ridge Plumbing in Asheville NC. Cover Google Search presence, GBP, and AI visibility. Deliver 90-day action guide."
@@ -661,7 +661,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   SCENARIO:  Extract tasks and decisions from strategy call
   SKILL:     aios/skills/custom/meeting-transcript-task-creator/SKILL.md
-  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_callan, create_tasks_from_meeting]
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, create_tasks_from_meeting]
 
   TASK GIVEN TO AGENT:
   "Process Strategy Session transcript from May 16. Extract action items with owners and due dates. Create Notion tasks. Schedule next meeting."
@@ -673,7 +673,7 @@
 
   OUTPUT:
   **Meeting Summary — Strategy Session, May 16, 2026**
-  **Participants**: Callan Myers, Alex Rivera (GHL Specialist)
+  **Participants**: Dustin Myers, Alex Rivera (GHL Specialist)
   
   ---
   
@@ -682,10 +682,10 @@
   | # | Task | Owner | Due | Priority |
   |---|------|-------|-----|----------|
   | 1 | Complete SMS automation sequences for Summit Roofing | Alex | May 20 | High |
-  | 2 | Draft sales proposal for TechServ Solutions | Callan | May 19 | High |
+  | 2 | Draft sales proposal for TechServ Solutions | Dustin | May 19 | High |
   | 3 | Update onboarding SOP for Growth package Day 5-7 | Alex | May 22 | Medium |
-  | 4 | Review and approve newsletter draft | Callan | May 21 | Medium |
-  | 5 | Add Blue Ridge Plumbing SEO audit report to client file | Callan | May 18 | Low |
+  | 4 | Review and approve newsletter draft | Dustin | May 21 | Medium |
+  | 5 | Add Blue Ridge Plumbing SEO audit report to client file | Dustin | May 18 | Low |
   
   **Tasks created in Notion** ✅ | **Team notified via Zapier** ✅
   
@@ -693,7 +693,7 @@
   
   **3 Key Decisions**
   - Summit Roofing delivery extended by 1 day (no additional charge) — materials delay on client side
-  - TechServ Solutions contract counter-proposal approved in principle — Callan to finalize
+  - TechServ Solutions contract counter-proposal approved in principle — Dustin to finalize
   - Monthly client check-in calls moving from last Friday to first Monday of month
   
   ---
@@ -719,7 +719,7 @@
 
   STEP 3 — Call Director for any task:
     POST /webhooks/director
-    { "task": "Anything Callan would normally do manually" }
+    { "task": "Anything Dustin would normally do manually" }
 
   STEP 4 — Let the scheduler run:
     AIOS_SCHEDULER=enabled  ← cron jobs auto-activate
@@ -729,7 +729,7 @@
 
   STEP 5 — Submit calls for coaching:
     POST /webhooks/sales-call
-    { "transcript": "...", "rep_name": "Callan" }
+    { "transcript": "...", "rep_name": "Dustin" }
     → Get 100-point scored report + scripted fixes in seconds
 
 ╔══════════════════════════════════════════════════════════════════════════════╗

@@ -18,7 +18,7 @@ const MOCK_RESPONSES: Record<string, { text: string; tools?: Array<{ name: strin
 **Actions taken**:
 - Logged decision to Notion Decision Log
 - Fired DEL-03 kickoff checklist Zap
-- Notified Callan via Slack`,
+- Notified Dustin via Slack`,
     tools: [
       { name: "notion_read", input: { database: "client_registry", limit: 5 } },
       { name: "log_decision", input: { decision: "Onboard Summit Roofing on Growth package", reasoning: "Signed contract received, setup fee collected", owner: "Director Agent" } },
@@ -75,12 +75,12 @@ Pipeline status updated. Contact created in GHL and moved through onboarding sta
 - ⚠️ Contractor payments due this week: $2,400 (3 contractors)
 - 📈 MRR target $20K — currently 72% there
 
-**Action**: P&L written to Notion KPI Snapshots. Callan notified via Slack.`,
+**Action**: P&L written to Notion KPI Snapshots. Dustin notified via Slack.`,
     tools: [
       { name: "notion_read", input: { database: "client_registry" } },
       { name: "notion_read", input: { database: "kpi_snapshots", limit: 3 } },
       { name: "notion_write", input: { database: "kpi_snapshots", data: { Period: "2026-05", MRR: 14458, SetupFees: 7994, NetProfit: 16840 } } },
-      { name: "notify_callan", input: { urgency: "low", message: "May Finance Report ready. MRR: $14,458 (+$997). Total revenue: $22,452. Margin: 75%. View full report in Notion KPI Snapshots." } },
+      { name: "notify_dustin", input: { urgency: "low", message: "May Finance Report ready. MRR: $14,458 (+$997). Total revenue: $22,452. Margin: 75%. View full report in Notion KPI Snapshots." } },
     ],
   },
 
@@ -105,7 +105,7 @@ Pipeline status updated. Contact created in GHL and moved through onboarding sta
 
 **Next Actions**
 - Newsletter draft due Tuesday (hook: "The 5-minute response rule")
-- 2 new Meta ad variants ready for Callan review
+- 2 new Meta ad variants ready for Dustin review
 - Transcript miner scheduled for Monday 9 AM`,
     tools: [
       { name: "notion_read", input: { database: "kpi_snapshots", filter: { property: "Type", select: { equals: "Marketing" } } } },
@@ -162,14 +162,14 @@ Pipeline status updated. Contact created in GHL and moved through onboarding sta
 
 **Highlight**: Lead volume +35% above 7-day average. Attribute to LinkedIn post "She had 1,800 contacts" going semi-viral (2,341 impressions).
 
-**Action Required**: None. Callan notified with digest.`,
+**Action Required**: None. Dustin notified with digest.`,
     tools: [
       { name: "notion_read", input: { database: "kpi_snapshots", limit: 7 } },
       { name: "notion_read", input: { database: "client_registry" } },
       { name: "generate_kpi_snapshot", input: { period: "daily" } },
       { name: "detect_anomaly", input: { metric: "weekly_leads", current_value: 7, baseline_value: 5.2, threshold_pct: 20 } },
       { name: "notion_write", input: { database: "kpi_snapshots", data: { Date: "2026-05-18", MRR: 14458, ActiveClients: 14, Leads: 7 } } },
-      { name: "notify_callan", input: { urgency: "low", message: "Monday digest: MRR $14,458. 14 active clients. 7 leads this week (+35%). All systems green." } },
+      { name: "notify_dustin", input: { urgency: "low", message: "Monday digest: MRR $14,458. 14 active clients. 7 leads this week (+35%). All systems green." } },
     ],
   },
 
@@ -217,10 +217,10 @@ Client is requesting a "30-day cancellation with 50% refund" clause on the Scale
 
 **⚠️ NOTE**: This analysis is for tracking purposes only. Consult qualified legal counsel before responding to the client.
 
-**Action**: Callan notified. Flag logged. Draft counter-proposal ready for review.`,
+**Action**: Dustin notified. Flag logged. Draft counter-proposal ready for review.`,
     tools: [
       { name: "flag_legal_review", input: { issue_type: "contract-review", description: "Non-standard cancellation clause requested", urgency: "medium", related_client: "TechServ Solutions" } },
-      { name: "notify_callan", input: { urgency: "medium", message: "Legal flag: TechServ Solutions requesting non-standard 30-day cancellation with 50% refund. Counter-proposal drafted. Review before responding." } },
+      { name: "notify_dustin", input: { urgency: "medium", message: "Legal flag: TechServ Solutions requesting non-standard 30-day cancellation with 50% refund. Counter-proposal drafted. Review before responding." } },
       { name: "log_decision", input: { decision: "Flagged TechServ contract clause for legal review", reasoning: "Non-standard term creates refund precedent risk", owner: "Legal Agent" } },
     ],
   },
@@ -233,10 +233,10 @@ Client is requesting a "30-day cancellation with 50% refund" clause on the Scale
 **Status**: Active investigation
 
 **Description**
-Unusual login activity detected on GHL agency account: 3 failed login attempts from an unrecognized IP (185.220.101.x — known Tor exit node) followed by successful login from Callan's usual location.
+Unusual login activity detected on GHL agency account: 3 failed login attempts from an unrecognized IP (185.220.101.x — known Tor exit node) followed by successful login from Dustin's usual location.
 
 **Assessment**
-- Likely scenario: credential stuffing attempt, blocked. Callan's login is legitimate.
+- Likely scenario: credential stuffing attempt, blocked. Dustin's login is legitimate.
 - No data accessed by attacker
 - No GHL sub-accounts compromised
 
@@ -247,11 +247,11 @@ Unusual login activity detected on GHL agency account: 3 failed login attempts f
 - ⏳ Recommend: Enable 2FA on all team GHL logins this week
 - ⏳ Recommend: Rotate agency API keys as precaution
 
-**Callan notification**: Sent (Slack). No immediate action required — awareness only.`,
+**Dustin notification**: Sent (Slack). No immediate action required — awareness only.`,
     tools: [
       { name: "create_incident", input: { level: 2, description: "Suspicious login attempts from Tor exit node on GHL agency account", affected_system: "GHL Agency Account", detected_by: "Login anomaly detection" } },
       { name: "log_decision", input: { decision: "Level 2 security incident logged for suspicious GHL login attempts", reasoning: "Failed logins from known Tor IPs warrant investigation", owner: "Security Agent" } },
-      { name: "notify_callan", input: { urgency: "medium", message: "Security: 3 failed GHL logins from Tor exit node detected. Your login was normal. Recommend enabling 2FA on all team accounts this week." } },
+      { name: "notify_dustin", input: { urgency: "medium", message: "Security: 3 failed GHL logins from Tor exit node detected. Your login was normal. Recommend enabling 2FA on all team accounts this week." } },
     ],
   },
 
@@ -295,7 +295,7 @@ Unusual login activity detected on GHL agency account: 3 failed login attempts f
 
   SalesCallCoach: {
     text: `**Sales Call Coaching Report**
-**Rep**: Callan Myers | **Date**: May 15, 2026
+**Rep**: Dustin Myers | **Date**: May 15, 2026
 **Overall Score**: 74/100
 
 ---
@@ -329,8 +329,8 @@ You calculated the daily cost but didn't extrapolate to the year.
 You went straight to package options without painting the future state.
 **Add before the pitch**: *"Three months from now — you're not chasing leads. They're being chased automatically. You're not wondering if someone followed up — it happened at 60 seconds. The business runs. You grow."*`,
     tools: [
-      { name: "save_coaching_report", input: { call_date: "2026-05-15", rep_name: "Callan Myers", overall_score: 74, top_strength: "Excellent discovery and quantification", top_improvement: "Close technique — ask directly instead of seeking permission" } },
-      { name: "notion_write", input: { database: "module_memory", data: { Type: "SalesCoaching", Rep: "Callan Myers", Score: 74, Date: "2026-05-15" } } },
+      { name: "save_coaching_report", input: { call_date: "2026-05-15", rep_name: "Dustin Myers", overall_score: 74, top_strength: "Excellent discovery and quantification", top_improvement: "Close technique — ask directly instead of seeking permission" } },
+      { name: "notion_write", input: { database: "module_memory", data: { Type: "SalesCoaching", Rep: "Dustin Myers", Score: 74, Date: "2026-05-15" } } },
     ],
   },
 
@@ -376,11 +376,11 @@ That's exactly what we build.
 
 → If you want to see what a reactivation campaign looks like for your business, reply "REACTIVATE" and I'll send you the framework.
 
-— Callan
+— Dustin
 
 ---
 **Word count**: 287 | **CTA**: Reply "REACTIVATE"
-**Status**: Awaiting Callan Review (Wednesday)`,
+**Status**: Awaiting Dustin Review (Wednesday)`,
     tools: [
       { name: "notion_read", input: { database: "module_memory", filter: { property: "Type", select: { equals: "Hook" } } } },
       { name: "save_newsletter_draft", input: { subject_a: "She had 1,800 contacts and zero follow-up system. Here's what happened.", subject_b: "How a roofing company recovered $47,000 in forgotten quotes", word_count: 287, send_date: "2026-05-22" } },
@@ -431,7 +431,7 @@ Your next customer already called. Did you answer?
 
 **Recommendation**: Test Variant B first — the hook is more specific and the proof point (78%) stops the scroll.
 
-**Status**: Saved — awaiting Callan's selection before launch`,
+**Status**: Saved — awaiting Dustin's selection before launch`,
     tools: [
       { name: "notion_read", input: { database: "module_memory", filter: { property: "Type", select: { equals: "Hook" } } } },
       { name: "save_ad_creative", input: { platform: "meta", target_audience: "Service business owners 35-55", source_hook: "Missed call cost calculation" } },
@@ -462,7 +462,7 @@ Your next customer already called. Did you answer?
 
 ---
 
-**Flags for Callan Review**
+**Flags for Dustin Review**
 1. **Amazon — $89.99**: Unclear if business or personal. *Action needed: confirm*
 2. **Restaurant — $183**: Listed guest on receipt? *Add client name to confirm meal deduction*
 3. **Adobe Creative Cloud — $54.99**: New subscription — confirm business use
@@ -471,7 +471,7 @@ Your next customer already called. Did you answer?
     tools: [
       { name: "notion_read", input: { database: "module_memory", filter: { property: "Type", select: { equals: "MerchantMemory" } } } },
       { name: "export_categorized_transactions", input: { month: "2026-04", transactions: [], total_deductible: 4892, flags: ["Amazon $89.99", "Restaurant $183", "Adobe $54.99"] } },
-      { name: "notify_callan", input: { urgency: "low", message: "April bookkeeping complete. 47 transactions categorized. $4,892 deductible. 3 items flagged for your review in Notion." } },
+      { name: "notify_dustin", input: { urgency: "low", message: "April bookkeeping complete. 47 transactions categorized. $4,892 deductible. 3 items flagged for your review in Notion." } },
     ],
   },
 
@@ -520,7 +520,7 @@ Your next customer already called. Did you answer?
 
   MeetingTranscript: {
     text: `**Meeting Summary — Strategy Session, May 16, 2026**
-**Participants**: Callan Myers, Alex Rivera (GHL Specialist)
+**Participants**: Dustin Myers, Alex Rivera (GHL Specialist)
 
 ---
 
@@ -529,10 +529,10 @@ Your next customer already called. Did you answer?
 | # | Task | Owner | Due | Priority |
 |---|------|-------|-----|----------|
 | 1 | Complete SMS automation sequences for Summit Roofing | Alex | May 20 | High |
-| 2 | Draft sales proposal for TechServ Solutions | Callan | May 19 | High |
+| 2 | Draft sales proposal for TechServ Solutions | Dustin | May 19 | High |
 | 3 | Update onboarding SOP for Growth package Day 5-7 | Alex | May 22 | Medium |
-| 4 | Review and approve newsletter draft | Callan | May 21 | Medium |
-| 5 | Add Blue Ridge Plumbing SEO audit report to client file | Callan | May 18 | Low |
+| 4 | Review and approve newsletter draft | Dustin | May 21 | Medium |
+| 5 | Add Blue Ridge Plumbing SEO audit report to client file | Dustin | May 18 | Low |
 
 **Tasks created in Notion** ✅ | **Team notified via Zapier** ✅
 
@@ -540,7 +540,7 @@ Your next customer already called. Did you answer?
 
 **3 Key Decisions**
 - Summit Roofing delivery extended by 1 day (no additional charge) — materials delay on client side
-- TechServ Solutions contract counter-proposal approved in principle — Callan to finalize
+- TechServ Solutions contract counter-proposal approved in principle — Dustin to finalize
 - Monthly client check-in calls moving from last Friday to first Monday of month
 
 ---
@@ -616,7 +616,7 @@ const SCENARIOS: Array<{
     agent: "Analytics",
     scenario: "Monday morning KPI digest with anomaly detection",
     skillPath: "modules/analytics/SKILL.md",
-    task: "Generate Monday May 18 daily KPI snapshot. Check for anomalies vs 7-day baseline. Notify Callan with digest.",
+    task: "Generate Monday May 18 daily KPI snapshot. Check for anomalies vs 7-day baseline. Notify Dustin with digest.",
     category: "Intelligence",
   },
   {
@@ -651,21 +651,21 @@ const SCENARIOS: Array<{
     agent: "SalesCallCoach",
     scenario: "Score and coach a sales call with scripted fixes",
     skillPath: "custom/sales-call-coach/SKILL.md",
-    task: "Score Callan's May 15 discovery call using the 6-category rubric. Provide scripted word-for-word fixes for top 3 improvement areas.",
+    task: "Score Dustin's May 15 discovery call using the 6-category rubric. Provide scripted word-for-word fixes for top 3 improvement areas.",
     category: "Sales Enablement",
   },
   {
     agent: "NewsletterWriter",
     scenario: "Write Tuesday newsletter from top-scored hook",
     skillPath: "custom/newsletter-skill/SKILL.md",
-    task: "Write this week's newsletter using the '$47K recovered in 23 days' hook. 7-part framework, 2 subject line variants, Callan's voice, under 300 words.",
+    task: "Write this week's newsletter using the '$47K recovered in 23 days' hook. 7-part framework, 2 subject line variants, Dustin's voice, under 300 words.",
     category: "Content",
   },
   {
     agent: "ScrollStopperAd",
     scenario: "Build 2 Meta ad variants from newsletter hook",
     skillPath: "custom/scroll-stopper-ad-skill/SKILL.md",
-    task: "Build 2 Meta ad variants from the missed-call cost hook. One Revenue Gap framework, one Speed Problem. Both in Callan's voice.",
+    task: "Build 2 Meta ad variants from the missed-call cost hook. One Revenue Gap framework, one Speed Problem. Both in Dustin's voice.",
     category: "Paid Ads",
   },
   {
@@ -698,22 +698,22 @@ async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
 
   // Simulate tool registration counts based on agent type
   const toolCountMap: Record<string, string[]> = {
-    Director: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "route_to_agent"],
-    CRM: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "update_ghl_pipeline"],
-    Finance: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "generate_invoice", "calculate_mrr"],
-    Marketing: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "schedule_content"],
-    Operations: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "create_ghl_subaccount", "check_onboarding_status"],
-    Analytics: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "generate_kpi_snapshot", "detect_anomaly"],
-    HR: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "onboard_contractor"],
-    Legal: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "flag_legal_review"],
-    Security: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "create_incident"],
-    TranscriptMiner: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "save_hook"],
-    SalesCallCoach: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "save_coaching_report"],
-    NewsletterWriter: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "save_newsletter_draft"],
-    ScrollStopperAd: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "save_ad_creative"],
-    Bookkeeping: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "export_categorized_transactions"],
-    GeoSeoAuditor: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "save_seo_audit"],
-    MeetingTranscript: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_callan", "create_tasks_from_meeting"],
+    Director: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "route_to_agent"],
+    CRM: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "update_ghl_pipeline"],
+    Finance: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "generate_invoice", "calculate_mrr"],
+    Marketing: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "schedule_content"],
+    Operations: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "create_ghl_subaccount", "check_onboarding_status"],
+    Analytics: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "generate_kpi_snapshot", "detect_anomaly"],
+    HR: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "onboard_contractor"],
+    Legal: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "flag_legal_review"],
+    Security: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "create_incident"],
+    TranscriptMiner: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "save_hook"],
+    SalesCallCoach: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "save_coaching_report"],
+    NewsletterWriter: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "save_newsletter_draft"],
+    ScrollStopperAd: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "save_ad_creative"],
+    Bookkeeping: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "export_categorized_transactions"],
+    GeoSeoAuditor: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "save_seo_audit"],
+    MeetingTranscript: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "create_tasks_from_meeting"],
   };
 
   const toolNames = toolCountMap[scenario.agent] ?? [];
@@ -783,7 +783,7 @@ function renderPresentation(results: TestResult[]): string {
     result.mockToolCalls.forEach((t, i) => {
       const toolEmoji: Record<string, string> = {
         notion_read: "📖", notion_write: "📝", log_decision: "🗂️",
-        zapier_fire: "⚡", notify_callan: "🔔", route_to_agent: "🔀",
+        zapier_fire: "⚡", notify_dustin: "🔔", route_to_agent: "🔀",
       };
       lines.push(`  ${i + 1}. ${toolEmoji[t] ?? "🔧"} ${t}`);
     });
@@ -813,7 +813,7 @@ function renderPresentation(results: TestResult[]): string {
   lines.push("");
   lines.push("  STEP 3 — Call Director for any task:");
   lines.push("    POST /webhooks/director");
-  lines.push('    { "task": "Anything Callan would normally do manually" }');
+  lines.push('    { "task": "Anything Dustin would normally do manually" }');
   lines.push("");
   lines.push("  STEP 4 — Let the scheduler run:");
   lines.push("    AIOS_SCHEDULER=enabled  ← cron jobs auto-activate");
@@ -823,7 +823,7 @@ function renderPresentation(results: TestResult[]): string {
   lines.push("");
   lines.push("  STEP 5 — Submit calls for coaching:");
   lines.push("    POST /webhooks/sales-call");
-  lines.push('    { "transcript": "...", "rep_name": "Callan" }');
+  lines.push('    { "transcript": "...", "rep_name": "Dustin" }');
   lines.push("    → Get 100-point scored report + scripted fixes in seconds");
   lines.push("");
   lines.push("╔══════════════════════════════════════════════════════════════════════════════╗");

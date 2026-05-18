@@ -46,7 +46,7 @@ export function startScheduler(): void {
     await runSafe("Newsletter Draft", async () => {
       const marketing = createMarketingAgent();
       await marketing.run(
-        "It's Tuesday — newsletter draft day. Check Notion Module Memory for the highest-scoring hook mined this week. Use it as the foundation for this week's newsletter. Load the newsletter-writer agent context. Generate a complete draft following the 7-part framework with 2 subject line variants (A/B). Save it for Callan's Wednesday review.",
+        "It's Tuesday — newsletter draft day. Check Notion Module Memory for the highest-scoring hook mined this week. Use it as the foundation for this week's newsletter. Load the newsletter-writer agent context. Generate a complete draft following the 7-part framework with 2 subject line variants (A/B). Save it for Dustin's Wednesday review.",
       );
     });
   });
@@ -56,7 +56,7 @@ export function startScheduler(): void {
     await runSafe("Weekly Report", async () => {
       const director = createDirectorAgent();
       await director.run(
-        "Generate the Monday weekly business report. Route to Analytics for KPI summary (MRR, new clients, churn risk), CRM for pipeline status, Marketing for content performance, and Operations for any blocked client onboardings. Synthesize into a single executive summary and notify Callan via Slack.",
+        "Generate the Monday weekly business report. Route to Analytics for KPI summary (MRR, new clients, churn risk), CRM for pipeline status, Marketing for content performance, and Operations for any blocked client onboardings. Synthesize into a single executive summary and notify Dustin via Slack.",
       );
     });
   });
@@ -66,7 +66,7 @@ export function startScheduler(): void {
     await runSafe("Monthly Bookkeeping Trigger", async () => {
       const bookkeeping = createBookkeepingAgent();
       await bookkeeping.run(
-        "It's the 1st of the month. Send Callan a notification that it's time to export last month's bank and credit card transactions for categorization. Log this reminder in Notion Automation Log and fire the OPS-01 Zapier webhook.",
+        "It's the 1st of the month. Send Dustin a notification that it's time to export last month's bank and credit card transactions for categorization. Log this reminder in Notion Automation Log and fire the OPS-01 Zapier webhook.",
       );
     });
   });
@@ -80,7 +80,7 @@ export function startScheduler(): void {
       await runSafe("Monthly Finance Report", async () => {
         const director = createDirectorAgent();
         await director.run(
-          "It's the first Monday of the month. Route to Finance module for monthly P&L calculation. Include: total revenue (setup fees + MRR), expenses by category, net profit, MRR growth vs last month, and any overdue invoices. Write results to Notion KPI Snapshots. Notify Callan via Slack with the summary.",
+          "It's the first Monday of the month. Route to Finance module for monthly P&L calculation. Include: total revenue (setup fees + MRR), expenses by category, net profit, MRR growth vs last month, and any overdue invoices. Write results to Notion KPI Snapshots. Notify Dustin via Slack with the summary.",
         );
       });
     }

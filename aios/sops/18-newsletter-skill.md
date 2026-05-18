@@ -7,25 +7,25 @@
 ---
 
 ## Purpose
-Build high-converting Myers Digital newsletters from mined content, topics, or ideas — in Callan's voice.
+Build high-converting Myers Digital newsletters from mined content, topics, or ideas — in Dustin's voice.
 
 ## Trigger
-Weekly newsletter is due, or Callan requests a newsletter on a specific topic.
+Weekly newsletter is due, or Dustin requests a newsletter on a specific topic.
 
 ## Weekly Rhythm
 - **Monday**: Transcript Miner runs if new calls available (SOP-14)
 - **Tuesday**: Newsletter draft built from mined hooks
-- **Wednesday**: Callan reviews and approves (or routes edits)
+- **Wednesday**: Dustin reviews and approves (or routes edits)
 - **Thursday**: Send day (optimal for service business audience)
 
 ## Steps
 
 1. Obtain content source: mined transcript hook, specific topic, or case study
-2. Load skills: `skills/custom/newsletter-skill/SKILL.md` + `skills/custom/callan-voice-skill/SKILL.md`
+2. Load skills: `skills/custom/newsletter-skill/SKILL.md` + `skills/custom/dustin-voice-skill/SKILL.md`
 3. Build newsletter following the 7-part framework in the skill
 4. Generate 2 subject line options (A/B test)
-5. Filter through Callan Voice Skill
-6. Callan approves
+5. Filter through Dustin Voice Skill
+6. Dustin approves
 7. Schedule in email platform (GHL or standalone ESP)
 8. Track: open rate, click rate, reply rate → log to Notion KPI Snapshots
 

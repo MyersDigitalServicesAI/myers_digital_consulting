@@ -15,7 +15,7 @@ export class LegalAgent extends BaseAgent {
       {
         name: "flag_legal_review",
         description:
-          "Flag an item for legal review and notify Callan. Use when contract terms are non-standard, client disputes arise, or IP/liability questions emerge.",
+          "Flag an item for legal review and notify Dustin. Use when contract terms are non-standard, client disputes arise, or IP/liability questions emerge.",
         input_schema: {
           type: "object" as const,
           properties: {

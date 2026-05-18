@@ -15,7 +15,7 @@ export class NewsletterWriterAgent extends BaseAgent {
       {
         name: "save_newsletter_draft",
         description:
-          "Save a completed newsletter draft to Google Drive and log it in Notion for Callan's review.",
+          "Save a completed newsletter draft to Google Drive and log it in Notion for Dustin's review.",
         input_schema: {
           type: "object" as const,
           properties: {
@@ -46,7 +46,7 @@ export class NewsletterWriterAgent extends BaseAgent {
         action: "newsletter_saved",
         draft_id: `NL-${Date.now()}`,
         ...input,
-        status: "Awaiting Callan Review",
+        status: "Awaiting Dustin Review",
       }),
     );
   }

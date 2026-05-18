@@ -51,7 +51,7 @@ Operator → Claude Director Agent
 | Transcript Miner & Ad Builder | `skills/custom/transcript-miner-ad-builder/SKILL.md` | Content from calls |
 | Sales Call Coach | `skills/custom/sales-call-coach/SKILL.md` | Live call scoring |
 | Bookkeeping Categorizer | `skills/custom/bookkeeping-categorizer/SKILL.md` | Expense automation |
-| Callan Voice Skill | `skills/custom/callan-voice-skill/SKILL.md` | Brand voice layer |
+| Dustin Voice Skill | `skills/custom/dustin-voice-skill/SKILL.md` | Brand voice layer |
 | Newsletter Skill | `skills/custom/newsletter-skill/SKILL.md` | Newsletter builder |
 | Scroll-Stopper Ad Skill | `skills/custom/scroll-stopper-ad-skill/SKILL.md` | Ad creative builder |
 
@@ -76,7 +76,7 @@ Operator → Claude Director Agent
 | Transcript Miner & Ad Builder | `sops/14-transcript-miner-ad-builder.md` |
 | Sales Call Coach | `sops/15-sales-call-coach.md` |
 | Bookkeeping Categorizer | `sops/16-bookkeeping-categorizer.md` |
-| Callan Voice Skill | `sops/17-callan-voice-skill.md` |
+| Dustin Voice Skill | `sops/17-dustin-voice-skill.md` |
 | Newsletter Skill | `sops/18-newsletter-skill.md` |
 | Scroll-Stopper Ad Skill | `sops/19-scroll-stopper-ad-skill.md` |
 | GHL Sales Playbook | `sops/20-ghl-sales-playbook.md` |
