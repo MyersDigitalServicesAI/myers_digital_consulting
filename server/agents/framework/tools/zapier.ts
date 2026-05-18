@@ -36,6 +36,16 @@ const ZAP_REGISTRY: Record<string, string> = {
   // Notifications
   "notify-dustin-sms": "ZAPIER_WEBHOOK_NOTIFY_SMS",
   "notify-dustin-slack": "ZAPIER_WEBHOOK_NOTIFY_SLACK",
+  // Social Media Publishing
+  "SOC-01-linkedin-post": "ZAPIER_WEBHOOK_SOC_01",
+  "SOC-02-facebook-post": "ZAPIER_WEBHOOK_SOC_02",
+  "SOC-03-instagram-post": "ZAPIER_WEBHOOK_SOC_03",
+  "SOC-04-twitter-post": "ZAPIER_WEBHOOK_SOC_04",
+  // Paid Ads
+  "ADS-01-meta-lead-to-ghl": "ZAPIER_WEBHOOK_ADS_01",
+  "ADS-02-google-lead-to-ghl": "ZAPIER_WEBHOOK_ADS_02",
+  "ADS-03-linkedin-lead-to-ghl": "ZAPIER_WEBHOOK_ADS_03",
+  "ADS-04-pause-ad-alert": "ZAPIER_WEBHOOK_ADS_04",
 };
 
 async function zapierFire(

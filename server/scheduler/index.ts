@@ -7,6 +7,9 @@ import { createTranscriptMinerAgent } from "../agents/custom/transcript-miner.ts
 import { createAnalyticsAgent } from "../agents/modules/analytics.ts";
 import { createBookkeepingAgent } from "../agents/custom/bookkeeping.ts";
 import { createMarketingAgent } from "../agents/modules/marketing.ts";
+import { createContentCalendarAgent } from "../agents/custom/content-calendar.ts";
+import { createAdPerformanceAgent } from "../agents/custom/ad-performance.ts";
+import { createSocialMediaManagerAgent } from "../agents/custom/social-media-manager.ts";
 
 async function runSafe(name: string, fn: () => Promise<void>): Promise<void> {
   try {
@@ -86,11 +89,55 @@ export function startScheduler(): void {
     }
   });
 
+  // --- MONDAY: 8:30 AM — Weekly content calendar planning ---
+  cron.schedule("30 8 * * 1", async () => {
+    await runSafe("Content Calendar Plan", async () => {
+      const calendar = createContentCalendarAgent();
+      await calendar.run(
+        "It's Monday — plan this week's content calendar. Check Notion Module Memory for hooks scored 7+ from last week's calls. Assign the top hook to newsletter + Meta ad + LinkedIn. Fill all 5 LinkedIn post slots, 7 Instagram slots, and 3 Facebook slots. Save the plan to Notion Content Calendar. Route the newsletter brief to the newsletter-writer agent and Meta ad brief to the scroll-stopper-ad agent.",
+      );
+    });
+  });
+
+  // --- TUESDAY: 9:00 AM — Social posts drafted and queued ---
+  cron.schedule("0 9 * * 2", async () => {
+    await runSafe("Social Posts Draft", async () => {
+      const social = createSocialMediaManagerAgent();
+      await social.run(
+        "Draft this week's social posts based on the Content Calendar plan in Notion. Write all 5 LinkedIn posts, 3 Facebook posts, and captions for 5 Instagram posts. Apply Dustin's voice. Save all as 'Awaiting Review' in Notion Content Calendar.",
+      );
+    });
+  });
+
+  // --- FRIDAY: 4:00 PM — Weekly ad performance review ---
+  cron.schedule("0 16 * * 5", async () => {
+    await runSafe("Ad Performance Review", async () => {
+      const adPerf = createAdPerformanceAgent();
+      await adPerf.run(
+        "Pull this week's ad performance from Meta Ads and Google Ads. Calculate spend, leads, and blended CPL for each platform. Identify the best-performing creative and any campaigns over CPL threshold. Generate the weekly ad report, write it to Notion KPI Snapshots, and notify Dustin with the summary and top 3 recommended actions for next week.",
+      );
+    });
+  });
+
+  // --- THURSDAY: 8:00 AM — Publish scheduled social content ---
+  cron.schedule("0 8 * * 4", async () => {
+    await runSafe("Publish Social Content", async () => {
+      const social = createSocialMediaManagerAgent();
+      await social.run(
+        "Check Notion Content Calendar for posts with status 'Approved' scheduled for today. Publish each approved post to its assigned platform. Log published status and post IDs back to Notion.",
+      );
+    });
+  });
+
   console.log("[Scheduler] Schedules registered:");
   console.log("  • 7:00 AM daily   — Analytics digest");
   console.log("  • 9:00 AM daily   — Transcript miner");
   console.log("  • Tuesday 10 AM   — Newsletter draft");
   console.log("  • Monday 8 AM     — Weekly business report");
+  console.log("  • Monday 8:30 AM  — Content calendar planning");
+  console.log("  • Tuesday 9 AM    — Social posts drafted");
+  console.log("  • Thursday 8 AM   — Approved posts published");
+  console.log("  • Friday 4 PM     — Ad performance review");
   console.log("  • 1st of month    — Bookkeeping reminder");
   console.log("  • 1st Monday      — Monthly finance report");
 }

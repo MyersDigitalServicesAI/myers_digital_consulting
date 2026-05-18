@@ -20,3 +20,10 @@ export { createScrollStopperAdAgent } from "./custom/scroll-stopper-ad.ts";
 export { createBookkeepingAgent } from "./custom/bookkeeping.ts";
 export { createGeoSeoAuditorAgent } from "./custom/geo-seo-auditor.ts";
 export { createMeetingTranscriptAgent } from "./custom/meeting-transcript.ts";
+
+// Social & media agents
+export { createSocialMediaManagerAgent } from "./custom/social-media-manager.ts";
+export { createMetaAdsManagerAgent } from "./custom/meta-ads-manager.ts";
+export { createGoogleAdsManagerAgent } from "./custom/google-ads-manager.ts";
+export { createContentCalendarAgent } from "./custom/content-calendar.ts";
+export { createAdPerformanceAgent } from "./custom/ad-performance.ts";

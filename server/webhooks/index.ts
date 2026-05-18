@@ -8,6 +8,10 @@ import { createSalesCallCoachAgent } from "../agents/custom/sales-call-coach.ts"
 import { createTranscriptMinerAgent } from "../agents/custom/transcript-miner.ts";
 import { createMeetingTranscriptAgent } from "../agents/custom/meeting-transcript.ts";
 import { createGeoSeoAuditorAgent } from "../agents/custom/geo-seo-auditor.ts";
+import { createSocialMediaManagerAgent } from "../agents/custom/social-media-manager.ts";
+import { createMetaAdsManagerAgent } from "../agents/custom/meta-ads-manager.ts";
+import { createAdPerformanceAgent } from "../agents/custom/ad-performance.ts";
+import { createContentCalendarAgent } from "../agents/custom/content-calendar.ts";
 
 export function createWebhookRouter(): Router {
   const router = Router();
@@ -171,6 +175,125 @@ export function createWebhookRouter(): Router {
         );
       } catch (err) {
         console.error("[Webhook] seo-audit error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/social/post — Publish a post to a social platform
+  router.post("/social/post", async (req: Request, res: Response) => {
+    const { platform, content, image_url, link } = req.body as {
+      platform: string;
+      content: string;
+      image_url?: string;
+      link?: string;
+    };
+
+    if (!platform || !content) {
+      res.status(400).json({ error: "platform and content are required" });
+      return;
+    }
+
+    try {
+      const social = createSocialMediaManagerAgent();
+      const result = await social.run(
+        `Publish this post to ${platform}. Apply Dustin's voice if needed, then post it.`,
+        JSON.stringify({ platform, content, image_url, link }),
+      );
+      res.json({ success: result.success, output: result.output });
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
+  // POST /webhooks/social/draft-week — Draft full week of social content
+  router.post("/social/draft-week", async (req: Request, res: Response) => {
+    const { hook, hook_score, week_of } = req.body as {
+      hook?: string;
+      hook_score?: number;
+      week_of?: string;
+    };
+
+    res.json({ received: true, week_of });
+
+    setImmediate(async () => {
+      try {
+        const calendar = createContentCalendarAgent();
+        await calendar.run(
+          `Plan and draft this week's full content calendar. Top hook: "${hook ?? "pull from Notion Module Memory"}" (score: ${hook_score ?? "TBD"}). Week of: ${week_of ?? "this week"}. Draft all posts, assign platforms, and save to Notion.`,
+        );
+      } catch (err) {
+        console.error("[Webhook] social/draft-week error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/ads/meta-lead — Meta lead form submission → GHL
+  // Wire this as the Meta Lead Form webhook URL
+  router.post("/ads/meta-lead", async (req: Request, res: Response) => {
+    // Acknowledge immediately — Meta expects fast response
+    res.json({ received: true });
+
+    setImmediate(async () => {
+      try {
+        const { full_name, email, phone, ad_name, campaign_name } =
+          req.body as {
+            full_name: string;
+            email: string;
+            phone?: string;
+            ad_name?: string;
+            campaign_name?: string;
+          };
+
+        const director = createDirectorAgent();
+        await director.run(
+          `New Meta Ads lead received. Route to CRM to create contact and trigger lead nurture sequence.`,
+          JSON.stringify({ full_name, email, phone, source: "meta-ads", ad_name, campaign_name }),
+        );
+      } catch (err) {
+        console.error("[Webhook] ads/meta-lead error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/ads/performance — Trigger ad performance review
+  router.post("/ads/performance", async (req: Request, res: Response) => {
+    const { period = "weekly" } = req.body as { period?: string };
+    res.json({ received: true, period });
+
+    setImmediate(async () => {
+      try {
+        const adPerf = createAdPerformanceAgent();
+        await adPerf.run(
+          `Run ${period} ad performance review. Pull Meta and Google Ads data, calculate blended CPL, identify winners and losers, write report to Notion, notify Dustin.`,
+        );
+      } catch (err) {
+        console.error("[Webhook] ads/performance error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/ads/meta-alert — Meta spend/performance alert from Zapier
+  router.post("/ads/meta-alert", async (req: Request, res: Response) => {
+    const { alert_type, campaign_id, campaign_name, metric, value } =
+      req.body as {
+        alert_type: string;
+        campaign_id: string;
+        campaign_name: string;
+        metric: string;
+        value: number;
+      };
+
+    res.json({ received: true });
+
+    setImmediate(async () => {
+      try {
+        const metaAds = createMetaAdsManagerAgent();
+        await metaAds.run(
+          `Meta alert received: ${alert_type} on campaign "${campaign_name}". ${metric}: ${value}. Evaluate against benchmarks and take appropriate action (pause/scale/maintain). Log decision.`,
+          JSON.stringify({ alert_type, campaign_id, campaign_name, metric, value }),
+        );
+      } catch (err) {
+        console.error("[Webhook] ads/meta-alert error:", err);
       }
     });
   });

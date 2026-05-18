@@ -763,7 +763,7 @@ function renderPresentation(results: TestResult[]): string {
   lines.push("└────────────────────────────────────────────────────────────────────────────┘");
   lines.push("");
 
-  const categories = [...new Set(SCENARIOS.map(s => s.category))];
+  const categories = Array.from(new Set(SCENARIOS.map(s => s.category)));
 
   for (const result of results) {
     const scenario = SCENARIOS.find(s => s.agent === result.agent)!;
