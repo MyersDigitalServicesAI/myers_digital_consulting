@@ -18,6 +18,7 @@ export interface AgentConfig {
   name: string;
   skillPath: string; // relative to aios/skills/
   maxTokens?: number;
+  model?: string;
 }
 
 export class BaseAgent {
@@ -80,7 +81,7 @@ export class BaseAgent {
 
     for (let iteration = 0; iteration < 15; iteration++) {
       const params: Anthropic.MessageCreateParamsNonStreaming = {
-        model: "claude-opus-4-7",
+        model: this.config.model ?? "claude-sonnet-4-6",
         max_tokens: this.config.maxTokens ?? 8192,
         thinking: { type: "adaptive" },
         system: this.systemPrompt,
@@ -101,9 +102,10 @@ export class BaseAgent {
         const textBlock = response.content.find(
           (b): b is Anthropic.TextBlock => b.type === "text",
         );
+        const isOpus = (this.config.model ?? "").includes("opus");
         const totalCost =
-          totalInputTokens * (5 / 1_000_000) +
-          totalOutputTokens * (25 / 1_000_000);
+          totalInputTokens * (isOpus ? 5 : 3) / 1_000_000 +
+          totalOutputTokens * (isOpus ? 25 : 15) / 1_000_000;
         console.log(
           `[${this.config.name}] Completed (${iteration + 1} turns, $${totalCost.toFixed(4)})`,
         );
