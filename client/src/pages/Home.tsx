@@ -13,6 +13,7 @@ import {
   Rocket,
   Shield,
   TrendingUp,
+  Users,
   X,
   Zap,
 } from "lucide-react";
@@ -850,6 +851,130 @@ export default function Home() {
               Most clients are fully live within{" "}
               <strong className="text-foreground">7–10 business days</strong> of kickoff. No long onboarding. No waiting months to see results.
             </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── WHITE-LABEL PARTNER PROGRAM ── */}
+      <section className="py-24 bg-card/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block px-4 py-2 rounded-full bg-accent/20 border border-accent/40 text-accent text-sm font-bold mb-4">
+              For Agencies &amp; Consultants
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              White-Label AIOS.{" "}
+              <span className="text-primary">Your Brand. Your Margin.</span>
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Already have clients who need this? We build and maintain the full AIOS stack under your brand. You sell it. You keep the margin. We do the build.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-14">
+            {[
+              {
+                icon: Brain,
+                title: "We Build It",
+                desc: "Full AIOS deployment for your client — Director, all modules, Zapier stack, Notion workspace, voice training. 7–10 business days.",
+              },
+              {
+                icon: Shield,
+                title: "Your Brand On It",
+                desc: "Every output, every email, every report carries your agency's name. Client never sees Myers Digital — only you.",
+              },
+              {
+                icon: TrendingUp,
+                title: "You Keep the Margin",
+                desc: "We charge you wholesale. You charge your client retail. Typical partner margin: $500–$1,500/mo per client, recurring.",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.title}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                custom={i}
+              >
+                <Card className="h-full bg-card border-border">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                      <item.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto rounded-xl border border-border overflow-hidden"
+          >
+            <div className="bg-card border-b border-border p-5">
+              <h3 className="font-bold text-lg">Partner Program — What's Included</h3>
+            </div>
+            <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+              <div className="p-6 space-y-3">
+                <p className="text-xs font-bold uppercase text-muted-foreground tracking-wider mb-4">Per Client Deployment</p>
+                {[
+                  "Full AIOS stack built to their business",
+                  "White-labeled under your brand",
+                  "Notion workspace + all 8 databases",
+                  "Zapier stack (tier-appropriate Zaps)",
+                  "Voice training for their communication style",
+                  "7–10 day build + handoff",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                    <span className="text-sm text-muted-foreground">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="p-6 space-y-3">
+                <p className="text-xs font-bold uppercase text-muted-foreground tracking-wider mb-4">Partner Requirements</p>
+                {[
+                  "Minimum 3 client deployments in first 90 days",
+                  "Active GHL agency account",
+                  "You handle client relationship + support tier 1",
+                  "Myers Digital handles build + tier 2 escalations",
+                  "Setup: $5,000–$10,000 per client (wholesale)",
+                  "Monthly: $500–$1,500/client (wholesale)",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <Users className="w-4 h-4 text-accent mt-0.5 shrink-0" />
+                    <span className="text-sm text-muted-foreground">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="p-5 bg-primary/5 border-t border-border text-center">
+              <p className="text-sm text-muted-foreground mb-3">
+                Partner inquiries are reviewed individually. Not every agency is the right fit — and that's intentional.
+              </p>
+              <Button
+                onClick={() => {
+                  const el = document.getElementById("contact");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              >
+                Apply for Partner Program <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
           </motion.div>
         </div>
       </section>

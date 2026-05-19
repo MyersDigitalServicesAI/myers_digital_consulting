@@ -553,6 +553,53 @@ Your next customer already called. Did you answer?
     ],
   },
 
+  AIOSSales: {
+    text: `⬡ AIOS SALES — May 19, 2026
+
+PROSPECT: Marcus Webb / Webb Roofing & Restoration
+STATUS: Qualified → Demo Booked
+
+QUALIFY RESULT: ✅ Fit confirmed
+  ✅ Revenue: $85K/month (Growth range)
+  ✅ Pain: "Spending 15 hours/week on reporting, follow-ups, and content"
+  ✅ GHL: Currently using it but "barely touching 20% of what it can do"
+
+RECOMMENDED TIER: Growth ($2,997/mo + $5,000 setup)
+  Agents unlocked: Director, CRM, Finance, Marketing, Operations, Analytics
+  + Content Calendar, Social Media Manager, Transcript Miner, Newsletter Writer, Ad Builder
+
+RESPONSE DRAFTED:
+
+Subject: Your demo is confirmed — here's what we'll look at
+
+Marcus,
+
+Looking forward to showing you the system on Thursday.
+
+Before we meet, I want to confirm what we're solving: you're spending 15 hours/week on
+reporting, follow-ups, and content that the system can run automatically. We're going
+to build your operations around the time you get back, not the tools you add.
+
+I'll show you the Director handling 3 real business scenarios live, your daily KPI
+digest running automatically, and the content calendar building itself from your
+best sales calls.
+
+30 minutes. No slides. Just the system working.
+
+See you Thursday at 2 PM.
+
+Dustin
+
+CRM UPDATE: Create "Marcus Webb / Webb Roofing" in GHL — stage: Demo Booked
+NOTION LOG: Decision logged — Growth tier recommended, demo confirmed for May 22`,
+    tools: [
+      { name: "notion_read", input: { database: "aios_sales_pipeline", filter: { property: "Status", select: { equals: "Inquiry" } } } },
+      { name: "notion_write", input: { database: "aios_sales_pipeline", data: { Prospect: "Marcus Webb / Webb Roofing", Tier: "Growth", Stage: "Demo Booked", DemoDate: "2026-05-22" } } },
+      { name: "log_decision", input: { decision: "Growth tier recommended for Webb Roofing — demo booked May 22", reasoning: "$85K MRR, 15hrs/week ops overhead, active GHL user — strong Growth fit", owner: "AIOS Sales" } },
+      { name: "notify_dustin", input: { message: "Demo booked: Marcus Webb / Webb Roofing — Growth tier — May 22 2PM. Prep brief queued." } },
+    ],
+  },
+
   WorkspaceArchitect: {
     text: `🏗 WORKSPACE ARCHITECT — Root file audit (CLAUDE.md + MEMORY.md)
 
@@ -740,6 +787,13 @@ const SCENARIOS: Array<{
     task: "Run a full workspace audit on root CLAUDE.md and MEMORY.md. Detect misplaced content, compress verbose memory entries, flag routing gaps, and validate file sizes against targets.",
     category: "Workspace Optimization",
   },
+  {
+    agent: "AIOSSales",
+    scenario: "Qualify inbound demo request and draft personalized response",
+    skillPath: "custom/aios-sales/SKILL.md",
+    task: "Marcus Webb from Webb Roofing & Restoration just submitted the demo form. Revenue $85K/month, pain is reporting and content overhead, active GHL user. Qualify, recommend tier, draft response, book demo.",
+    category: "Sales",
+  },
 ];
 
 async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
@@ -766,6 +820,7 @@ async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
     GeoSeoAuditor: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "save_seo_audit"],
     MeetingTranscript: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "create_tasks_from_meeting"],
     WorkspaceArchitect: ["read_file", "edit_file", "write_file", "log_decision", "notify_dustin", "archive_content"],
+    AIOSSales: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "draft_proposal"],
   };
 
   const toolNames = toolCountMap[scenario.agent] ?? [];
@@ -800,12 +855,12 @@ function renderPresentation(results: TestResult[]): string {
 
   lines.push("╔══════════════════════════════════════════════════════════════════════════════╗");
   lines.push("║          MYERS DIGITAL AIOS — END-TO-END AGENT TEST RESULTS                ║");
-  lines.push("║                  17 Digital Employees. Every Domain.                       ║");
+  lines.push("║                  18 Digital Employees. Every Domain.                       ║");
   lines.push("╚══════════════════════════════════════════════════════════════════════════════╝");
   lines.push("");
 
   lines.push("┌─────────────────────── SYSTEM OVERVIEW ────────────────────────────────────┐");
-  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 8 Custom Skills"})       │`);
+  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 9 Custom Skills"})       │`);
   lines.push(`│  Skills loaded:         ${String(passed).padEnd(4)} / ${results.length} (SKILL.md system prompts)              │`);
   lines.push(`│  Tools registered:      ${String(totalTools).padEnd(4)} across all agents                            │`);
   lines.push(`│  Tool calls executed:   ${String(totalToolCalls).padEnd(4)} (Notion reads/writes + Zapier fires)        │`);
