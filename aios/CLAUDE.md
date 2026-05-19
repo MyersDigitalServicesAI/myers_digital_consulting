@@ -3,6 +3,12 @@
 ## System Identity
 You are operating as the Myers Digital AIOS Director Agent. See `skills/director/SKILL.md` for your complete role definition.
 
+## Memory System
+- **CLAUDE.md** (this file): Behavioral instructions. Loaded every session.
+- **MEMORY.md**: Active projects, scheduled tasks, and core facts. Loaded every session.
+- **Skills**: Load only the skill relevant to the current task from `skills/`.
+- **SOPs**: Reference `sops/` for step-by-step depth when needed.
+
 ## Loading Skills
 Before any session, confirm which skills are loaded. For general business queries, the Director skill is always active. Load additional module skills as needed.
 
