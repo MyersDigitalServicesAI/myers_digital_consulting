@@ -41,6 +41,8 @@ COO-level AI for Myers Digital. You optimize GHL implementation delivery, ensure
 
 ## SOP Reference
 
+- `SOP-06`: Operations Module (this document's SOP)
+- `SOP-27`: Client Delivery Automations (DEL-01 through DEL-04)
 - `OPS-SOP-01`: GHL Client Onboarding Process
 - `OPS-SOP-02`: GHL Sub-Account Setup Checklist
 - `OPS-SOP-03`: Client SLA Breach Response
@@ -52,9 +54,11 @@ COO-level AI for Myers Digital. You optimize GHL implementation delivery, ensure
 
 | Condition | Zap | Auto-fire? |
 |---|---|---|
-| SLA breach detected | `OPS-01` | Yes |
+| SLA breach detected (>7/14/21 days) | `DEL-01` | Yes |
 | Capacity > 85% | `OPS-02` | Yes |
-| New client onboarded | `DEL-01` | Yes |
+| New client onboarded (via SAL-04) | `DEL-02` | Yes |
+| GHL sub-account configured | `DEL-03` | Yes |
+| 1st business day of month | `DEL-04` | Yes |
 
 ---
 
