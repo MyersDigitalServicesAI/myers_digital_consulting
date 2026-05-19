@@ -8,7 +8,7 @@
 │  Skills loaded:         16   / 16 (SKILL.md system prompts)              │
 │  Tools registered:      99   across all agents                            │
 │  Tool calls executed:   54   (Notion reads/writes + Zapier fires)        │
-│  Model:                 claude-opus-4-7 + adaptive thinking                 │
+│  Models:                sonnet-4-6 (21 agents) · opus-4-7 (Director)       │
 │  Memory layer:          Notion (8 databases)                                │
 │  Execution layer:       Zapier (25 webhooks)                                │
 └────────────────────────────────────────────────────────────────────────────┘
