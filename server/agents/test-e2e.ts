@@ -757,7 +757,7 @@ function renderPresentation(results: TestResult[]): string {
   lines.push(`│  Skills loaded:         ${String(passed).padEnd(4)} / ${results.length} (SKILL.md system prompts)              │`);
   lines.push(`│  Tools registered:      ${String(totalTools).padEnd(4)} across all agents                            │`);
   lines.push(`│  Tool calls executed:   ${String(totalToolCalls).padEnd(4)} (Notion reads/writes + Zapier fires)        │`);
-  lines.push(`│  Model:                 claude-opus-4-7 + adaptive thinking                 │`);
+  lines.push(`│  Models:                sonnet-4-6 (21 agents) · opus-4-7 (Director)       │`);
   lines.push(`│  Memory layer:          Notion (8 databases)                                │`);
   lines.push(`│  Execution layer:       Zapier (25 webhooks)                                │`);
   lines.push("└────────────────────────────────────────────────────────────────────────────┘");

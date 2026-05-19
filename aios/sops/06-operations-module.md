@@ -42,6 +42,14 @@ All Growth steps plus:
 - Monthly report delivery: by 5th of each month
 - Support ticket resolution: < 24 hours (< 4 hours for critical)
 
+## SLA Alert Thresholds
+
+| Package | Delivery Target | Alert At | Breach (DEL-01 fires) |
+|---|---|---|---|
+| Starter | 5 business days | > 7 days | > 14 days |
+| Growth | 10 business days | > 14 days | > 21 days |
+| Scale | 15 business days | > 21 days | > 30 days |
+
 ## Escalation
-- SLA breach → `OPS-01` Zapier + Director notification
+- SLA breach → `DEL-01` Zapier alert → Director notification (see SOP-27)
 - Capacity > 85% → `OPS-02` + HR module trigger

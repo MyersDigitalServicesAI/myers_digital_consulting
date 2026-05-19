@@ -39,10 +39,12 @@ Result → logged back to AIOS Automation Log
 
 | Zap | Trigger | Actions |
 |---|---|---|
-| `DEL-01` New Client Onboarded | Client tag in CRM | Create GHL sub-account → Slack notify → Notion log |
-| `DEL-02` GHL Setup Complete | Project status update | Client welcome email → Onboarding checklist → Notion |
-| `DEL-03` Go-Live Approved | Director confirmation | Client launch notification → Update Notion tracker |
-| `DEL-04` Monthly Client Report | Scheduled (1st of month) | Pull GHL data → Email client → Notion log |
+| `DEL-01` SLA Breach Alert | Delivery exceeds threshold (14/21/30 days) | Slack DM Dustin → #aios-alerts → Notion log |
+| `DEL-02` Client Onboarding Email | SAL-04 Closed Won fires | Gmail welcome email → #aios-delivery notify → Notion log |
+| `DEL-03` GHL Sub-Account Ready | GHL build complete and tested | Gmail access email → #aios-delivery notify → Notion log |
+| `DEL-04` Monthly Client Report | Scheduled (1st business day of month) | Gmail report email → Notion log |
+
+> Skill: `aios-del-automations` — see SOP-27 for full DEL automation documentation.
 
 ### SALES ZAPS
 
