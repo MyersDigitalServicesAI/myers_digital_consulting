@@ -8,7 +8,7 @@ description: >
 compatibility:
   requires: [myers-digital-notion-context, myers-digital-zapier-automation]
   modules: [finance, operations, marketing, legal, hr, analytics, security, crm]
-  custom_skills: [meeting-transcript-task-creator, geo-seo-auditor, transcript-miner-ad-builder, sales-call-coach, bookkeeping-categorizer, dustin-voice, newsletter, scroll-stopper-ad, workspace-architect]
+  custom_skills: [meeting-transcript-task-creator, geo-seo-auditor, transcript-miner-ad-builder, sales-call-coach, bookkeeping-categorizer, dustin-voice, newsletter, scroll-stopper-ad, workspace-architect, aios-sales]
 ---
 
 # Myers Digital AIOS Director Agent
@@ -56,6 +56,7 @@ Determine module(s) to activate.
 - Newsletter creation → Newsletter Skill
 - Ad creative → Scroll-Stopper Ad Skill
 - Workspace audit, CLAUDE.md/MEMORY.md optimization, workstation creation, file migration → Workspace Architect
+- AIOS demo inquiry, prospect qualification, proposal, objection, follow-up, partner program → AIOS Sales Workstation
 - Cross-functional → ALL relevant modules, then synthesize
 
 ### Step 3: SYNTHESIZE
