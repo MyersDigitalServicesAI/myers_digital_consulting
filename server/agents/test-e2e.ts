@@ -552,6 +552,50 @@ Your next customer already called. Did you answer?
       { name: "log_decision", input: { decision: "Summit Roofing delivery extended 1 day, TechServ counter-proposal approved", reasoning: "Client-side delay, contract negotiation progress", owner: "Director Agent" } },
     ],
   },
+
+  WorkspaceArchitect: {
+    text: `🏗 WORKSPACE ARCHITECT — Root file audit (CLAUDE.md + MEMORY.md)
+
+STRUCTURAL VIOLATIONS:
+  - MEMORY.md line 42: "Always pull Notion before routing" → behavioral rule, move to CLAUDE.md §Rules
+  - CLAUDE.md line 187: "GHL Tracker DB ID: 44bab4bf..." → mutable fact, move to MEMORY.md §Core Memory
+  - CLAUDE.md line 203–229: GHL onboarding checklist (26 lines) → extract to resource file, pointer only in CLAUDE.md
+
+TOKEN INEFFICIENCIES:
+  - MEMORY.md: 3 project entries averaging 8 sentences each → compress to 1–2 sentences per entry
+  - CLAUDE.md §Rules: "SLA breach → OPS-01" duplicated in 4 locations → consolidate to single entry
+  - Workstation routing repeated verbatim in both CLAUDE.md and director/SKILL.md → pointer reference only
+
+MODULARIZATION OPPORTUNITIES:
+  - GHL Onboarding process (26 lines in CLAUDE.md) → extract to resources/ghl-onboarding-checklist.md
+  - Expense category rules (18 lines) → already covered by bookkeeping-categorizer skill, remove from root
+
+ROUTING GAPS:
+  - "audit my workspace" / "clean up [file]" had no route → now routed to Workspace Architect ✅
+  - "migrate [project]" had no route → now routed to Workspace Architect ✅
+
+MEMORY ENTRIES TO COMPRESS:
+  Before: "Summit Roofing is a Growth package client that signed on May 12, 2026. They are currently on Day 3 of their 10-day onboarding, with SMS sequences pending. Alex Rivera is handling the GHL build and the client seems engaged based on the kickoff call feedback received on May 13."
+  After:  "Summit Roofing (Growth): Day 3/10 onboarding. SMS sequences pending. Alex Rivera assigned."
+
+VALIDATION:
+  CLAUDE.md: 287 lines ✅ in range
+  MEMORY.md: 143 lines ✅ in range
+  Misplaced content: 3 items flagged
+  Duplicated instructions: 2 instances found
+
+RECOMMENDED ACTIONS (priority order):
+  1. Move GHL Tracker DB ID to MEMORY.md §Core Memory (5 min)
+  2. Compress 3 verbose MEMORY.md project entries (10 min)
+  3. Extract GHL Onboarding checklist to resources/ with pointer (15 min)
+  4. Remove Notion routing rule from MEMORY.md, confirm it exists in CLAUDE.md §Rules (5 min)`,
+    tools: [
+      { name: "read_file", input: { path: "aios/CLAUDE.md" } },
+      { name: "read_file", input: { path: "aios/MEMORY.md" } },
+      { name: "log_decision", input: { decision: "Workspace audit complete — 3 structural violations, 2 duplication issues, 3 compression targets identified", reasoning: "Routine workspace optimization to maintain token efficiency and correct content placement", owner: "Workspace Architect" } },
+      { name: "notify_dustin", input: { message: "Workspace audit complete. 4 priority fixes queued. Approve to apply changes." } },
+    ],
+  },
 };
 
 // ── Test runner ────────────────────────────────────────────────────────────────
@@ -689,6 +733,13 @@ const SCENARIOS: Array<{
     task: "Process Strategy Session transcript from May 16. Extract action items with owners and due dates. Create Notion tasks. Schedule next meeting.",
     category: "Operations",
   },
+  {
+    agent: "WorkspaceArchitect",
+    scenario: "Audit root CLAUDE.md and MEMORY.md for structural violations and token waste",
+    skillPath: "custom/workspace-architect/SKILL.md",
+    task: "Run a full workspace audit on root CLAUDE.md and MEMORY.md. Detect misplaced content, compress verbose memory entries, flag routing gaps, and validate file sizes against targets.",
+    category: "Workspace Optimization",
+  },
 ];
 
 async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
@@ -714,6 +765,7 @@ async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
     Bookkeeping: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "export_categorized_transactions"],
     GeoSeoAuditor: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "save_seo_audit"],
     MeetingTranscript: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "create_tasks_from_meeting"],
+    WorkspaceArchitect: ["read_file", "edit_file", "write_file", "log_decision", "notify_dustin", "archive_content"],
   };
 
   const toolNames = toolCountMap[scenario.agent] ?? [];
@@ -748,12 +800,12 @@ function renderPresentation(results: TestResult[]): string {
 
   lines.push("╔══════════════════════════════════════════════════════════════════════════════╗");
   lines.push("║          MYERS DIGITAL AIOS — END-TO-END AGENT TEST RESULTS                ║");
-  lines.push("║                  15 Digital Employees. Every Domain.                       ║");
+  lines.push("║                  17 Digital Employees. Every Domain.                       ║");
   lines.push("╚══════════════════════════════════════════════════════════════════════════════╝");
   lines.push("");
 
   lines.push("┌─────────────────────── SYSTEM OVERVIEW ────────────────────────────────────┐");
-  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 7 Custom Skills"})       │`);
+  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 8 Custom Skills"})       │`);
   lines.push(`│  Skills loaded:         ${String(passed).padEnd(4)} / ${results.length} (SKILL.md system prompts)              │`);
   lines.push(`│  Tools registered:      ${String(totalTools).padEnd(4)} across all agents                            │`);
   lines.push(`│  Tool calls executed:   ${String(totalToolCalls).padEnd(4)} (Notion reads/writes + Zapier fires)        │`);
