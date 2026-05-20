@@ -30,7 +30,7 @@ Analyze, optimize, and maintain the Myers Digital AIOS Markdown workspace — CL
 
 ## When to Invoke
 
-- Root CLAUDE.md approaches 300 lines
+- Root CLAUDE.md approaches 200 lines
 - Root MEMORY.md approaches 150 lines
 - Routing feels slow, ambiguous, or broken
 - New major project needs to be added to the workspace
@@ -54,12 +54,12 @@ Analyze, optimize, and maintain the Myers Digital AIOS Markdown workspace — CL
 
 ## File Health Targets
 
-| File | Target | Alert At |
+| File | Target | Hard Limit |
 |---|---|---|
-| Root CLAUDE.md | 200–300 lines | > 300 lines |
-| Root MEMORY.md | < 150 lines | > 150 lines |
-| Workstation CLAUDE.md | < 150 lines | > 200 lines |
-| Workstation MEMORY.md | < 100 lines | > 150 lines |
+| Root CLAUDE.md | 150–200 lines | 200 lines |
+| Root MEMORY.md | < 150 lines | 150 lines |
+| Workstation CLAUDE.md | 150–200 lines | 200 lines |
+| Workstation MEMORY.md | < 100 lines | 150 lines |
 
 ---
 
