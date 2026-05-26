@@ -1,0 +1,89 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "engine": "node-cron",
+  "server_file": "server/scheduler/index.ts",
+  "enable_env_var": "AIOS_SCHEDULER",
+  "enable_value": "enabled",
+  "jobs": [
+    {
+      "id": "daily_digest",
+      "cron": "0 7 * * *",
+      "description": "Daily KPI Digest — 7:00 AM every day",
+      "agent": "analytics",
+      "task": "Generate daily KPI snapshot, detect anomalies, write to Notion, notify Dustin"
+    },
+    {
+      "id": "transcript_miner",
+      "cron": "0 9 * * *",
+      "description": "Transcript Miner — 9:00 AM every day",
+      "agent": "transcript-miner",
+      "task": "Check for unprocessed transcripts, mine hooks 7+, save to Notion Module Memory"
+    },
+    {
+      "id": "newsletter_draft",
+      "cron": "0 10 * * 2",
+      "description": "Newsletter Draft — Tuesdays 10:00 AM",
+      "agent": "marketing",
+      "task": "Draft weekly newsletter from top-scored hook using 7-part framework"
+    },
+    {
+      "id": "cost_report",
+      "cron": "0 7 * * 1",
+      "description": "Weekly Cost Breakdown — Mondays 7:00 AM",
+      "agent": "cost-breakdown",
+      "task": "Generate weekly AIOS cost breakdown, flag over-threshold agents, notify Dustin"
+    },
+    {
+      "id": "weekly_report",
+      "cron": "0 8 * * 1",
+      "description": "Weekly Business Report — Mondays 8:00 AM",
+      "agent": "director",
+      "task": "Route to Analytics + CRM + Marketing + Operations. Synthesize executive summary. Notify Dustin."
+    },
+    {
+      "id": "content_calendar",
+      "cron": "30 8 * * 1",
+      "description": "Content Calendar Planning — Mondays 8:30 AM",
+      "agent": "content-calendar",
+      "task": "Plan week's content, assign top hook, fill all platform slots, brief newsletter + ad agents"
+    },
+    {
+      "id": "social_draft",
+      "cron": "0 9 * * 2",
+      "description": "Social Posts Draft — Tuesdays 9:00 AM",
+      "agent": "social-media-manager",
+      "task": "Draft all social posts from Content Calendar plan. Save as Awaiting Review."
+    },
+    {
+      "id": "social_publish",
+      "cron": "0 8 * * 4",
+      "description": "Publish Approved Posts — Thursdays 8:00 AM",
+      "agent": "social-media-manager",
+      "task": "Publish all posts with Approved status. Log post IDs to Notion."
+    },
+    {
+      "id": "ad_performance",
+      "cron": "0 16 * * 5",
+      "description": "Ad Performance Review — Fridays 4:00 PM",
+      "agent": "ad-performance",
+      "task": "Pull Meta + Google data, calculate blended CPL, generate report, notify Dustin"
+    },
+    {
+      "id": "bookkeeping_trigger",
+      "cron": "0 6 1 * *",
+      "description": "Monthly Bookkeeping Trigger — 1st of each month 6:00 AM",
+      "agent": "bookkeeping",
+      "task": "Notify Dustin to export transactions. Fire OPS-01 Zapier webhook."
+    },
+    {
+      "id": "monthly_finance",
+      "cron": "0 9 * * 1",
+      "description": "Monthly Finance Report — First Monday of month 9:00 AM",
+      "agent": "director",
+      "condition": "date <= 7",
+      "task": "Route to Finance for monthly P&L. Write to Notion KPI Snapshots. Notify Dustin."
+    }
+  ]
+}

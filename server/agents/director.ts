@@ -89,8 +89,12 @@ export class DirectorAgent extends BaseAgent {
                 "content-calendar",
                 "ad-performance",
                 "cost-breakdown",
+                // Workspace & sales agents
+                "workspace-architect",
+                "aios-sales",
               ],
-              description: "Which specialist agent to dispatch this task to",
+              description:
+                "Which specialist agent to dispatch this task to. Workspace/file optimization → workspace-architect. AIOS sales inquiries, demos, proposals → aios-sales.",
             },
             task: {
               type: "string",

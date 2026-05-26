@@ -1,0 +1,70 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "operator": {
+    "name": "Dustin Myers",
+    "title": "Founder & CEO",
+    "access_level": 9,
+    "email": "myersdigitalconsulting@gmail.com",
+    "authority": "Full approval authority — financial, legal, external communications",
+    "contact_channel": "Slack (primary), Email (secondary)"
+  },
+  "ai_layer": {
+    "director_agent": {
+      "role": "COO/CEO-level orchestrator",
+      "model": "claude-opus-4-7",
+      "authority": "Route, coordinate, synthesize — no direct execution",
+      "reports_to": "Dustin Myers",
+      "manages": ["module_agents", "custom_agents"]
+    },
+    "module_agents": [
+      { "name": "CRM", "domain": "Client health, pipeline, GHL CRM" },
+      { "name": "Finance", "domain": "Revenue, invoices, P&L, cash flow" },
+      { "name": "Marketing", "domain": "Campaigns, content, lead gen" },
+      { "name": "Operations", "domain": "Delivery, SLAs, GHL builds" },
+      { "name": "Analytics", "domain": "KPIs, dashboards, anomaly detection" },
+      { "name": "HR", "domain": "Contractors, hiring, onboarding" },
+      { "name": "Legal", "domain": "Contracts, compliance, risk flags" },
+      { "name": "Security", "domain": "Incident detection, access control" }
+    ],
+    "custom_agents": [
+      { "name": "TranscriptMiner", "domain": "Call mining, hook extraction" },
+      { "name": "SalesCallCoach", "domain": "Sales call scoring + coaching" },
+      { "name": "NewsletterWriter", "domain": "Newsletter creation (7-part framework)" },
+      { "name": "ScrollStopperAd", "domain": "Meta/Google ad creative" },
+      { "name": "Bookkeeping", "domain": "Transaction categorization, QBO prep" },
+      { "name": "GeoSeoAuditor", "domain": "Client GEO+SEO audits" },
+      { "name": "MeetingTranscript", "domain": "Meeting → tasks + decisions" },
+      { "name": "SocialMediaManager", "domain": "Social post creation + publishing" },
+      { "name": "MetaAdsManager", "domain": "Meta campaign management" },
+      { "name": "GoogleAdsManager", "domain": "Google Ads management" },
+      { "name": "ContentCalendar", "domain": "Weekly content planning" },
+      { "name": "AdPerformance", "domain": "Cross-platform ad analytics" },
+      { "name": "CostBreakdown", "domain": "AIOS cost analysis + optimization" },
+      { "name": "WorkspaceArchitect", "domain": "CLAUDE.md / MEMORY.md optimization" },
+      { "name": "AiosSales", "domain": "Prospect qualification, demos, proposals" }
+    ]
+  },
+  "human_team": {
+    "contractors": [
+      {
+        "role": "GHL Specialist",
+        "responsibilities": "GHL sub-account builds, automation configuration",
+        "reports_to": "Dustin Myers (via Operations agent oversight)"
+      }
+    ],
+    "future_hires": [
+      "Account Manager (trigger: > 20 active clients)",
+      "Ads Specialist (trigger: > $5K/mo ad spend)"
+    ]
+  },
+  "client_base": {
+    "total_active": 14,
+    "by_tier": {
+      "scale": 3,
+      "growth": 6,
+      "starter": 5
+    }
+  }
+}

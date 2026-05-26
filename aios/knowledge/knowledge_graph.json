@@ -1,0 +1,69 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "description": "Semantic knowledge graph mapping entities, relationships, and workflows across the AIOS stack",
+  "entities": {
+    "agents": {
+      "director": {
+        "type": "orchestrator",
+        "model": "claude-opus-4-7",
+        "connects_to": ["crm", "finance", "marketing", "operations", "analytics", "hr", "legal", "security", "transcript-miner", "sales-call-coach", "newsletter-writer", "scroll-stopper-ad", "bookkeeping", "geo-seo-auditor", "meeting-transcript", "social-media-manager", "meta-ads-manager", "google-ads-manager", "content-calendar", "ad-performance", "cost-breakdown", "workspace-architect", "aios-sales"]
+      },
+      "crm": { "type": "module", "domain": "client_management", "memory": "notion_client_registry", "triggers": ["ghl_new_lead", "health_check_scheduled"] },
+      "finance": { "type": "module", "domain": "revenue_ops", "memory": "notion_finance_tracker", "triggers": ["monthly_report", "invoice_request", "closed_won"] },
+      "marketing": { "type": "module", "domain": "growth", "memory": "notion_content_calendar", "triggers": ["weekly_report", "tuesday_newsletter"] },
+      "operations": { "type": "module", "domain": "delivery", "memory": "notion_ghl_tracker", "triggers": ["onboarding_kickoff", "daily_check"] },
+      "analytics": { "type": "module", "domain": "intelligence", "memory": "notion_kpi_snapshots", "triggers": ["daily_7am", "anomaly_detected"] },
+      "hr": { "type": "module", "domain": "team", "memory": "notion_team_registry" },
+      "legal": { "type": "module", "domain": "compliance", "memory": "notion_legal_flags" },
+      "security": { "type": "module", "domain": "security", "memory": "notion_security_incidents" },
+      "transcript-miner": { "type": "custom", "domain": "content_intelligence", "feeds_into": ["newsletter-writer", "scroll-stopper-ad", "social-media-manager"] },
+      "sales-call-coach": { "type": "custom", "domain": "sales_enablement", "triggered_by": ["sales_call_webhook"] },
+      "newsletter-writer": { "type": "custom", "domain": "content", "receives_from": ["transcript-miner"], "feeds_into": ["social-media-manager"] },
+      "scroll-stopper-ad": { "type": "custom", "domain": "paid_ads", "receives_from": ["transcript-miner"] },
+      "bookkeeping": { "type": "custom", "domain": "finance_ops", "triggered_by": ["monthly_1st"] },
+      "geo-seo-auditor": { "type": "custom", "domain": "client_delivery", "triggered_by": ["seo_audit_webhook"] },
+      "meeting-transcript": { "type": "custom", "domain": "operations", "triggered_by": ["meeting_webhook"] },
+      "social-media-manager": { "type": "custom", "domain": "social", "triggered_by": ["tuesday_9am", "social_post_webhook"] },
+      "meta-ads-manager": { "type": "custom", "domain": "paid_ads", "triggered_by": ["meta_alert_webhook", "meta_lead_webhook"] },
+      "google-ads-manager": { "type": "custom", "domain": "paid_ads" },
+      "content-calendar": { "type": "custom", "domain": "content_planning", "triggered_by": ["monday_830am", "draft_week_webhook"] },
+      "ad-performance": { "type": "custom", "domain": "analytics", "triggered_by": ["friday_4pm", "performance_webhook"] },
+      "cost-breakdown": { "type": "custom", "domain": "finance_ops", "triggered_by": ["monday_7am", "cost_webhook"] },
+      "workspace-architect": { "type": "custom", "domain": "workspace_optimization", "triggered_by": ["workspace_audit_webhook"] },
+      "aios-sales": { "type": "custom", "domain": "sales", "triggered_by": ["sales_inquiry_webhook", "demo_complete_webhook", "closed_won_webhook"] }
+    },
+    "memory_stores": {
+      "notion_client_registry": { "type": "database", "owner": "crm", "fields": ["client_name", "package", "mrr", "health_score", "stage"] },
+      "notion_finance_tracker": { "type": "database", "owner": "finance", "fields": ["date", "revenue", "expenses", "net_profit", "mrr"] },
+      "notion_kpi_snapshots": { "type": "database", "owner": "analytics", "fields": ["date", "mrr", "leads", "clients", "anomaly_flag"] },
+      "notion_content_calendar": { "type": "database", "owner": "marketing", "fields": ["post_date", "platform", "copy", "status", "hook_score"] },
+      "notion_ghl_tracker": { "type": "database", "owner": "operations", "fields": ["client", "day", "milestone", "status", "blocker"] },
+      "notion_team_registry": { "type": "database", "owner": "hr", "fields": ["name", "role", "rate", "1099_active"] },
+      "notion_legal_flags": { "type": "database", "owner": "legal", "fields": ["flag_id", "client", "issue", "urgency", "status"] },
+      "notion_security_incidents": { "type": "database", "owner": "security", "fields": ["incident_id", "level", "description", "status"] },
+      "notion_automation_log": { "type": "database", "owner": "director", "fields": ["timestamp", "agent", "decision", "zapier_fired"] },
+      "notion_module_memory": { "type": "database", "owner": "all_agents", "fields": ["agent", "key", "value", "updated_at"] }
+    },
+    "automation_layer": {
+      "zapier_webhooks": { "count": 25, "categories": ["SAL", "DEL", "FIN", "CRM", "MKT", "HR", "LEG", "SEC", "DAT", "OPS"] },
+      "ghl_webhooks": ["new_lead", "pipeline_stage_change", "appointment_booked"],
+      "meta_webhooks": ["new_lead_form", "ad_alert"],
+      "scheduler": { "jobs": 11, "engine": "node-cron" }
+    }
+  },
+  "key_relationships": [
+    { "from": "transcript-miner", "to": "newsletter-writer", "type": "feeds_hooks" },
+    { "from": "transcript-miner", "to": "scroll-stopper-ad", "type": "feeds_hooks" },
+    { "from": "transcript-miner", "to": "content-calendar", "type": "feeds_hooks" },
+    { "from": "content-calendar", "to": "social-media-manager", "type": "assigns_posts" },
+    { "from": "meta_lead_webhook", "to": "director", "type": "triggers" },
+    { "from": "director", "to": "crm", "type": "routes_new_lead" },
+    { "from": "director", "to": "operations", "type": "routes_onboarding" },
+    { "from": "director", "to": "finance", "type": "routes_invoice" },
+    { "from": "aios-sales", "to": "director", "type": "fires_closed_won_chain" },
+    { "from": "analytics", "to": "notion_kpi_snapshots", "type": "writes_daily" },
+    { "from": "all_agents", "to": "notion_automation_log", "type": "logs_decisions" }
+  ]
+}

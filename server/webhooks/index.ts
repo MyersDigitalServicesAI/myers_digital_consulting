@@ -13,6 +13,8 @@ import { createMetaAdsManagerAgent } from "../agents/custom/meta-ads-manager.ts"
 import { createAdPerformanceAgent } from "../agents/custom/ad-performance.ts";
 import { createContentCalendarAgent } from "../agents/custom/content-calendar.ts";
 import { createCostBreakdownAgent } from "../agents/custom/cost-breakdown.ts";
+import { createWorkspaceArchitectAgent } from "../agents/custom/workspace-architect.ts";
+import { createAiosSalesAgent } from "../agents/custom/aios-sales.ts";
 
 export function createWebhookRouter(): Router {
   const router = Router();
@@ -312,6 +314,141 @@ export function createWebhookRouter(): Router {
         );
       } catch (err) {
         console.error("[Webhook] cost/breakdown error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/workspace/audit — Run workspace structural audit
+  // Scope: "root" | "skills" | "sops" | "full"
+  router.post("/workspace/audit", async (req: Request, res: Response) => {
+    const { scope = "full", file_path } = req.body as {
+      scope?: string;
+      file_path?: string;
+    };
+
+    res.json({ received: true, scope });
+
+    setImmediate(async () => {
+      try {
+        const architect = createWorkspaceArchitectAgent();
+        await architect.run(
+          `Run a workspace audit with scope: ${scope}. ${file_path ? `Focus on file: ${file_path}.` : ""} Identify structural violations, token inefficiencies, modularization opportunities, and routing gaps. Output the full WORKSPACE ARCHITECT report and log decision to Notion.`,
+        );
+      } catch (err) {
+        console.error("[Webhook] workspace/audit error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/workspace/optimize — Optimize a specific workspace file
+  router.post("/workspace/optimize", async (req: Request, res: Response) => {
+    const { file_path, task } = req.body as {
+      file_path: string;
+      task: string;
+    };
+
+    if (!file_path || !task) {
+      res.status(400).json({ error: "file_path and task are required" });
+      return;
+    }
+
+    try {
+      const architect = createWorkspaceArchitectAgent();
+      const result = await architect.run(
+        `Workspace optimization task for ${file_path}: ${task}. Read the file, apply the optimization, write back only if changes are needed, and log the decision.`,
+      );
+      res.json({ success: result.success, output: result.output });
+    } catch (err) {
+      console.error("[Webhook] workspace/optimize error:", err);
+      res.status(500).json({ error: String(err) });
+    }
+  });
+
+  // POST /webhooks/sales/inquiry — New AIOS sales inquiry from website or referral
+  router.post("/sales/inquiry", async (req: Request, res: Response) => {
+    const { prospect_name, business_name, business_type, monthly_revenue, primary_pain, source } =
+      req.body as {
+        prospect_name: string;
+        business_name: string;
+        business_type?: string;
+        monthly_revenue?: string;
+        primary_pain?: string;
+        source?: string;
+      };
+
+    if (!prospect_name || !business_name) {
+      res.status(400).json({ error: "prospect_name and business_name are required" });
+      return;
+    }
+
+    // Acknowledge immediately
+    res.json({ received: true, prospect_name });
+
+    setImmediate(async () => {
+      try {
+        const sales = createAiosSalesAgent();
+        await sales.run(
+          `New AIOS inquiry received from ${prospect_name} at ${business_name}. Qualify this prospect, recommend a tier, draft a personalized response in Dustin's voice, log to CRM pipeline, and notify Dustin.`,
+          JSON.stringify({ prospect_name, business_name, business_type, monthly_revenue, primary_pain, source }),
+        );
+      } catch (err) {
+        console.error("[Webhook] sales/inquiry error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/sales/demo-complete — Post-demo follow-up sequence
+  router.post("/sales/demo-complete", async (req: Request, res: Response) => {
+    const { prospect_name, demo_outcome, notes } = req.body as {
+      prospect_name: string;
+      demo_outcome: "positive" | "neutral" | "negative";
+      notes?: string;
+    };
+
+    if (!prospect_name || !demo_outcome) {
+      res.status(400).json({ error: "prospect_name and demo_outcome are required" });
+      return;
+    }
+
+    res.json({ received: true, prospect_name });
+
+    setImmediate(async () => {
+      try {
+        const sales = createAiosSalesAgent();
+        await sales.run(
+          `Demo completed for ${prospect_name}. Outcome: ${demo_outcome}. Draft the Day 1 post-demo follow-up in Dustin's voice, update CRM stage, and queue the follow-up sequence.`,
+          notes ? `NOTES FROM DEMO: ${notes}` : undefined,
+        );
+      } catch (err) {
+        console.error("[Webhook] sales/demo-complete error:", err);
+      }
+    });
+  });
+
+  // POST /webhooks/sales/closed-won — New client signed — fire onboarding chain
+  router.post("/sales/closed-won", async (req: Request, res: Response) => {
+    const { client_name, package_tier, business_type } = req.body as {
+      client_name: string;
+      package_tier: "starter" | "growth" | "scale";
+      business_type?: string;
+    };
+
+    if (!client_name || !package_tier) {
+      res.status(400).json({ error: "client_name and package_tier are required" });
+      return;
+    }
+
+    res.json({ received: true, client_name });
+
+    setImmediate(async () => {
+      try {
+        const director = createDirectorAgent();
+        await director.run(
+          `New client closed: ${client_name} signed the ${package_tier} package. Route to Sales agent to fire the SAL-04 → DEL-02 onboarding chain, then route to Operations to provision GHL sub-account, and Finance to generate setup fee invoice.`,
+          JSON.stringify({ client_name, package_tier, business_type }),
+        );
+      } catch (err) {
+        console.error("[Webhook] sales/closed-won error:", err);
       }
     });
   });

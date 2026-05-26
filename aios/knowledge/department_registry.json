@@ -1,0 +1,106 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "departments": [
+    {
+      "id": "SALES",
+      "name": "Sales",
+      "agent": "aios-sales",
+      "skill": "aios/skills/custom/aios-sales/SKILL.md",
+      "sop": "aios/sops/29-aios-sales.md",
+      "kpis": ["demos_booked", "close_rate", "pipeline_value", "cac"],
+      "zapier_hooks": ["SAL-01", "SAL-02", "SAL-03", "SAL-04"],
+      "notion_db": "Sales Pipeline",
+      "routing_triggers": ["demo", "inquiry", "proposal", "objection", "follow-up", "closed won"]
+    },
+    {
+      "id": "CRM",
+      "name": "CRM / Client Management",
+      "agent": "crm",
+      "skill": "aios/skills/modules/crm/SKILL.md",
+      "sop": "aios/sops/04-crm-module.md",
+      "kpis": ["client_health_score", "churn_risk", "nps", "pipeline_stage_velocity"],
+      "zapier_hooks": ["CRM-01", "CRM-02", "CRM-03"],
+      "notion_db": "Client Registry",
+      "routing_triggers": ["client health", "churn", "pipeline", "GHL CRM", "contact"]
+    },
+    {
+      "id": "MARKETING",
+      "name": "Marketing & Growth",
+      "agent": "marketing",
+      "skill": "aios/skills/modules/marketing/SKILL.md",
+      "sop": "aios/sops/05-marketing-module.md",
+      "kpis": ["leads_per_week", "newsletter_open_rate", "linkedin_reach", "cpl"],
+      "zapier_hooks": ["MKT-01", "MKT-02", "MKT-03"],
+      "notion_db": "Content Calendar",
+      "routing_triggers": ["leads", "campaigns", "content", "newsletter", "ads", "social"]
+    },
+    {
+      "id": "OPERATIONS",
+      "name": "Operations & Delivery",
+      "agent": "operations",
+      "skill": "aios/skills/modules/operations/SKILL.md",
+      "sop": "aios/sops/06-operations-module.md",
+      "kpis": ["onboarding_completion_rate", "sla_adherence", "client_satisfaction"],
+      "zapier_hooks": ["DEL-01", "DEL-02", "DEL-03", "DEL-04"],
+      "notion_db": "GHL Project Tracker",
+      "routing_triggers": ["delivery", "SLA", "GHL setup", "onboarding", "build", "vendor"]
+    },
+    {
+      "id": "FINANCE",
+      "name": "Finance & Revenue Ops",
+      "agent": "finance",
+      "skill": "aios/skills/modules/finance/SKILL.md",
+      "sop": "aios/sops/07-finance-module.md",
+      "kpis": ["mrr", "net_profit", "gross_margin", "overdue_invoices"],
+      "zapier_hooks": ["FIN-01", "FIN-02", "FIN-03", "FIN-04"],
+      "notion_db": "Finance Tracker",
+      "routing_triggers": ["revenue", "invoice", "expense", "P&L", "MRR", "cash flow"]
+    },
+    {
+      "id": "ANALYTICS",
+      "name": "Analytics & Intelligence",
+      "agent": "analytics",
+      "skill": "aios/skills/modules/analytics/SKILL.md",
+      "sop": "aios/sops/10-analytics-module.md",
+      "kpis": ["kpi_snapshot_frequency", "anomaly_detection_accuracy", "report_delivery_time"],
+      "zapier_hooks": ["DAT-01", "DAT-02"],
+      "notion_db": "KPI Snapshots",
+      "routing_triggers": ["KPI", "report", "trend", "dashboard", "analytics", "digest"]
+    },
+    {
+      "id": "HR",
+      "name": "HR & Team",
+      "agent": "hr",
+      "skill": "aios/skills/modules/hr/SKILL.md",
+      "sop": "aios/sops/08-hr-module.md",
+      "kpis": ["contractor_utilization", "onboarding_speed", "1099_compliance"],
+      "zapier_hooks": ["HR-01", "HR-02"],
+      "notion_db": "Team Registry",
+      "routing_triggers": ["hiring", "contractor", "team", "onboard", "W-9", "payroll"]
+    },
+    {
+      "id": "LEGAL",
+      "name": "Legal & Compliance",
+      "agent": "legal",
+      "skill": "aios/skills/modules/legal/SKILL.md",
+      "sop": "aios/sops/09-legal-module.md",
+      "kpis": ["open_legal_flags", "contract_review_turnaround"],
+      "zapier_hooks": ["LEG-01"],
+      "notion_db": "Legal Flags",
+      "routing_triggers": ["contract", "compliance", "legal", "NDA", "refund", "dispute"]
+    },
+    {
+      "id": "SECURITY",
+      "name": "Security",
+      "agent": "security",
+      "skill": "aios/skills/modules/security/SKILL.md",
+      "sop": "aios/sops/11-security-module.md",
+      "kpis": ["open_incidents", "mean_time_to_resolve", "2fa_coverage"],
+      "zapier_hooks": ["SEC-01"],
+      "notion_db": "Security Incidents",
+      "routing_triggers": ["security", "breach", "incident", "login", "suspicious", "access"]
+    }
+  ]
+}

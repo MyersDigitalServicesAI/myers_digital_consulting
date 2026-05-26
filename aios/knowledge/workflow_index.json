@@ -1,0 +1,168 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "total_workflows": 35,
+  "workflows": [
+    {
+      "id": "WF-001",
+      "name": "New Lead Intake",
+      "trigger": "GHL new lead webhook OR Meta lead form",
+      "agent": "crm",
+      "steps": ["Create GHL contact", "Assess lead quality", "Route to sales pipeline", "Fire CRM-01 welcome sequence"],
+      "sop": "aios/sops/04-crm-module.md",
+      "automation": "CRM-01",
+      "estimated_time": "2 minutes automated"
+    },
+    {
+      "id": "WF-002",
+      "name": "AIOS Sales Inquiry → Demo Book",
+      "trigger": "Website form submission OR Dustin directive",
+      "agent": "aios-sales",
+      "steps": ["Qualify prospect (3 questions)", "Recommend tier", "Draft personalized response", "Log to GHL pipeline", "Book demo", "Notify Dustin"],
+      "sop": "aios/sops/29-aios-sales.md",
+      "automation": "SAL-01 → SAL-03",
+      "estimated_time": "5 minutes automated"
+    },
+    {
+      "id": "WF-003",
+      "name": "Closed Won → Client Onboarding",
+      "trigger": "sales/closed-won webhook",
+      "agent": "director → operations + finance + crm",
+      "steps": ["Fire SAL-04 → DEL-02 chain", "Provision GHL sub-account", "Generate setup invoice", "Create client record", "Send welcome sequence"],
+      "sop": "aios/sops/27-client-delivery-automations.md",
+      "automation": "SAL-04 → DEL-01 → DEL-02 → DEL-03",
+      "estimated_time": "10 minutes automated"
+    },
+    {
+      "id": "WF-004",
+      "name": "Daily KPI Digest",
+      "trigger": "Cron: 7:00 AM daily",
+      "agent": "analytics",
+      "steps": ["Pull all KPIs", "Compare vs 7-day baseline", "Detect anomalies", "Write to Notion KPI Snapshots", "Notify Dustin via Slack"],
+      "sop": "aios/sops/10-analytics-module.md",
+      "automation": "DAT-01",
+      "estimated_time": "3 minutes automated"
+    },
+    {
+      "id": "WF-005",
+      "name": "Daily Transcript Mining",
+      "trigger": "Cron: 9:00 AM daily",
+      "agent": "transcript-miner",
+      "steps": ["Check Notion for unprocessed transcripts", "Mine for hooks (7+ score threshold)", "Save hooks to Module Memory", "Queue top hook for newsletter"],
+      "sop": "aios/sops/14-transcript-miner-ad-builder.md",
+      "automation": "none (internal)",
+      "estimated_time": "4 minutes automated"
+    },
+    {
+      "id": "WF-006",
+      "name": "Weekly Content Calendar",
+      "trigger": "Cron: Monday 8:30 AM",
+      "agent": "content-calendar",
+      "steps": ["Pull top hooks from Module Memory", "Assign content to platforms", "Draft LinkedIn (5), Facebook (3), Instagram (5) posts", "Brief newsletter + ad agents", "Save to Notion Content Calendar"],
+      "sop": "aios/sops/24-content-calendar.md",
+      "automation": "MKT-02",
+      "estimated_time": "8 minutes automated"
+    },
+    {
+      "id": "WF-007",
+      "name": "Tuesday Newsletter Draft",
+      "trigger": "Cron: Tuesday 10:00 AM",
+      "agent": "marketing → newsletter-writer",
+      "steps": ["Pull top hook", "Write 7-part framework newsletter", "Generate 2 subject line variants", "Save as 'Awaiting Review'"],
+      "sop": "aios/sops/18-newsletter-skill.md",
+      "automation": "none",
+      "estimated_time": "5 minutes automated"
+    },
+    {
+      "id": "WF-008",
+      "name": "Social Posts Draft + Publish",
+      "trigger": "Cron: Tuesday 9:00 AM (draft) | Thursday 8:00 AM (publish)",
+      "agent": "social-media-manager",
+      "steps": ["Draft posts from Content Calendar", "Apply Dustin's voice", "Save as Awaiting Review", "[Thursday] Publish Approved posts", "Log post IDs to Notion"],
+      "sop": "aios/sops/21-social-media-manager.md",
+      "automation": "none",
+      "estimated_time": "6 minutes draft, 3 minutes publish"
+    },
+    {
+      "id": "WF-009",
+      "name": "Sales Call Coaching Report",
+      "trigger": "POST /webhooks/sales-call",
+      "agent": "sales-call-coach",
+      "steps": ["Score call on 6-category rubric (100 pts)", "Identify top 3 improvement areas", "Write scripted word-for-word fixes", "Save report to Notion"],
+      "sop": "aios/sops/15-sales-call-coach.md",
+      "automation": "none",
+      "estimated_time": "60 seconds automated"
+    },
+    {
+      "id": "WF-010",
+      "name": "Meeting → Tasks",
+      "trigger": "POST /webhooks/meeting",
+      "agent": "meeting-transcript",
+      "steps": ["Parse transcript", "Extract action items (owner + due date)", "Extract key decisions", "Create Notion tasks", "Schedule next meeting"],
+      "sop": "aios/sops/12-meeting-transcript-task-creator.md",
+      "automation": "none",
+      "estimated_time": "2 minutes automated"
+    },
+    {
+      "id": "WF-011",
+      "name": "Client GEO+SEO Audit",
+      "trigger": "POST /webhooks/seo-audit",
+      "agent": "geo-seo-auditor",
+      "steps": ["Audit Google Search presence (40 pts)", "Audit Google Business Profile (40 pts)", "Audit AI Visibility (20 pts)", "Generate 90-day action guide", "Save to client file"],
+      "sop": "aios/sops/13-geo-seo-auditor.md",
+      "automation": "none",
+      "estimated_time": "8 minutes automated"
+    },
+    {
+      "id": "WF-012",
+      "name": "Monthly Bookkeeping",
+      "trigger": "Cron: 1st of month",
+      "agent": "bookkeeping",
+      "steps": ["Notify Dustin to export transactions", "Categorize all transactions", "Flag deductibles", "Flag personal/business mixing", "Export for QBO import"],
+      "sop": "aios/sops/16-bookkeeping-categorizer.md",
+      "automation": "OPS-01",
+      "estimated_time": "10 minutes automated"
+    },
+    {
+      "id": "WF-013",
+      "name": "Weekly Ad Performance Review",
+      "trigger": "Cron: Friday 4:00 PM",
+      "agent": "ad-performance",
+      "steps": ["Pull Meta + Google data", "Calculate blended CPL", "Identify top creative", "Flag over-threshold campaigns", "Write report to Notion", "Notify Dustin"],
+      "sop": "aios/sops/25-ad-performance.md",
+      "automation": "none",
+      "estimated_time": "5 minutes automated"
+    },
+    {
+      "id": "WF-014",
+      "name": "Meta Ad Alert Response",
+      "trigger": "POST /webhooks/ads/meta-alert",
+      "agent": "meta-ads-manager",
+      "steps": ["Assess alert type (spend/performance)", "Compare to benchmarks", "Pause/scale/maintain decision", "Log to Notion Decision Log"],
+      "sop": "aios/sops/22-meta-ads-manager.md",
+      "automation": "none",
+      "estimated_time": "90 seconds automated"
+    },
+    {
+      "id": "WF-015",
+      "name": "Workspace Audit",
+      "trigger": "POST /webhooks/workspace/audit OR Dustin directive",
+      "agent": "workspace-architect",
+      "steps": ["Read CLAUDE.md + MEMORY.md", "Structural review", "Content placement audit", "Token efficiency scan", "Modularization opportunities", "Routing optimization", "Memory compression", "Validation report"],
+      "sop": "aios/sops/28-workspace-architect.md",
+      "automation": "none",
+      "estimated_time": "3 minutes automated"
+    },
+    {
+      "id": "WF-016",
+      "name": "Weekly Business Report",
+      "trigger": "Cron: Monday 8:00 AM",
+      "agent": "director",
+      "steps": ["Pull Analytics KPI summary", "Pull CRM pipeline status", "Pull Marketing content performance", "Check Operations for blockers", "Synthesize executive summary", "Notify Dustin via Slack"],
+      "sop": "aios/sops/01-director-agent.md",
+      "automation": "none",
+      "estimated_time": "6 minutes automated"
+    }
+  ]
+}

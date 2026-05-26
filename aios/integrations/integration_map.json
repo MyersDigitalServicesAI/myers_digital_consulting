@@ -1,0 +1,103 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "integrations": {
+    "anthropic": {
+      "purpose": "AI agent runtime — all 20 agents",
+      "auth": "ANTHROPIC_API_KEY",
+      "models_used": ["claude-sonnet-4-6", "claude-opus-4-7"],
+      "status": "active",
+      "criticality": "CRITICAL"
+    },
+    "notion": {
+      "purpose": "Persistent memory layer for all agents",
+      "auth": "NOTION_API_KEY",
+      "databases": {
+        "client_registry": "NOTION_DB_CLIENT_REGISTRY",
+        "finance_tracker": "NOTION_DB_FINANCE_TRACKER",
+        "kpi_snapshots": "NOTION_DB_KPI_SNAPSHOTS",
+        "content_calendar": "NOTION_DB_CONTENT_CALENDAR",
+        "ghl_tracker": "NOTION_DB_GHL_TRACKER",
+        "team_registry": "NOTION_DB_TEAM_REGISTRY",
+        "automation_log": "NOTION_DB_AUTOMATION_LOG",
+        "module_memory": "NOTION_DB_MODULE_MEMORY"
+      },
+      "setup_sop": "aios/sops/02-notion-setup.md",
+      "status": "active",
+      "criticality": "HIGH"
+    },
+    "zapier": {
+      "purpose": "Automation layer — 25 webhooks across all departments",
+      "auth": "ZAPIER_WEBHOOK_* env vars (25 total)",
+      "webhook_count": 25,
+      "setup_sop": "aios/sops/03-zapier-setup.md",
+      "webhook_registry": "aios/automation/zapier_webhooks.json",
+      "status": "active",
+      "criticality": "HIGH"
+    },
+    "gohighlevel": {
+      "purpose": "CRM, automation, and client delivery platform",
+      "auth": "GHL_API_KEY + GHL_LOCATION_ID",
+      "features_used": [
+        "Sub-account management",
+        "CRM + pipelines",
+        "SMS automation",
+        "Email automation",
+        "Missed Call Text-Back",
+        "Calendar booking",
+        "Lead capture funnels",
+        "Reputation management",
+        "Analytics dashboard"
+      ],
+      "webhook_inbound": "POST /webhooks/ghl/new-lead",
+      "status": "active",
+      "criticality": "HIGH"
+    },
+    "slack": {
+      "purpose": "Dustin notifications from all agents",
+      "auth": "SLACK_WEBHOOK_URL",
+      "channel": "#aios-director",
+      "used_by": "notify_dustin tool (all agents)",
+      "status": "active",
+      "criticality": "MEDIUM"
+    },
+    "meta_ads": {
+      "purpose": "Paid advertising — Facebook + Instagram",
+      "auth": "META_ACCESS_TOKEN",
+      "features_used": ["Lead forms", "Campaign management", "Performance data"],
+      "webhook_inbound": "POST /webhooks/ads/meta-lead (lead forms), POST /webhooks/ads/meta-alert (alerts)",
+      "agent": "meta-ads-manager",
+      "status": "active",
+      "criticality": "LOW"
+    },
+    "google_ads": {
+      "purpose": "Paid advertising — Google Search + Display",
+      "auth": "GOOGLE_ADS_DEVELOPER_TOKEN",
+      "agent": "google-ads-manager",
+      "status": "configured",
+      "criticality": "LOW"
+    },
+    "railway": {
+      "purpose": "Cloud hosting for AIOS server",
+      "config": "railway.toml",
+      "build_command": "pnpm build",
+      "start_command": "node dist/server/index.js",
+      "status": "active",
+      "criticality": "CRITICAL"
+    },
+    "quickbooks": {
+      "purpose": "Accounting and expense tracking",
+      "integration": "Via Bookkeeping agent export (CSV) + Zapier",
+      "agent": "bookkeeping",
+      "status": "configured",
+      "criticality": "LOW"
+    },
+    "docusign": {
+      "purpose": "Contract signing for clients + contractors",
+      "integration": "Via Zapier (HR-01, FIN-03)",
+      "status": "configured",
+      "criticality": "LOW"
+    }
+  }
+}

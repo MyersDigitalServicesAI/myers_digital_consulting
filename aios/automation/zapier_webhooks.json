@@ -1,0 +1,185 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "total_webhooks": 25,
+  "description": "Complete Zapier webhook registry. Set each URL as an environment variable (ZAPIER_WEBHOOK_[ID]).",
+  "webhooks": {
+    "DEL-01": {
+      "name": "Provision GHL Sub-Account",
+      "trigger": "New client signed",
+      "action": "Create GHL sub-account, set up pipeline stages",
+      "env_var": "ZAPIER_WEBHOOK_DEL_01",
+      "used_by": "operations"
+    },
+    "DEL-02": {
+      "name": "Client Onboarding Kickoff",
+      "trigger": "SAL-04 closes → DEL-02 fires",
+      "action": "Send kickoff email, schedule kickoff call, create 10-day task list in Notion",
+      "env_var": "ZAPIER_WEBHOOK_DEL_02",
+      "used_by": "operations"
+    },
+    "DEL-03": {
+      "name": "Onboarding Milestone Check",
+      "trigger": "Each day during onboarding",
+      "action": "Check milestone status, notify if blocked",
+      "env_var": "ZAPIER_WEBHOOK_DEL_03",
+      "used_by": "operations"
+    },
+    "DEL-04": {
+      "name": "Monthly Client Report",
+      "trigger": "1st of each month",
+      "action": "Generate and send monthly performance report to each active client",
+      "env_var": "ZAPIER_WEBHOOK_DEL_04",
+      "used_by": "operations"
+    },
+    "SAL-01": {
+      "name": "New Inquiry Received",
+      "trigger": "Website form submission",
+      "action": "Create GHL contact in Sales pipeline stage 'Inquiry'",
+      "env_var": "ZAPIER_WEBHOOK_SAL_01",
+      "used_by": "aios-sales"
+    },
+    "SAL-02": {
+      "name": "Demo Confirmation",
+      "trigger": "Demo booked",
+      "action": "Send calendar invite, create Notion prep brief",
+      "env_var": "ZAPIER_WEBHOOK_SAL_02",
+      "used_by": "aios-sales"
+    },
+    "SAL-03": {
+      "name": "Post-Demo Follow-Up Queue",
+      "trigger": "Demo completed",
+      "action": "Queue D1, D3, D7 follow-up emails in GHL",
+      "env_var": "ZAPIER_WEBHOOK_SAL_03",
+      "used_by": "aios-sales"
+    },
+    "SAL-04": {
+      "name": "Closed Won Chain",
+      "trigger": "Client signed",
+      "action": "Fire DEL-01 + DEL-02 + FIN-01 + CRM-01 in sequence",
+      "env_var": "ZAPIER_WEBHOOK_SAL_04",
+      "used_by": "aios-sales",
+      "chains_to": ["DEL-01", "DEL-02", "FIN-01", "CRM-01"]
+    },
+    "FIN-01": {
+      "name": "Generate Invoice",
+      "trigger": "New client closed OR manual request",
+      "action": "Create invoice in QBO, send via email",
+      "env_var": "ZAPIER_WEBHOOK_FIN_01",
+      "used_by": "finance"
+    },
+    "FIN-02": {
+      "name": "Payment Received",
+      "trigger": "Payment confirmed",
+      "action": "Update Notion Finance Tracker, update client status",
+      "env_var": "ZAPIER_WEBHOOK_FIN_02",
+      "used_by": "finance"
+    },
+    "FIN-03": {
+      "name": "W-9 Collection",
+      "trigger": "New contractor hired",
+      "action": "Send W-9 request via DocuSign, create 1099 tracking record",
+      "env_var": "ZAPIER_WEBHOOK_FIN_03",
+      "used_by": "finance + hr"
+    },
+    "FIN-04": {
+      "name": "Monthly Finance Report",
+      "trigger": "First Monday of month",
+      "action": "Trigger Finance agent to generate P&L, notify Dustin",
+      "env_var": "ZAPIER_WEBHOOK_FIN_04",
+      "used_by": "finance"
+    },
+    "CRM-01": {
+      "name": "Welcome Sequence",
+      "trigger": "New client record created",
+      "action": "Fire 6-touch SMS + email onboarding sequence in GHL",
+      "env_var": "ZAPIER_WEBHOOK_CRM_01",
+      "used_by": "crm"
+    },
+    "CRM-02": {
+      "name": "Health Score Update",
+      "trigger": "Weekly health check",
+      "action": "Update client health score in GHL, flag risks in Notion",
+      "env_var": "ZAPIER_WEBHOOK_CRM_02",
+      "used_by": "crm"
+    },
+    "CRM-03": {
+      "name": "Churn Risk Alert",
+      "trigger": "Health score drops below threshold",
+      "action": "Notify Dustin, create action item in Notion",
+      "env_var": "ZAPIER_WEBHOOK_CRM_03",
+      "used_by": "crm"
+    },
+    "MKT-01": {
+      "name": "Newsletter Send",
+      "trigger": "Newsletter approved by Dustin",
+      "action": "Send newsletter to full list via GHL",
+      "env_var": "ZAPIER_WEBHOOK_MKT_01",
+      "used_by": "marketing"
+    },
+    "MKT-02": {
+      "name": "Content Calendar Published",
+      "trigger": "Monday 8:30 AM",
+      "action": "Notify Dustin that week's content calendar is ready for review",
+      "env_var": "ZAPIER_WEBHOOK_MKT_02",
+      "used_by": "marketing + content-calendar"
+    },
+    "MKT-03": {
+      "name": "Lead Nurture Sequence",
+      "trigger": "New lead from Meta or LinkedIn",
+      "action": "Enroll in 5-touch nurture sequence in GHL",
+      "env_var": "ZAPIER_WEBHOOK_MKT_03",
+      "used_by": "marketing + crm"
+    },
+    "OPS-01": {
+      "name": "Bookkeeping Monthly Trigger",
+      "trigger": "1st of month",
+      "action": "Notify Dustin to export bank + CC transactions",
+      "env_var": "ZAPIER_WEBHOOK_OPS_01",
+      "used_by": "bookkeeping + operations"
+    },
+    "DAT-01": {
+      "name": "Daily KPI Slack Digest",
+      "trigger": "Daily 7:00 AM",
+      "action": "Post KPI snapshot to Slack #aios-digest channel",
+      "env_var": "ZAPIER_WEBHOOK_DAT_01",
+      "used_by": "analytics"
+    },
+    "DAT-02": {
+      "name": "Anomaly Alert",
+      "trigger": "Metric deviates > 20% from 7-day baseline",
+      "action": "Immediate Slack notification to Dustin with context",
+      "env_var": "ZAPIER_WEBHOOK_DAT_02",
+      "used_by": "analytics"
+    },
+    "HR-01": {
+      "name": "Contractor Onboarding",
+      "trigger": "New contractor hired",
+      "action": "Send contract via DocuSign, create Notion profile, send onboarding Loom",
+      "env_var": "ZAPIER_WEBHOOK_HR_01",
+      "used_by": "hr"
+    },
+    "HR-02": {
+      "name": "Contractor Payment",
+      "trigger": "Milestone completed or weekly",
+      "action": "Log payment to Notion, update 1099 tracker",
+      "env_var": "ZAPIER_WEBHOOK_HR_02",
+      "used_by": "hr + finance"
+    },
+    "LEG-01": {
+      "name": "Legal Flag Created",
+      "trigger": "Non-standard contract term or compliance issue",
+      "action": "Create legal flag in Notion, notify Dustin immediately",
+      "env_var": "ZAPIER_WEBHOOK_LEG_01",
+      "used_by": "legal"
+    },
+    "SEC-01": {
+      "name": "Security Incident",
+      "trigger": "Security anomaly detected",
+      "action": "Create incident in Notion, immediate Slack notification to Dustin",
+      "env_var": "ZAPIER_WEBHOOK_SEC_01",
+      "used_by": "security"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "description": "Memory architecture for the Myers Digital AIOS — how memory is structured, scoped, and maintained",
+  "memory_layers": {
+    "session_memory": {
+      "scope": "Single conversation",
+      "storage": "In-context (Claude conversation history)",
+      "durability": "Lost at session end",
+      "use_for": "Working context for the current task"
+    },
+    "root_memory": {
+      "scope": "Every session — always loaded",
+      "storage": "aios/CLAUDE.md + aios-template/MEMORY.md",
+      "durability": "Permanent until edited",
+      "use_for": "Behavioral rules, routing map, active projects, core facts",
+      "files": {
+        "CLAUDE.md": {
+          "purpose": "Behavioral instructions — HOW the agent acts",
+          "target_lines": "200-300",
+          "hard_limit": "350 lines",
+          "sections": ["System Identity", "Memory System", "Preferences", "Rules", "Routing Map", "References", "Escalation"]
+        },
+        "MEMORY.md": {
+          "purpose": "Active state — WHAT the agent knows right now",
+          "target_lines": "< 150",
+          "hard_limit": "200 lines",
+          "sections": ["Active Projects", "Scheduled Tasks", "Core Memory"]
+        }
+      }
+    },
+    "skill_memory": {
+      "scope": "Loaded on demand when skill is invoked",
+      "storage": "aios/skills/[skill]/SKILL.md",
+      "durability": "Permanent until edited",
+      "use_for": "Domain-specific instructions, protocols, output formats",
+      "load_rule": "Load ONLY the skill relevant to current task — never all skills at once"
+    },
+    "notion_memory": {
+      "scope": "Persistent across all sessions",
+      "storage": "Notion databases (8 databases)",
+      "durability": "Permanent — queryable",
+      "use_for": "Client records, KPI history, decisions, hooks, coaching reports",
+      "read_tool": "notion_read",
+      "write_tool": "notion_write",
+      "databases": [
+        "notion_client_registry",
+        "notion_finance_tracker",
+        "notion_kpi_snapshots",
+        "notion_content_calendar",
+        "notion_ghl_tracker",
+        "notion_team_registry",
+        "notion_automation_log",
+        "notion_module_memory"
+      ]
+    },
+    "archive_memory": {
+      "scope": "Historical reference — not loaded by default",
+      "storage": "ARCHIVE.md (per workspace)",
+      "durability": "Permanent",
+      "use_for": "Completed projects, resolved incidents, historical decisions",
+      "load_rule": "Load only when explicitly referenced"
+    }
+  },
+  "memory_rules": [
+    "Always pull Notion context before routing (notion_read)",
+    "Always write back to Notion after any actionable decision (notion_write)",
+    "Behavioral rules belong in CLAUDE.md — never in MEMORY.md",
+    "Mutable facts and statuses belong in MEMORY.md — never in CLAUDE.md",
+    "No memory entry should exceed 2 sentences — compress verbose entries",
+    "Historical content moves to ARCHIVE.md after project completion",
+    "Workspace Architect audits memory files on demand — trigger via /webhooks/workspace/audit"
+  ],
+  "compression_format": {
+    "pattern": "[Project/Context]: [Current status]. [Next action if any].",
+    "example_before": "Summit Roofing is a Growth package client that signed on May 12, 2026. They are currently on Day 3 of their 10-day onboarding, with SMS sequences pending. Alex Rivera is handling the GHL build and the client seems engaged based on the kickoff call feedback received on May 13.",
+    "example_after": "Summit Roofing (Growth): Day 3/10 onboarding. SMS sequences pending — Alex Rivera assigned."
+  }
+}
