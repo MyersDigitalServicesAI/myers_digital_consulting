@@ -28,3 +28,7 @@ export { createGoogleAdsManagerAgent } from "./custom/google-ads-manager.ts";
 export { createContentCalendarAgent } from "./custom/content-calendar.ts";
 export { createAdPerformanceAgent } from "./custom/ad-performance.ts";
 export { createCostBreakdownAgent } from "./custom/cost-breakdown.ts";
+
+// Workspace & sales agents
+export { createWorkspaceArchitectAgent } from "./custom/workspace-architect.ts";
+export { createAiosSalesAgent } from "./custom/aios-sales.ts";

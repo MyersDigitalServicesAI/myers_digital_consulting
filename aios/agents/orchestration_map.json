@@ -1,0 +1,81 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "description": "Defines how the Director routes tasks across all agents — the complete orchestration logic",
+  "routing_rules": [
+    { "trigger": "client health|churn|pipeline|GHL CRM|contact record", "route_to": "crm", "priority": "standard" },
+    { "trigger": "revenue|invoice|cash flow|MRR|P&L|expense", "route_to": "finance", "priority": "standard" },
+    { "trigger": "leads|campaigns|content marketing|newsletter|social media", "route_to": "marketing", "priority": "standard" },
+    { "trigger": "delivery|SLA|GHL build|onboarding|vendor|checklist", "route_to": "operations", "priority": "standard" },
+    { "trigger": "KPI|report|trend|dashboard|analytics|daily digest", "route_to": "analytics", "priority": "standard" },
+    { "trigger": "hiring|contractor|team|onboard|W-9|payroll", "route_to": "hr", "priority": "standard" },
+    { "trigger": "contract|compliance|legal|NDA|refund|dispute", "route_to": "legal", "priority": "urgent" },
+    { "trigger": "security|breach|incident|suspicious|access control", "route_to": "security", "priority": "escalate" },
+    { "trigger": "meeting notes|action items|transcript processing|strategy call", "route_to": "meeting-transcript", "priority": "standard" },
+    { "trigger": "SEO audit|GEO audit|client visibility|Google Business", "route_to": "geo-seo-auditor", "priority": "standard" },
+    { "trigger": "mine transcript|hooks|content from calls|call mining", "route_to": "transcript-miner", "priority": "standard" },
+    { "trigger": "score sales call|coach call|call review|rubric", "route_to": "sales-call-coach", "priority": "standard" },
+    { "trigger": "categorize expenses|bookkeeping|transactions|QBO", "route_to": "bookkeeping", "priority": "standard" },
+    { "trigger": "write in Dustin's voice|external comms|voice layer", "route_to": "marketing", "priority": "standard" },
+    { "trigger": "newsletter|email draft|subject line", "route_to": "newsletter-writer", "priority": "standard" },
+    { "trigger": "ad creative|scroll-stopper|Meta ad|Facebook ad copy", "route_to": "scroll-stopper-ad", "priority": "standard" },
+    { "trigger": "audit workspace|optimize CLAUDE.md|MEMORY.md|file migration|workstation", "route_to": "workspace-architect", "priority": "standard" },
+    { "trigger": "AIOS inquiry|demo|prospect|proposal|qualification|follow-up|closed won", "route_to": "aios-sales", "priority": "standard" },
+    { "trigger": "post to social|LinkedIn|Instagram|Facebook|publish content", "route_to": "social-media-manager", "priority": "standard" },
+    { "trigger": "Meta campaign|pause ad|scale campaign|meta performance", "route_to": "meta-ads-manager", "priority": "standard" },
+    { "trigger": "Google Ads|search campaign|PPC|Google performance", "route_to": "google-ads-manager", "priority": "standard" },
+    { "trigger": "plan content week|content calendar|weekly content", "route_to": "content-calendar", "priority": "standard" },
+    { "trigger": "ad performance|CPL|blended cost per lead|ROAS", "route_to": "ad-performance", "priority": "standard" },
+    { "trigger": "AIOS cost|agent cost|token spend|cost breakdown", "route_to": "cost-breakdown", "priority": "standard" }
+  ],
+  "escalation_thresholds": {
+    "security_breach": { "level": "escalate", "notify": "dustin_immediate", "zapier": "SEC-01" },
+    "financial_variance_20pct": { "level": "urgent", "notify": "dustin_same_day", "zapier": "FIN-escalate" },
+    "legal_deadline_72h": { "level": "escalate", "notify": "dustin_immediate", "zapier": "LEG-01" },
+    "churn_risk_15pct_arr": { "level": "urgent", "notify": "dustin_same_day", "zapier": "CRM-escalate" },
+    "ghl_system_failure": { "level": "urgent", "notify": "dustin_same_day", "zapier": "OPS-escalate" }
+  },
+  "multi_agent_workflows": [
+    {
+      "name": "New Client Onboarding",
+      "trigger": "closed_won",
+      "sequence": [
+        { "step": 1, "agent": "aios-sales", "action": "fire_onboarding_chain (SAL-04 → DEL-02)" },
+        { "step": 2, "agent": "operations", "action": "provision GHL sub-account" },
+        { "step": 3, "agent": "finance", "action": "generate setup fee invoice" },
+        { "step": 4, "agent": "crm", "action": "create client record, trigger welcome sequence" }
+      ]
+    },
+    {
+      "name": "Weekly Business Report",
+      "trigger": "monday_8am_cron",
+      "sequence": [
+        { "step": 1, "agent": "analytics", "action": "KPI summary (MRR, clients, leads)" },
+        { "step": 2, "agent": "crm", "action": "pipeline status + churn risks" },
+        { "step": 3, "agent": "marketing", "action": "content performance" },
+        { "step": 4, "agent": "operations", "action": "blocked onboardings" },
+        { "step": 5, "agent": "director", "action": "synthesize → notify Dustin" }
+      ]
+    },
+    {
+      "name": "Content Intelligence Loop",
+      "trigger": "transcript_submitted",
+      "sequence": [
+        { "step": 1, "agent": "transcript-miner", "action": "mine hooks (7+ threshold)" },
+        { "step": 2, "agent": "content-calendar", "action": "assign top hook to week plan" },
+        { "step": 3, "agent": "newsletter-writer", "action": "draft newsletter from hook" },
+        { "step": 4, "agent": "scroll-stopper-ad", "action": "build 2 Meta ad variants" },
+        { "step": 5, "agent": "social-media-manager", "action": "draft social posts" }
+      ]
+    }
+  ],
+  "approval_gates": [
+    { "action": "financial_transaction", "requires_approval": true, "approver": "dustin" },
+    { "action": "external_client_communication", "requires_approval": true, "approver": "dustin" },
+    { "action": "contract_modification", "requires_approval": true, "approver": "dustin" },
+    { "action": "ad_budget_change > $500", "requires_approval": true, "approver": "dustin" },
+    { "action": "social_post_publish", "requires_approval": true, "approver": "dustin" },
+    { "action": "newsletter_send", "requires_approval": true, "approver": "dustin" }
+  ]
+}

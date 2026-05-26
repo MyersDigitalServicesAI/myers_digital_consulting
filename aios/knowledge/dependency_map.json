@@ -1,0 +1,134 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "description": "System dependency map — what each component depends on to function",
+  "critical_dependencies": [
+    {
+      "component": "All Agents (AI Layer)",
+      "depends_on": ["ANTHROPIC_API_KEY"],
+      "failure_mode": "Complete AIOS shutdown",
+      "mitigation": "Alert Dustin immediately; no fallback"
+    },
+    {
+      "component": "Memory Layer (All Agents)",
+      "depends_on": ["NOTION_API_KEY", "Notion Database IDs"],
+      "failure_mode": "Agents run without context persistence; decisions not logged",
+      "mitigation": "Agents continue with degraded memory; log error; alert Dustin"
+    },
+    {
+      "component": "Automation Layer (All Zapier-triggered workflows)",
+      "depends_on": ["ZAPIER_WEBHOOK_* env vars", "Zapier account active"],
+      "failure_mode": "Automations don't fire; manual intervention required",
+      "mitigation": "Agents log action as 'automation_skipped'; Dustin notified"
+    },
+    {
+      "component": "GHL CRM Integration",
+      "depends_on": ["GHL_API_KEY", "GHL sub-account", "GHL_LOCATION_ID"],
+      "failure_mode": "Client records not created/updated in GHL",
+      "mitigation": "Log to Notion; flag for manual GHL update"
+    },
+    {
+      "component": "Scheduler (node-cron)",
+      "depends_on": ["AIOS_SCHEDULER=enabled", "Server process running"],
+      "failure_mode": "All scheduled automations (daily digest, newsletters, etc.) stop",
+      "mitigation": "Railway auto-restarts process; monitor via health endpoint"
+    }
+  ],
+  "agent_dependencies": {
+    "director": {
+      "hard": ["anthropic_api", "all_module_agents_registered"],
+      "soft": ["notion_api", "zapier_webhooks"]
+    },
+    "crm": {
+      "hard": ["anthropic_api"],
+      "soft": ["notion_client_registry", "ghl_api", "zapier_crm_hooks"]
+    },
+    "finance": {
+      "hard": ["anthropic_api"],
+      "soft": ["notion_finance_tracker", "zapier_fin_hooks"]
+    },
+    "marketing": {
+      "hard": ["anthropic_api"],
+      "soft": ["notion_content_calendar", "zapier_mkt_hooks"]
+    },
+    "operations": {
+      "hard": ["anthropic_api"],
+      "soft": ["notion_ghl_tracker", "ghl_api", "zapier_del_hooks"]
+    },
+    "analytics": {
+      "hard": ["anthropic_api"],
+      "soft": ["notion_kpi_snapshots", "zapier_dat_hooks"]
+    },
+    "transcript-miner": {
+      "hard": ["anthropic_api"],
+      "soft": ["notion_module_memory"],
+      "feeds_into": ["newsletter-writer", "scroll-stopper-ad", "content-calendar"]
+    },
+    "aios-sales": {
+      "hard": ["anthropic_api"],
+      "soft": ["notion_api", "ghl_api", "zapier_sal_hooks"],
+      "fires_chain": ["SAL-04", "DEL-02"]
+    },
+    "workspace-architect": {
+      "hard": ["anthropic_api", "filesystem_read_write"],
+      "soft": ["notion_api"]
+    }
+  },
+  "environment_variables": {
+    "required": [
+      "ANTHROPIC_API_KEY",
+      "NOTION_API_KEY",
+      "NOTION_DB_CLIENT_REGISTRY",
+      "NOTION_DB_FINANCE_TRACKER",
+      "NOTION_DB_KPI_SNAPSHOTS",
+      "NOTION_DB_CONTENT_CALENDAR",
+      "NOTION_DB_GHL_TRACKER",
+      "NOTION_DB_TEAM_REGISTRY",
+      "NOTION_DB_AUTOMATION_LOG",
+      "NOTION_DB_MODULE_MEMORY"
+    ],
+    "optional": [
+      "GHL_API_KEY",
+      "GHL_LOCATION_ID",
+      "SLACK_WEBHOOK_URL",
+      "ZAPIER_WEBHOOK_DEL_01",
+      "ZAPIER_WEBHOOK_DEL_02",
+      "ZAPIER_WEBHOOK_DEL_03",
+      "ZAPIER_WEBHOOK_DEL_04",
+      "ZAPIER_WEBHOOK_SAL_01",
+      "ZAPIER_WEBHOOK_SAL_02",
+      "ZAPIER_WEBHOOK_SAL_03",
+      "ZAPIER_WEBHOOK_SAL_04",
+      "ZAPIER_WEBHOOK_FIN_01",
+      "ZAPIER_WEBHOOK_FIN_02",
+      "ZAPIER_WEBHOOK_FIN_03",
+      "ZAPIER_WEBHOOK_FIN_04",
+      "ZAPIER_WEBHOOK_CRM_01",
+      "ZAPIER_WEBHOOK_CRM_02",
+      "ZAPIER_WEBHOOK_CRM_03",
+      "ZAPIER_WEBHOOK_MKT_01",
+      "ZAPIER_WEBHOOK_MKT_02",
+      "ZAPIER_WEBHOOK_MKT_03",
+      "ZAPIER_WEBHOOK_OPS_01",
+      "ZAPIER_WEBHOOK_DAT_01",
+      "ZAPIER_WEBHOOK_DAT_02",
+      "ZAPIER_WEBHOOK_HR_01",
+      "ZAPIER_WEBHOOK_HR_02",
+      "ZAPIER_WEBHOOK_LEG_01",
+      "ZAPIER_WEBHOOK_SEC_01",
+      "AIOS_SCHEDULER",
+      "NODE_ENV",
+      "PORT"
+    ]
+  },
+  "external_service_dependencies": [
+    { "service": "Anthropic API", "criticality": "CRITICAL", "endpoint": "api.anthropic.com" },
+    { "service": "Notion API", "criticality": "HIGH", "endpoint": "api.notion.com" },
+    { "service": "Zapier Webhooks", "criticality": "HIGH", "endpoint": "hooks.zapier.com" },
+    { "service": "GoHighLevel API", "criticality": "MEDIUM", "endpoint": "rest.gohighlevel.com" },
+    { "service": "Railway (hosting)", "criticality": "CRITICAL", "endpoint": "railway.app" },
+    { "service": "Meta Ads API", "criticality": "LOW", "endpoint": "graph.facebook.com" },
+    { "service": "Google Ads API", "criticality": "LOW", "endpoint": "googleads.googleapis.com" }
+  ]
+}

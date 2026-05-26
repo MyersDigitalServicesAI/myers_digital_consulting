@@ -1,0 +1,151 @@
+{
+  "organization": "Myers Digital Consulting",
+  "version": "1.0",
+  "last_updated": "2026-05-26",
+  "setup_sop": "aios/sops/02-notion-setup.md",
+  "databases": [
+    {
+      "id": "client_registry",
+      "env_var": "NOTION_DB_CLIENT_REGISTRY",
+      "name": "Client Registry",
+      "owner_agent": "crm",
+      "purpose": "Master record for all active and past clients",
+      "properties": [
+        { "name": "Client Name", "type": "title" },
+        { "name": "Package", "type": "select", "options": ["Starter", "Growth", "Scale"] },
+        { "name": "MRR", "type": "number", "format": "dollar" },
+        { "name": "Setup Fee", "type": "number", "format": "dollar" },
+        { "name": "Status", "type": "select", "options": ["Active", "Onboarding", "Paused", "Churned"] },
+        { "name": "Health Score", "type": "number" },
+        { "name": "Churn Risk", "type": "select", "options": ["Low", "Medium", "High"] },
+        { "name": "GHL Sub-Account ID", "type": "rich_text" },
+        { "name": "Onboarding Day", "type": "number" },
+        { "name": "Start Date", "type": "date" },
+        { "name": "Next Check-In", "type": "date" }
+      ]
+    },
+    {
+      "id": "finance_tracker",
+      "env_var": "NOTION_DB_FINANCE_TRACKER",
+      "name": "Finance Tracker",
+      "owner_agent": "finance",
+      "purpose": "Revenue, expenses, invoices, and P&L tracking",
+      "properties": [
+        { "name": "Period", "type": "title" },
+        { "name": "MRR", "type": "number", "format": "dollar" },
+        { "name": "Setup Fees", "type": "number", "format": "dollar" },
+        { "name": "Total Revenue", "type": "number", "format": "dollar" },
+        { "name": "Expenses", "type": "number", "format": "dollar" },
+        { "name": "Net Profit", "type": "number", "format": "dollar" },
+        { "name": "Margin", "type": "number", "format": "percent" },
+        { "name": "Overdue Invoices", "type": "number" },
+        { "name": "Notes", "type": "rich_text" }
+      ]
+    },
+    {
+      "id": "kpi_snapshots",
+      "env_var": "NOTION_DB_KPI_SNAPSHOTS",
+      "name": "KPI Snapshots",
+      "owner_agent": "analytics",
+      "purpose": "Daily + weekly + monthly KPI records with anomaly flags",
+      "properties": [
+        { "name": "Date", "type": "title" },
+        { "name": "Period Type", "type": "select", "options": ["Daily", "Weekly", "Monthly"] },
+        { "name": "MRR", "type": "number", "format": "dollar" },
+        { "name": "Active Clients", "type": "number" },
+        { "name": "Leads This Week", "type": "number" },
+        { "name": "Avg Response Time (sec)", "type": "number" },
+        { "name": "Newsletter Open Rate", "type": "number", "format": "percent" },
+        { "name": "Anomaly Flag", "type": "checkbox" },
+        { "name": "Anomaly Detail", "type": "rich_text" },
+        { "name": "AIOS Daily Cost ($)", "type": "number" }
+      ]
+    },
+    {
+      "id": "content_calendar",
+      "env_var": "NOTION_DB_CONTENT_CALENDAR",
+      "name": "Content Calendar",
+      "owner_agent": "marketing",
+      "purpose": "All social posts, newsletter drafts, and ad creatives",
+      "properties": [
+        { "name": "Post Title / Hook", "type": "title" },
+        { "name": "Platform", "type": "multi_select", "options": ["LinkedIn", "Facebook", "Instagram", "Newsletter", "Meta Ad", "Google Ad"] },
+        { "name": "Scheduled Date", "type": "date" },
+        { "name": "Status", "type": "select", "options": ["Draft", "Awaiting Review", "Approved", "Published", "Archived"] },
+        { "name": "Hook Score", "type": "number" },
+        { "name": "Hook Type", "type": "select", "options": ["proof", "education", "behind-the-scenes", "offer"] },
+        { "name": "Copy", "type": "rich_text" },
+        { "name": "Post ID", "type": "rich_text" },
+        { "name": "Impressions", "type": "number" },
+        { "name": "Engagement Rate", "type": "number", "format": "percent" }
+      ]
+    },
+    {
+      "id": "ghl_tracker",
+      "env_var": "NOTION_DB_GHL_TRACKER",
+      "name": "GHL Project Tracker",
+      "owner_agent": "operations",
+      "purpose": "10-day onboarding progress for each active client build",
+      "properties": [
+        { "name": "Client", "type": "title" },
+        { "name": "Package", "type": "select", "options": ["Starter", "Growth", "Scale"] },
+        { "name": "Day", "type": "number" },
+        { "name": "Milestone", "type": "rich_text" },
+        { "name": "Status", "type": "select", "options": ["Complete", "In Progress", "Pending", "Blocked"] },
+        { "name": "Assigned To", "type": "rich_text" },
+        { "name": "Blocker Detail", "type": "rich_text" },
+        { "name": "Target Date", "type": "date" }
+      ]
+    },
+    {
+      "id": "team_registry",
+      "env_var": "NOTION_DB_TEAM_REGISTRY",
+      "name": "Team Registry",
+      "owner_agent": "hr",
+      "purpose": "Contractor profiles, rates, and 1099 tracking",
+      "properties": [
+        { "name": "Name", "type": "title" },
+        { "name": "Role", "type": "select", "options": ["GHL Specialist", "Designer", "Copywriter", "Ads Manager"] },
+        { "name": "Rate ($/hr)", "type": "number" },
+        { "name": "1099 Active", "type": "checkbox" },
+        { "name": "YTD Payments ($)", "type": "number" },
+        { "name": "Contract Signed", "type": "checkbox" },
+        { "name": "W-9 Received", "type": "checkbox" },
+        { "name": "Active Projects", "type": "rich_text" },
+        { "name": "Start Date", "type": "date" }
+      ]
+    },
+    {
+      "id": "automation_log",
+      "env_var": "NOTION_DB_AUTOMATION_LOG",
+      "name": "Automation Log",
+      "owner_agent": "director",
+      "purpose": "Audit trail for all agent decisions and Zapier fires",
+      "properties": [
+        { "name": "Timestamp", "type": "title" },
+        { "name": "Agent", "type": "select" },
+        { "name": "Decision Summary", "type": "rich_text" },
+        { "name": "Zapier Fired", "type": "rich_text" },
+        { "name": "Dustin Notified", "type": "checkbox" },
+        { "name": "Approval Required", "type": "checkbox" },
+        { "name": "Outcome", "type": "rich_text" }
+      ]
+    },
+    {
+      "id": "module_memory",
+      "env_var": "NOTION_DB_MODULE_MEMORY",
+      "name": "Module Memory",
+      "owner_agent": "all_agents",
+      "purpose": "Agent-specific persistent memory — hooks, coaching history, client context",
+      "properties": [
+        { "name": "Key", "type": "title" },
+        { "name": "Agent", "type": "select" },
+        { "name": "Value", "type": "rich_text" },
+        { "name": "Category", "type": "select", "options": ["hook", "coaching_report", "client_context", "decision", "preference"] },
+        { "name": "Score", "type": "number" },
+        { "name": "Updated At", "type": "date" },
+        { "name": "Archived", "type": "checkbox" }
+      ]
+    }
+  ]
+}
