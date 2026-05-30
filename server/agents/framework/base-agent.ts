@@ -81,7 +81,7 @@ export class BaseAgent {
 
     for (let iteration = 0; iteration < 15; iteration++) {
       const params: Anthropic.MessageCreateParamsNonStreaming = {
-        model: this.config.model ?? "claude-opus-4-8",
+        model: this.config.model ?? "claude-sonnet-4-6",
         max_tokens: this.config.maxTokens ?? 8192,
         thinking: { type: "adaptive" },
         system: this.systemPrompt,
