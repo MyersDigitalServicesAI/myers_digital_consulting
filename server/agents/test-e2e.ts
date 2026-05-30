@@ -600,6 +600,51 @@ NOTION LOG: Decision logged — Growth tier recommended, demo confirmed for May 
     ],
   },
 
+  CompetitiveIntel: {
+    text: `⬡ COMPETITOR PROFILE — AutomatePro Agency
+URL: automatepro.agency
+Threat Level: Medium
+
+POSITIONING:
+  Lead pain: "Drowning in manual tasks and disconnected tools"
+  Promise: "Full business automation in 30 days"
+  Differentiator: "AI-powered workflows without needing to learn new software"
+
+OFFER:
+  Services: Custom Zapier + Make automations, ChatGPT integrations, GHL setup
+  Pricing: $1,200–$2,500/mo (inferred from LinkedIn post, not confirmed on site)
+  Delivery: Done-for-you, 30-day build
+  Timeline: "30 days" claimed — no SLA details
+
+CONTENT FOOTPRINT:
+  LinkedIn: Yes — 3x/week, lead pain hooks, no proof of results
+  YouTube: No
+  Newsletter: No
+
+ICP OVERLAP WITH MYERS DIGITAL:
+  Revenue range: Partial — targets $10K–$100K/mo
+  Industry: Match — service businesses, agencies
+  Platform: GHL + agnostic
+
+GAPS IN THEIR PITCH:
+  - No persistent memory layer — each session starts fresh
+  - No specialized agents — one generalist AI wrapper
+  - No voice training — outputs sound generic, not like the owner
+  - No SLA guarantee — "30 days" is aspirational, not contractual
+  - No Notion integration — no business memory or decision logging
+
+STRATEGIC RESPONSE:
+  Lead with memory and specialization. "AutomatePro builds automations —
+  AIOS builds an operating system. The difference is that ours remembers
+  everything, routes intelligently, and sounds like you."`,
+    tools: [
+      { name: "web_search", input: { query: "AutomatePro Agency pricing reviews GHL AI automation" } },
+      { name: "web_fetch", input: { url: "https://automatepro.agency" } },
+      { name: "notion_write", input: { database: "competitor_registry", data: { Name: "AutomatePro Agency", ThreatLevel: "Medium", ICPOverlap: "Partial", LastReviewed: "2026-05-19" } } },
+      { name: "log_decision", input: { decision: "AutomatePro flagged as Medium threat — memory gap and voice training absent from their offer", reasoning: "ICP overlap partial, pricing below Myers Digital, no persistent system differentiation", owner: "Competitive Intel Agent" } },
+    ],
+  },
+
   WorkspaceArchitect: {
     text: `🏗 WORKSPACE ARCHITECT — Root file audit (CLAUDE.md + MEMORY.md)
 
@@ -788,6 +833,13 @@ const SCENARIOS: Array<{
     category: "Workspace Optimization",
   },
   {
+    agent: "CompetitiveIntel",
+    scenario: "Profile competitor and identify positioning gaps",
+    skillPath: "custom/competitive-intel/SKILL.md",
+    task: "Profile AutomatePro Agency — a done-for-you AI automation agency targeting service businesses with GHL. Identify their positioning, ICP overlap, gaps in their offer, and how Myers Digital should respond.",
+    category: "Strategy",
+  },
+  {
     agent: "AIOSSales",
     scenario: "Qualify inbound demo request and draft personalized response",
     skillPath: "custom/aios-sales/SKILL.md",
@@ -821,6 +873,7 @@ async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
     MeetingTranscript: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "create_tasks_from_meeting"],
     WorkspaceArchitect: ["read_file", "edit_file", "write_file", "log_decision", "notify_dustin", "archive_content"],
     AIOSSales: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "draft_proposal"],
+    CompetitiveIntel: ["web_search", "web_fetch", "notion_read", "notion_write", "log_decision", "notify_dustin"],
   };
 
   const toolNames = toolCountMap[scenario.agent] ?? [];
@@ -855,12 +908,12 @@ function renderPresentation(results: TestResult[]): string {
 
   lines.push("╔══════════════════════════════════════════════════════════════════════════════╗");
   lines.push("║          MYERS DIGITAL AIOS — END-TO-END AGENT TEST RESULTS                ║");
-  lines.push("║                  18 Digital Employees. Every Domain.                       ║");
+  lines.push("║                  19 Digital Employees. Every Domain.                       ║");
   lines.push("╚══════════════════════════════════════════════════════════════════════════════╝");
   lines.push("");
 
   lines.push("┌─────────────────────── SYSTEM OVERVIEW ────────────────────────────────────┐");
-  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 9 Custom Skills"})       │`);
+  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 10 Custom Skills"})      │`);
   lines.push(`│  Skills loaded:         ${String(passed).padEnd(4)} / ${results.length} (SKILL.md system prompts)              │`);
   lines.push(`│  Tools registered:      ${String(totalTools).padEnd(4)} across all agents                            │`);
   lines.push(`│  Tool calls executed:   ${String(totalToolCalls).padEnd(4)} (Notion reads/writes + Zapier fires)        │`);

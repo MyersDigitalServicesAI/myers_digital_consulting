@@ -118,11 +118,26 @@ If deploying for a partner agency's client (not a direct Myers Digital client):
 
 ---
 
+## File Size Limits
+
+These limits are enforced on every Workspace Architect audit:
+
+| File | Target | Hard Limit |
+|---|---|---|
+| CLAUDE.md | 150–200 lines | 200 lines |
+| MEMORY.md | < 150 lines | 150 lines |
+| Workstation CLAUDE.md | 150–200 lines | 200 lines |
+| Workstation MEMORY.md | < 100 lines | 150 lines |
+
+If a file approaches its hard limit, run Workspace Architect before adding more content. Move large rule systems to resource files and reference them with a pointer.
+
+---
+
 ## Maintenance Schedule
 
 | Cadence | Action |
 |---|---|
 | Weekly | Review Automation Log for failures |
-| Monthly | Run Workspace Architect audit |
+| Monthly | Run Workspace Architect audit (check line counts + content placement) |
 | Quarterly | Voice recalibration check |
 | As needed | Add new agents as client grows |

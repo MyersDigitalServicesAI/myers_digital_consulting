@@ -76,7 +76,7 @@ Compress any memory entry longer than 2 sentences into:
 
 ### Step 7 — Validation
 Confirm the optimized workspace:
-- [ ] CLAUDE.md within 200–300 lines
+- [ ] CLAUDE.md within 150–200 lines
 - [ ] MEMORY.md under 150 lines
 - [ ] All memory entries ≤ 2 sentences
 - [ ] No behavioral rules in MEMORY.md
@@ -100,9 +100,9 @@ Confirm the optimized workspace:
 
 | File | Target | Hard Limit |
 |---|---|---|
-| Root CLAUDE.md | 200–300 lines | 350 lines |
+| Root CLAUDE.md | 150–200 lines | 200 lines |
 | Root MEMORY.md | < 150 lines | 200 lines |
-| Workstation CLAUDE.md | < 150 lines | 200 lines |
+| Workstation CLAUDE.md | 150–200 lines | 200 lines |
 | Workstation MEMORY.md | < 100 lines | 150 lines |
 | Resource/reference file | Any | — |
 | ARCHIVE.md | Any | — |
@@ -143,7 +143,7 @@ MEMORY ENTRIES TO COMPRESS:
   After:  [compressed 1–2 sentence version]
 
 VALIDATION:
-  CLAUDE.md: [X lines] [✅ in range / ⚠ over limit]
+  CLAUDE.md: [X lines] [✅ in range (150–200) / ⚠ over limit]
   MEMORY.md: [X lines] [✅ in range / ⚠ over limit]
   Misplaced content: [count] items flagged
   Duplicated instructions: [count] instances found
