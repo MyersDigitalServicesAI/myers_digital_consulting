@@ -49,7 +49,7 @@ export class DirectorAgent extends BaseAgent {
       name: "Director",
       skillPath: "director/SKILL.md",
       maxTokens: 16384,
-      model: "claude-opus-4-7",
+      model: "claude-opus-4-8",
     });
 
     registerStandardTools(this);
