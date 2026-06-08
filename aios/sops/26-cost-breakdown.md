@@ -34,13 +34,14 @@ Track and report the operational cost of every AIOS agent — what each one cost
 `POST /webhooks/cost/breakdown` — runs full on-demand cost analysis with optimization recommendations
 
 ## Agent Cost Benchmarks
-**Director**: `claude-opus-4-7` · Input: $5.00/1M · Output: $25.00/1M
-**All other 21 agents**: `claude-sonnet-4-6` · Input: $3.00/1M · Output: $15.00/1M
+**Director**: `claude-opus-4-8` · Input: $5.00/1M · Output: $25.00/1M
+**All other 23 agents**: `claude-sonnet-4-6` · Input: $3.00/1M · Output: $15.00/1M
 
 | Agent | Model | Est. Input/Run | Est. Output/Run | Cost/Run | Runs/Day | Daily Cost |
 |-------|-------|---------------|-----------------|----------|----------|------------|
-| Director | Opus 4.7 | 8,500 | 4,500 | $0.1550 | 5.0 | $0.7750 |
+| Director | Opus 4.8 | 8,500 | 4,500 | $0.1550 | 5.0 | $0.7750 |
 | SalesCallCoach | Sonnet 4.6 | 9,500 | 5,500 | $0.1110 | 2.0 | $0.2220 |
+| AiosSales | Sonnet 4.6 | 9,000 | 5,000 | $0.1020 | 2.0 | $0.2040 |
 | CRM | Sonnet 4.6 | 6,500 | 2,500 | $0.0570 | 3.0 | $0.1710 |
 | MeetingTranscript | Sonnet 4.6 | 7,000 | 3,500 | $0.0735 | 2.0 | $0.1470 |
 | MetaAdsManager | Sonnet 4.6 | 8,500 | 4,500 | $0.0930 | 1.0 | $0.0930 |
@@ -53,6 +54,7 @@ Track and report the operational cost of every AIOS agent — what each one cost
 | ContentCalendar | Sonnet 4.6 | 9,000 | 5,000 | $0.1020 | 0.14 | $0.0143 |
 | AdPerformance | Sonnet 4.6 | 9,000 | 5,000 | $0.1020 | 0.14 | $0.0143 |
 | GoogleAdsManager | Sonnet 4.6 | 8,000 | 4,000 | $0.0840 | 0.14 | $0.0118 |
+| WorkspaceArchitect | Sonnet 4.6 | 8,000 | 4,000 | $0.0840 | 0.14 | $0.0118 |
 | CostBreakdown | Sonnet 4.6 | 7,500 | 4,000 | $0.0825 | 0.14 | $0.0116 |
 | Marketing | Sonnet 4.6 | 6,500 | 2,500 | $0.0570 | 0.14 | $0.0080 |
 | Security | Sonnet 4.6 | 6,500 | 2,500 | $0.0570 | 0.14 | $0.0080 |
@@ -62,8 +64,8 @@ Track and report the operational cost of every AIOS agent — what each one cost
 | Bookkeeping | Sonnet 4.6 | 7,000 | 3,000 | $0.0660 | 0.07 | $0.0046 |
 | Legal | Sonnet 4.6 | 6,500 | 2,500 | $0.0570 | 0.07 | $0.0040 |
 
-**Total estimated daily cost: ~$1.83 · Monthly: ~$54.81 · Annual: ~$657.72**
-*28% cost reduction vs all-Opus baseline ($2.53/day → $1.83/day)*
+**Total estimated daily cost: ~$2.04 · Monthly: ~$61.28 · Annual: ~$735.38**
+*29% cost reduction vs all-Opus baseline ($2.89/day → $2.04/day)*
 
 ## Optimization Opportunities
 1. **Prompt caching** on Director, SalesCallCoach, NewsletterWriter — system prompts are stable, caching saves ~80% on input tokens for repeated runs

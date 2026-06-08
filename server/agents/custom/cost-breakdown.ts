@@ -5,7 +5,7 @@ import { registerAgent } from "../director.ts";
 
 // Pricing per model
 const PRICING: Record<string, { input: number; output: number }> = {
-  opus:   { input: 5  / 1_000_000, output: 25 / 1_000_000 }, // claude-opus-4-7
+  opus:   { input: 5  / 1_000_000, output: 25 / 1_000_000 }, // claude-opus-4-8
   sonnet: { input: 3  / 1_000_000, output: 15 / 1_000_000 }, // claude-sonnet-4-6
 };
 
@@ -20,7 +20,7 @@ const AGENT_PROFILES: Record<
     schedule: string;
   }
 > = {
-  // Director is the only agent that stays on Opus 4.7 — complex multi-domain routing
+  // Director is the only agent that stays on Opus 4.8 — complex multi-domain routing
   director: { name: "Director", model: "opus", inputTokens: 8500, outputTokens: 4500, runsPerDay: 5, schedule: "On-demand (webhooks)" },
   crm: { name: "CRM", model: "sonnet", inputTokens: 6500, outputTokens: 2500, runsPerDay: 3, schedule: "On-demand (GHL leads)" },
   finance: { name: "Finance", model: "sonnet", inputTokens: 7000, outputTokens: 3000, runsPerDay: 0.07, schedule: "1st Monday 9AM" },
@@ -43,6 +43,8 @@ const AGENT_PROFILES: Record<
   "content-calendar": { name: "ContentCalendar", model: "sonnet", inputTokens: 9000, outputTokens: 5000, runsPerDay: 0.14, schedule: "Monday 8:30AM" },
   "ad-performance": { name: "AdPerformance", model: "sonnet", inputTokens: 9000, outputTokens: 5000, runsPerDay: 0.14, schedule: "Friday 4PM" },
   "cost-breakdown": { name: "CostBreakdown", model: "sonnet", inputTokens: 7500, outputTokens: 4000, runsPerDay: 0.14, schedule: "Monday 7AM" },
+  "workspace-architect": { name: "WorkspaceArchitect", model: "sonnet", inputTokens: 8000, outputTokens: 4000, runsPerDay: 0.14, schedule: "On-demand (audits)" },
+  "aios-sales": { name: "AiosSales", model: "sonnet", inputTokens: 9000, outputTokens: 5000, runsPerDay: 2, schedule: "On-demand (inquiries)" },
 };
 
 const GET_COST_MODEL_TOOL: Anthropic.Tool = {
@@ -74,7 +76,7 @@ async function getCostModel(input: Record<string, unknown>): Promise<unknown> {
     return {
       key,
       name: p.name,
-      model: p.model === "opus" ? "claude-opus-4-7" : "claude-sonnet-4-6",
+      model: p.model === "opus" ? "claude-opus-4-8" : "claude-sonnet-4-6",
       inputTokensPerRun: p.inputTokens,
       outputTokensPerRun: p.outputTokens,
       costPerRun: +costPerRun.toFixed(6),
@@ -106,8 +108,8 @@ async function getCostModel(input: Record<string, unknown>): Promise<unknown> {
   return {
     generatedAt: today,
     models: {
-      "claude-opus-4-7": { agents: ["Director"], pricing: { inputPerMillionTokens: 5.0, outputPerMillionTokens: 25.0 } },
-      "claude-sonnet-4-6": { agents: "all others (21 agents)", pricing: { inputPerMillionTokens: 3.0, outputPerMillionTokens: 15.0 } },
+      "claude-opus-4-8": { agents: ["Director"], pricing: { inputPerMillionTokens: 5.0, outputPerMillionTokens: 25.0 } },
+      "claude-sonnet-4-6": { agents: "all others (23 agents)", pricing: { inputPerMillionTokens: 3.0, outputPerMillionTokens: 15.0 } },
     },
     agents: sorted,
     summary: {

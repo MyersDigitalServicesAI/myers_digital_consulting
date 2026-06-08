@@ -1,6 +1,6 @@
 /**
  * Myers Digital AIOS — End-to-End Agent Test Suite
- * Runs all 15 agents against realistic business scenarios.
+ * Runs all 24 agents against realistic business scenarios.
  * Uses mock Claude responses when ANTHROPIC_API_KEY is not set.
  */
 
@@ -794,6 +794,48 @@ const SCENARIOS: Array<{
     task: "Marcus Webb from Webb Roofing & Restoration just submitted the demo form. Revenue $85K/month, pain is reporting and content overhead, active GHL user. Qualify, recommend tier, draft response, book demo.",
     category: "Sales",
   },
+  {
+    agent: "SocialMediaManager",
+    scenario: "Draft and queue the week's approved social posts",
+    skillPath: "custom/social-media-manager/SKILL.md",
+    task: "Draft this week's social posts from the Content Calendar plan. Write 5 LinkedIn posts, 3 Facebook posts, and 5 Instagram captions in Dustin's voice. Save all as 'Awaiting Review' in Notion.",
+    category: "Social",
+  },
+  {
+    agent: "MetaAdsManager",
+    scenario: "Evaluate a spend alert and take optimization action",
+    skillPath: "custom/meta-ads-manager/SKILL.md",
+    task: "Meta alert: campaign 'Missed-Call Revenue Gap' CPL hit $48 vs $25 benchmark. Evaluate against benchmarks and decide pause/scale/maintain. Log the decision.",
+    category: "Paid Ads",
+  },
+  {
+    agent: "GoogleAdsManager",
+    scenario: "Weekly Google Ads search campaign review",
+    skillPath: "custom/google-ads-manager/SKILL.md",
+    task: "Review the week's Google Ads search campaigns. Assess spend, conversions, and quality scores. Identify wasted spend and recommend bid/keyword adjustments.",
+    category: "Paid Ads",
+  },
+  {
+    agent: "ContentCalendar",
+    scenario: "Plan the week's full content calendar from top hook",
+    skillPath: "custom/content-calendar/SKILL.md",
+    task: "Plan this week's content calendar. Use the top hook scored 7+ from last week's calls. Assign it to newsletter, Meta ad, and LinkedIn. Fill all LinkedIn, Instagram, and Facebook slots. Save the plan to Notion.",
+    category: "Content",
+  },
+  {
+    agent: "AdPerformance",
+    scenario: "Weekly blended ad performance report across platforms",
+    skillPath: "custom/ad-performance/SKILL.md",
+    task: "Pull this week's Meta and Google Ads data. Calculate spend, leads, and blended CPL. Identify the best creative and any campaign over CPL threshold. Write the report to Notion and notify Dustin.",
+    category: "Intelligence",
+  },
+  {
+    agent: "CostBreakdown",
+    scenario: "Weekly AIOS cost model report across all 24 agents",
+    skillPath: "cost-breakdown/SKILL.md",
+    task: "Generate the weekly cost breakdown for all 24 agents. Calculate total daily and monthly spend, identify the top 5 cost drivers, and flag any agent over $0.50/run. Write a KPI Snapshot to Notion.",
+    category: "Cost Intelligence",
+  },
 ];
 
 async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
@@ -821,6 +863,12 @@ async function runTest(scenario: typeof SCENARIOS[0]): Promise<TestResult> {
     MeetingTranscript: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "create_tasks_from_meeting"],
     WorkspaceArchitect: ["read_file", "edit_file", "write_file", "log_decision", "notify_dustin", "archive_content"],
     AIOSSales: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "draft_proposal"],
+    SocialMediaManager: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "publish_social_post"],
+    MetaAdsManager: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "manage_meta_campaign"],
+    GoogleAdsManager: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "manage_google_campaign"],
+    ContentCalendar: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "plan_content_calendar"],
+    AdPerformance: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "generate_ad_report"],
+    CostBreakdown: ["notion_read", "notion_write", "log_decision", "zapier_fire", "notify_dustin", "get_cost_model"],
   };
 
   const toolNames = toolCountMap[scenario.agent] ?? [];
@@ -855,16 +903,16 @@ function renderPresentation(results: TestResult[]): string {
 
   lines.push("╔══════════════════════════════════════════════════════════════════════════════╗");
   lines.push("║          MYERS DIGITAL AIOS — END-TO-END AGENT TEST RESULTS                ║");
-  lines.push("║                  18 Digital Employees. Every Domain.                       ║");
+  lines.push("║                  24 Digital Employees. Every Domain.                       ║");
   lines.push("╚══════════════════════════════════════════════════════════════════════════════╝");
   lines.push("");
 
   lines.push("┌─────────────────────── SYSTEM OVERVIEW ────────────────────────────────────┐");
-  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 9 Custom Skills"})       │`);
+  lines.push(`│  Agents deployed:       ${String(results.length).padEnd(4)} (${"Director + 8 Modules + 15 Custom Skills"})      │`);
   lines.push(`│  Skills loaded:         ${String(passed).padEnd(4)} / ${results.length} (SKILL.md system prompts)              │`);
   lines.push(`│  Tools registered:      ${String(totalTools).padEnd(4)} across all agents                            │`);
   lines.push(`│  Tool calls executed:   ${String(totalToolCalls).padEnd(4)} (Notion reads/writes + Zapier fires)        │`);
-  lines.push(`│  Models:                sonnet-4-6 (21 agents) · opus-4-7 (Director)       │`);
+  lines.push(`│  Models:                sonnet-4-6 (23 agents) · opus-4-8 (Director)       │`);
   lines.push(`│  Memory layer:          Notion (8 databases)                                │`);
   lines.push(`│  Execution layer:       Zapier (25 webhooks)                                │`);
   lines.push("└────────────────────────────────────────────────────────────────────────────┘");

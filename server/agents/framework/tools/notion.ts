@@ -26,6 +26,12 @@ const DB_MAP: Record<string, string> = {
   automation_log:
     process.env.NOTION_DB_AUTOMATION_LOG ??
     "44bab4bf-b1c7-44f4-b845-33064b8b5fd2",
+  // Client Registry + GHL Project Tracker complete the canonical 8-database
+  // memory layer (see aios/sops/02-notion-setup.md). Agents reference these in
+  // their SKILL.md files; set the env vars to point them at your real DBs.
+  client_registry: process.env.NOTION_DB_CLIENT_REGISTRY ?? "",
+  ghl_project_tracker: process.env.NOTION_DB_GHL_PROJECT_TRACKER ?? "",
+  // connector_registry is auxiliary integration metadata (not part of the 8).
   connector_registry:
     process.env.NOTION_DB_CONNECTOR_REGISTRY ??
     "a3b50335-3872-4893-9adb-1c882440411b",

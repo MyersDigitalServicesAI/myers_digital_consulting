@@ -4,9 +4,9 @@
   "last_updated": "2026-05-26",
   "integrations": {
     "anthropic": {
-      "purpose": "AI agent runtime — all 20 agents",
+      "purpose": "AI agent runtime — all 24 agents",
       "auth": "ANTHROPIC_API_KEY",
-      "models_used": ["claude-sonnet-4-6", "claude-opus-4-7"],
+      "models_used": ["claude-sonnet-4-6", "claude-opus-4-8"],
       "status": "active",
       "criticality": "CRITICAL"
     },

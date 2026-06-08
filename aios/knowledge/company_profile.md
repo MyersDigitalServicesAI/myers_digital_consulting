@@ -95,7 +95,7 @@ Build and deploy AI Operating Systems (AIOS) for service businesses — replacin
 | Category | Tool |
 |---|---|
 | CRM / Automation Platform | GoHighLevel (GHL) |
-| AI Engine | Claude (Anthropic) — Sonnet 4.6 + Opus 4.7 |
+| AI Engine | Claude (Anthropic) — Sonnet 4.6 + Opus 4.8 |
 | Memory Layer | Notion |
 | Automation Layer | Zapier |
 | Communication | Slack |

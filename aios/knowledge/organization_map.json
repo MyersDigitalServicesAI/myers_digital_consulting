@@ -13,7 +13,7 @@
   "ai_layer": {
     "director_agent": {
       "role": "COO/CEO-level orchestrator",
-      "model": "claude-opus-4-7",
+      "model": "claude-opus-4-8",
       "authority": "Route, coordinate, synthesize — no direct execution",
       "reports_to": "Dustin Myers",
       "manages": ["module_agents", "custom_agents"]

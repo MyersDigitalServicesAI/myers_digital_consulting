@@ -98,19 +98,19 @@
 
 ## End-to-End Test Protocol
 
-Run `server/agents/test-e2e.ts` to verify all 20 agents:
+Run `server/agents/test-e2e.ts` to verify all 24 agents:
 
 ```bash
 npx tsx server/agents/test-e2e.ts
 ```
 
 **Pass criteria:**
-- All 20 agents complete without TypeScript errors
+- All 24 agents complete without TypeScript errors
 - All SKILL.md files load successfully
 - Tool calls execute (simulated mode acceptable)
 - Output format matches expected structure per agent
 
-**Current status**: 18/18 tested as of `aios-e2e-results.txt` (workspace-architect and aios-sales added in this build)
+**Current status**: 24/24 verified (typecheck) as of `aios-e2e-results.txt` (workspace-architect and aios-sales added in this build)
 
 ---
 

@@ -7,7 +7,7 @@
     "agents": {
       "director": {
         "type": "orchestrator",
-        "model": "claude-opus-4-7",
+        "model": "claude-opus-4-8",
         "connects_to": ["crm", "finance", "marketing", "operations", "analytics", "hr", "legal", "security", "transcript-miner", "sales-call-coach", "newsletter-writer", "scroll-stopper-ad", "bookkeeping", "geo-seo-auditor", "meeting-transcript", "social-media-manager", "meta-ads-manager", "google-ads-manager", "content-calendar", "ad-performance", "cost-breakdown", "workspace-architect", "aios-sales"]
       },
       "crm": { "type": "module", "domain": "client_management", "memory": "notion_client_registry", "triggers": ["ghl_new_lead", "health_check_scheduled"] },

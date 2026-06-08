@@ -60,7 +60,7 @@ export function startScheduler(): void {
     await runSafe("Weekly Cost Report", async () => {
       const costAgent = createCostBreakdownAgent();
       await costAgent.run(
-        "Generate the weekly AIOS cost breakdown report. Pull the full cost model for all 22 agents. Calculate total daily and monthly spend, identify the top 5 cost drivers, flag any agent with cost-per-run over $0.50, and check if total daily cost exceeds the $5.00 alert threshold. Write a KPI Snapshot to Notion with the total daily cost metric. Notify Dustin via Slack with the summary and any optimization opportunities.",
+        "Generate the weekly AIOS cost breakdown report. Pull the full cost model for all 24 agents. Calculate total daily and monthly spend, identify the top 5 cost drivers, flag any agent with cost-per-run over $0.50, and check if total daily cost exceeds the $5.00 alert threshold. Write a KPI Snapshot to Notion with the total daily cost metric. Notify Dustin via Slack with the summary and any optimization opportunities.",
       );
     });
   });

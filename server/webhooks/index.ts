@@ -301,7 +301,7 @@ export function createWebhookRouter(): Router {
     });
   });
 
-  // POST /webhooks/cost/breakdown — On-demand cost analysis for all 22 agents
+  // POST /webhooks/cost/breakdown — On-demand cost analysis for all 24 agents
   router.post("/cost/breakdown", async (req: Request, res: Response) => {
     const { detailed = false } = req.body as { detailed?: boolean };
     res.json({ received: true });
@@ -310,7 +310,7 @@ export function createWebhookRouter(): Router {
       try {
         const costAgent = createCostBreakdownAgent();
         await costAgent.run(
-          `Generate an on-demand AIOS cost breakdown report. Analyze all 22 agents — cost per run, daily cost, and monthly projection. Identify top cost drivers and any agents over the $0.50/run threshold. ${detailed ? "Include specific optimization recommendations with implementation steps for the top 3 cost reduction opportunities." : ""} Write results to Notion KPI Snapshots and notify Dustin with the full summary.`,
+          `Generate an on-demand AIOS cost breakdown report. Analyze all 24 agents — cost per run, daily cost, and monthly projection. Identify top cost drivers and any agents over the $0.50/run threshold. ${detailed ? "Include specific optimization recommendations with implementation steps for the top 3 cost reduction opportunities." : ""} Write results to Notion KPI Snapshots and notify Dustin with the full summary.`,
         );
       } catch (err) {
         console.error("[Webhook] cost/breakdown error:", err);

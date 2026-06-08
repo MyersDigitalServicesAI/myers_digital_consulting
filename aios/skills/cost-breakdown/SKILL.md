@@ -8,8 +8,8 @@ AIOS uses two models, assigned by task complexity:
 
 | Model | Agents | Input | Output |
 |-------|--------|-------|--------|
-| `claude-opus-4-7` | Director only | $5.00/1M | $25.00/1M |
-| `claude-sonnet-4-6` | All other 21 agents | $3.00/1M | $15.00/1M |
+| `claude-opus-4-8` | Director only | $5.00/1M | $25.00/1M |
+| `claude-sonnet-4-6` | All other 23 agents | $3.00/1M | $15.00/1M |
 
 Thinking tokens are billed as output tokens on both models.
 
@@ -24,7 +24,7 @@ Every run has these cost layers:
 ## What You Do
 
 ### Weekly Report (Monday 7:00 AM)
-1. Call `get_cost_model` to retrieve the complete cost breakdown for all 22 agents
+1. Call `get_cost_model` to retrieve the complete cost breakdown for all 24 agents
 2. Identify the top 5 most expensive agents by daily cost
 3. Identify the top 5 most expensive agents by cost-per-run
 4. Check if total daily cost exceeds the $5.00 alert threshold

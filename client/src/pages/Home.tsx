@@ -55,7 +55,7 @@ const SPECIALISTS = [
 const SCHEDULE = [
   { time: "Every Day 7:00 AM", task: "Analytics digest — KPIs, anomalies, Slack summary" },
   { time: "Every Day 9:00 AM", task: "Transcript Miner — mines calls, scores & saves top hooks" },
-  { time: "Monday 7:00 AM", task: "Cost report — AI spend across all 22 agents, weekly ROI" },
+  { time: "Monday 7:00 AM", task: "Cost report — AI spend across all 24 agents, weekly ROI" },
   { time: "Monday 8:30 AM", task: "Content Calendar — full week planned from top-scoring hook" },
   { time: "Tuesday 9:00 AM", task: "Social posts drafted — LinkedIn, Instagram, Facebook" },
   { time: "Wednesday", task: "Review & approve window — your only required touchpoint" },
@@ -93,7 +93,7 @@ const PRICING = [
     setup: "$7,500",
     highlight: false,
     agents: [
-      "All 22 agents active",
+      "All 24 agents active",
       "Complete automation stack",
       "All platforms wired",
       "Full Zapier + GHL integration",
@@ -118,14 +118,14 @@ const PRICE_TIERS = [
 ];
 
 const DELIVERABLES = [
-  "Full AIOS build — all 22 agents configured to your business",
+  "Full AIOS build — all 24 agents configured to your business",
   "7 Notion databases set up and populated with your data",
-  "27 Zapier automations wired, tested, and live",
+  "25 Zapier automations wired, tested, and live",
   "GHL webhook integration connected and verified",
   "Slack notifications for every alert and decision",
   "LinkedIn, Instagram, Facebook, Twitter connected",
   "Meta Ads + Google Ads monitoring active from day one",
-  "26 SOPs documenting every automation in plain language",
+  "30 SOPs documenting every automation in plain language",
   "Weekly cost report so you always know your exact ROI",
   "Your voice layer — every output sounds like you, not AI",
   "Ongoing monthly support included with all retainer plans",
@@ -263,7 +263,7 @@ export default function Home() {
             >
               What would cost{" "}
               <span className="text-foreground font-semibold">$13,000–$23,000/month</span> to hire runs autonomously for{" "}
-              <span className="text-primary font-semibold">$1.83/day</span> in AI costs.
+              <span className="text-primary font-semibold">$2.04/day</span> in AI costs.
             </motion.p>
 
             <motion.div
@@ -295,7 +295,7 @@ export default function Home() {
             >
               {[
                 { val: "22", label: "AI Agents" },
-                { val: "$1.83", label: "Per Day" },
+                { val: "$2.04", label: "Per Day" },
                 { val: "300x", label: "ROI" },
                 { val: "10 days", label: "Go Live" },
               ].map((s) => (
@@ -426,7 +426,7 @@ export default function Home() {
                 icon: Zap,
                 layer: "The Hands",
                 tool: "Zapier + GHL",
-                desc: "Fires 27+ automations, routes leads, sends notifications, publishes content, and tracks revenue — all without human input.",
+                desc: "Fires 25 automations, routes leads, sends notifications, publishes content, and tracks revenue — all without human input.",
                 color: "text-primary",
                 bg: "bg-primary/10",
               },
@@ -534,7 +534,7 @@ export default function Home() {
               <span className="text-primary">While You Sleep</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              12 webhook endpoints. 27 Zapier automations. Always on.
+              17 webhook endpoints. 25 Zapier automations. Always on.
             </p>
           </motion.div>
 
@@ -564,7 +564,7 @@ export default function Home() {
           >
             <strong className="text-primary">Always on:</strong>{" "}
             <span className="text-muted-foreground">
-              12 webhook endpoints fire in real-time for lead routing, CRM updates, and Slack alerts — no cron job delays, no missed triggers.
+              17 webhook endpoints fire in real-time for lead routing, CRM updates, and Slack alerts — no cron job delays, no missed triggers.
             </span>
           </motion.div>
         </div>
@@ -587,7 +587,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8 mb-16 max-w-4xl mx-auto">
             {[
-              { icon: DollarSign, val: "$1.83", label: "Per Day", desc: "Total cost to run all 22 agents via Claude API" },
+              { icon: DollarSign, val: "$2.04", label: "Per Day", desc: "Total cost to run all 24 agents via Claude API" },
               { icon: TrendingUp, val: "$23K", label: "Human Team Cost", desc: "What the equivalent human team costs per month" },
               { icon: Rocket, val: "300x", label: "ROI", desc: "Return on every dollar spent — 150–300x depending on tier" },
             ].map((s, i) => (

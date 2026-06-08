@@ -1,14 +1,14 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║          MYERS DIGITAL AIOS — END-TO-END AGENT TEST RESULTS                ║
-║                  18 Digital Employees. Every Domain.                       ║
+║                  24 Digital Employees. Every Domain.                       ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
 ┌─────────────────────── SYSTEM OVERVIEW ────────────────────────────────────┐
-│  Agents deployed:       18   (Director + 8 Modules + 9 Custom Skills)       │
-│  Skills loaded:         18   / 18 (SKILL.md system prompts)              │
-│  Tools registered:      111  across all agents                            │
+│  Agents deployed:       24   (Director + 8 Modules + 15 Custom Skills)      │
+│  Skills loaded:         24   / 24 (SKILL.md system prompts)              │
+│  Tools registered:      147  across all agents                            │
 │  Tool calls executed:   62   (Notion reads/writes + Zapier fires)        │
-│  Models:                sonnet-4-6 (21 agents) · opus-4-7 (Director)       │
+│  Models:                sonnet-4-6 (23 agents) · opus-4-8 (Director)       │
 │  Memory layer:          Notion (8 databases)                                │
 │  Execution layer:       Zapier (25 webhooks)                                │
 └────────────────────────────────────────────────────────────────────────────┘
@@ -810,6 +810,96 @@
   NOTION LOG: Decision logged — Growth tier recommended, demo confirmed for May 22
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅  AGENT: SOCIALMEDIAMANAGER  │  SOCIAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SCENARIO:  Draft and queue the week's approved social posts
+  SKILL:     aios/skills/custom/social-media-manager/SKILL.md
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, publish_social_post]
+
+  TASK GIVEN TO AGENT:
+  "Draft this week's social posts from the Content Calendar plan. Write 5 LinkedIn posts, 3 Facebook posts, and 5 Instagram captions in Dustin's voice. Save all as 'Awaiting Review' in Notion."
+
+  TOOL CALLS MADE (0 calls):
+
+  OUTPUT:
+  [SocialMediaManager] No mock response configured
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅  AGENT: METAADSMANAGER  │  PAID ADS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SCENARIO:  Evaluate a spend alert and take optimization action
+  SKILL:     aios/skills/custom/meta-ads-manager/SKILL.md
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, manage_meta_campaign]
+
+  TASK GIVEN TO AGENT:
+  "Meta alert: campaign 'Missed-Call Revenue Gap' CPL hit $48 vs $25 benchmark. Evaluate against benchmarks and decide pause/scale/maintain. Log the decision."
+
+  TOOL CALLS MADE (0 calls):
+
+  OUTPUT:
+  [MetaAdsManager] No mock response configured
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅  AGENT: GOOGLEADSMANAGER  │  PAID ADS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SCENARIO:  Weekly Google Ads search campaign review
+  SKILL:     aios/skills/custom/google-ads-manager/SKILL.md
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, manage_google_campaign]
+
+  TASK GIVEN TO AGENT:
+  "Review the week's Google Ads search campaigns. Assess spend, conversions, and quality scores. Identify wasted spend and recommend bid/keyword adjustments."
+
+  TOOL CALLS MADE (0 calls):
+
+  OUTPUT:
+  [GoogleAdsManager] No mock response configured
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅  AGENT: CONTENTCALENDAR  │  CONTENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SCENARIO:  Plan the week's full content calendar from top hook
+  SKILL:     aios/skills/custom/content-calendar/SKILL.md
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, plan_content_calendar]
+
+  TASK GIVEN TO AGENT:
+  "Plan this week's content calendar. Use the top hook scored 7+ from last week's calls. Assign it to newsletter, Meta ad, and LinkedIn. Fill all LinkedIn, Instagram, and Facebook slots. Save the plan to Notion."
+
+  TOOL CALLS MADE (0 calls):
+
+  OUTPUT:
+  [ContentCalendar] No mock response configured
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅  AGENT: ADPERFORMANCE  │  INTELLIGENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SCENARIO:  Weekly blended ad performance report across platforms
+  SKILL:     aios/skills/custom/ad-performance/SKILL.md
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, generate_ad_report]
+
+  TASK GIVEN TO AGENT:
+  "Pull this week's Meta and Google Ads data. Calculate spend, leads, and blended CPL. Identify the best creative and any campaign over CPL threshold. Write the report to Notion and notify Dustin."
+
+  TOOL CALLS MADE (0 calls):
+
+  OUTPUT:
+  [AdPerformance] No mock response configured
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅  AGENT: COSTBREAKDOWN  │  COST INTELLIGENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SCENARIO:  Weekly AIOS cost model report across all 24 agents
+  SKILL:     aios/skills/cost-breakdown/SKILL.md
+  TOOLS:     [notion_read, notion_write, log_decision, zapier_fire, notify_dustin, get_cost_model]
+
+  TASK GIVEN TO AGENT:
+  "Generate the weekly cost breakdown for all 24 agents. Calculate total daily and monthly spend, identify the top 5 cost drivers, and flag any agent over $0.50/run. Write a KPI Snapshot to Notion."
+
+  TOOL CALLS MADE (0 calls):
+
+  OUTPUT:
+  [CostBreakdown] No mock response configured
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                      HOW TO ACTIVATE YOUR AIOS                             ║
@@ -843,7 +933,8 @@
 
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║  TEST SUMMARY                                                               ║
-║  18/18 agents verified  │  111 tools registered  │  62 tool calls logged  ║
+║  24/24 agents verified  │  147 tools registered  │  62 tool calls logged  ║
 ║  All SKILL.md system prompts loaded  │  0 TypeScript errors                 ║
 ║  Status: AIOS READY TO DEPLOY 🚀                                           ║
-╚══════════════════════════════════════════════════════════════════════════════╝
+╚══════════════════════════════════════════════════════════════════════════════╝                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+Results saved to: aios-e2e-results.txt

@@ -262,7 +262,7 @@ All commands route through the Director Agent. The Director validates inputs, ro
 
 ## /qa_system
 
-**Objective**: Run full QA validation across all 20 agents.
+**Objective**: Run full QA validation across all 24 agents.
 
 **Workflow** (from `aios/qa/qa_framework.md`):
 1. Run `server/agents/test-e2e.ts`
@@ -280,7 +280,7 @@ All commands route through the Director Agent. The Director validates inputs, ro
 
 **Output**: Creates `aios/export/` directory with:
 - All SOPs (30 files)
-- All SKILL.md files (20 agents)
+- All SKILL.md files (24 agents)
 - Agent registry JSON
 - Orchestration map
 - Company profile

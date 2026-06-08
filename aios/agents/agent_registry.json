@@ -5,14 +5,14 @@
   "total_agents": 20,
   "models": {
     "default": "claude-sonnet-4-6",
-    "director": "claude-opus-4-7"
+    "director": "claude-opus-4-8"
   },
   "agents": {
     "director": {
       "id": "director",
       "name": "Director Agent",
       "type": "orchestrator",
-      "model": "claude-opus-4-7",
+      "model": "claude-opus-4-8",
       "max_tokens": 16384,
       "skill": "aios/skills/director/SKILL.md",
       "server_file": "server/agents/director.ts",
