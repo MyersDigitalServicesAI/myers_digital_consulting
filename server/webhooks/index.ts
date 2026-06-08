@@ -425,6 +425,36 @@ export function createWebhookRouter(): Router {
     });
   });
 
+  // POST /webhooks/intake-quiz — Operational audit quiz submission from website
+  // Runs aios-sales agent async; auto-sends personalized intake form to prospect
+  router.post("/intake-quiz", async (req: Request, res: Response) => {
+    const quiz = req.body as {
+      first_name?: string;
+      business_name?: string;
+      email?: string;
+      [key: string]: unknown;
+    };
+
+    if (!quiz.email || !quiz.first_name) {
+      res.status(400).json({ error: "first_name and email are required" });
+      return;
+    }
+
+    res.json({ received: true });
+
+    setImmediate(async () => {
+      try {
+        const sales = createAiosSalesAgent();
+        await sales.run(
+          `New AIOS operational audit received from ${quiz.first_name} at ${quiz.business_name ?? "unknown business"} (${quiz.email}). Analyze their answers to determine the best-fit AIOS package tier. Log this prospect to Notion CRM pipeline. Notify Dustin via Slack with a summary of their answers and your tier recommendation. Fire the SAL-01 Zapier webhook to trigger the onboarding email sequence with their personalized intake form link.`,
+          JSON.stringify(quiz, null, 2),
+        );
+      } catch (err) {
+        console.error("[Webhook] intake-quiz error:", err);
+      }
+    });
+  });
+
   // POST /webhooks/sales/closed-won — New client signed — fire onboarding chain
   router.post("/sales/closed-won", async (req: Request, res: Response) => {
     const { client_name, package_tier, business_type } = req.body as {
