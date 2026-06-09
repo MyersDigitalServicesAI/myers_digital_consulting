@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createWebhookRouter } from "./webhooks/index.ts";
 import { startScheduler } from "./scheduler/index.ts";
+import { createPortalRouter } from "./routes/portal.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +18,9 @@ async function startServer() {
 
   // AIOS webhook endpoints
   app.use("/webhooks", createWebhookRouter());
+
+  // AIOS Client Portal API
+  app.use("/api/portal", createPortalRouter());
 
   // Health check
   app.get("/health", (_req, res) => {
@@ -36,8 +40,8 @@ async function startServer() {
 
   app.use(express.static(staticPath));
 
-  // Client-side routing fallback
-  app.get("*", (_req, res) => {
+  // Client-side routing fallback (app.use avoids path-to-regexp wildcard syntax)
+  app.use((_req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
