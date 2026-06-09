@@ -9,6 +9,12 @@ export interface Tenant {
   contact_email: string | null;
   contact_name: string | null;
   created_at: string;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+  subscription_status: string | null;
+  billing_interval: "month" | "year" | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
 }
 
 export interface TenantMember {

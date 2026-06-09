@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link } from "wouter";
+import { CreditCard } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PortalLayout } from "@/components/portal/PortalLayout";
 import { OverviewTab } from "@/components/portal/dashboard/OverviewTab";
@@ -45,6 +47,23 @@ export default function Dashboard() {
             Your AIOS client portal
           </p>
         </div>
+
+        {!me.tenant.paid && (
+          <Link
+            href="/portal/billing"
+            className="flex items-center gap-2.5 rounded-md border border-cyan-400/30 bg-cyan-400/5 px-3 py-2.5 text-sm hover:bg-cyan-400/10 transition-colors"
+          >
+            <CreditCard className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+            <span>
+              <span className="font-medium text-cyan-400">
+                Activate your subscription
+              </span>{" "}
+              <span className="text-muted-foreground">
+                — choose a plan to unlock your full AIOS build.
+              </span>
+            </span>
+          </Link>
+        )}
 
         <Tabs defaultValue="overview">
           <TabsList className="w-full sm:w-auto">
