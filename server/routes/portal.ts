@@ -7,6 +7,7 @@ import {
   type PortalRequest,
 } from "../middleware/portal-auth.ts";
 import { createDirectorAgent } from "../agents/director.ts";
+import { createBillingRouter } from "./billing.ts";
 import type {
   OnboardingFormData,
   AdminProvisionRequest,
@@ -14,6 +15,9 @@ import type {
 
 export function createPortalRouter(): Router {
   const router = Router();
+
+  // Billing — checkout, customer portal, subscription status
+  router.use("/billing", createBillingRouter());
 
   // ─── Public endpoints ────────────────────────────────────────────────────────
 

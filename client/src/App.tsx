@@ -14,6 +14,7 @@ import AuthCallback from "./pages/portal/AuthCallback";
 import Onboarding from "./pages/portal/Onboarding";
 import Dashboard from "./pages/portal/Dashboard";
 import SopViewer from "./pages/portal/SopViewer";
+import Billing from "./pages/portal/Billing";
 
 function Router() {
   return (
@@ -39,6 +40,11 @@ function Router() {
       <Route path="/portal/sops/:id">
         <PortalGuard>
           <SopViewer />
+        </PortalGuard>
+      </Route>
+      <Route path="/portal/billing">
+        <PortalGuard>
+          <Billing />
         </PortalGuard>
       </Route>
 

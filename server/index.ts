@@ -3,9 +3,12 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import rateLimit from "express-rate-limit";
 import { createWebhookRouter } from "./webhooks/index.ts";
+import { stripeWebhookHandler } from "./webhooks/stripe.ts";
 import { startScheduler } from "./scheduler/index.ts";
 import { createPortalRouter } from "./routes/portal.ts";
+import { isStripeConfigured } from "./lib/stripe.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,13 +17,30 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
 
+  // Railway/Vercel terminate TLS at a proxy — needed for correct client IPs
+  app.set("trust proxy", 1);
+
+  // Stripe webhook needs the raw payload for signature verification,
+  // so it must be mounted before the JSON body parser.
+  app.post(
+    "/webhooks/stripe",
+    express.raw({ type: "application/json" }),
+    stripeWebhookHandler
+  );
+
   app.use(express.json({ limit: "10mb" })); // large limit for transcripts
 
   // AIOS webhook endpoints
   app.use("/webhooks", createWebhookRouter());
 
-  // AIOS Client Portal API
-  app.use("/api/portal", createPortalRouter());
+  // AIOS Client Portal API (rate-limited)
+  const portalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use("/api/portal", portalLimiter, createPortalRouter());
 
   // Health check
   app.get("/health", (_req, res) => {
@@ -29,6 +49,7 @@ async function startServer() {
       aios: "running",
       anthropic: process.env.ANTHROPIC_API_KEY ? "configured" : "missing",
       notion: process.env.NOTION_API_KEY ? "configured" : "missing",
+      stripe: isStripeConfigured() ? "configured" : "missing",
     });
   });
 

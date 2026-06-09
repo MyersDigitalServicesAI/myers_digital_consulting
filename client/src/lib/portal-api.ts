@@ -7,6 +7,13 @@ import type {
   AdminProvisionRequest,
   AdminProvisionResponse,
 } from "@shared/portal.types";
+import type {
+  BillingInterval,
+  BillingStatusResponse,
+  CheckoutSessionResponse,
+  PlanKey,
+  PortalSessionResponse,
+} from "@shared/billing";
 
 async function getToken(): Promise<string> {
   const { data } = await supabase.auth.getSession();
@@ -72,6 +79,24 @@ export const portalApi = {
 
   workspaceStatus(): Promise<{ workspaceStatus: WorkspaceStatus | null }> {
     return apiFetch("/workspace-status");
+  },
+
+  billingStatus(): Promise<BillingStatusResponse> {
+    return apiFetch("/billing/status");
+  },
+
+  createCheckout(
+    plan: PlanKey,
+    interval: BillingInterval
+  ): Promise<CheckoutSessionResponse> {
+    return apiFetch("/billing/checkout", {
+      method: "POST",
+      body: JSON.stringify({ plan, interval }),
+    });
+  },
+
+  createBillingPortalSession(): Promise<PortalSessionResponse> {
+    return apiFetch("/billing/portal-session", { method: "POST" });
   },
 
   adminProvision(

@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   LayoutDashboard,
   FileText,
-  Settings2,
+  CreditCard,
   LogOut,
   Zap,
   ChevronRight,
@@ -16,6 +16,7 @@ import {
 const NAV_ITEMS = [
   { path: "/portal/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { path: "/portal/sops", icon: FileText, label: "SOPs" },
+  { path: "/portal/billing", icon: CreditCard, label: "Billing" },
 ];
 
 interface Props {

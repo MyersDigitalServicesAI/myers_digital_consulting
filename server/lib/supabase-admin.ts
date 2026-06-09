@@ -10,7 +10,10 @@ if (!serviceRoleKey) {
   );
 }
 
-export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
+// createClient throws on an empty key; the placeholder keeps imports safe in
+// unconfigured environments (tests, local dev) — isSupabaseConfigured() gates
+// all real usage behind a 503.
+export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey || "not-configured", {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
