@@ -15,7 +15,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # supabase-js needs native WebSocket (Node 22+); keep in sync with Railway
+          node-version-file: .node-version
           cache: pnpm
 
       - name: Install dependencies
