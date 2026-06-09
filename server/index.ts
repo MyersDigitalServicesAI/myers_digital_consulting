@@ -40,8 +40,8 @@ async function startServer() {
 
   app.use(express.static(staticPath));
 
-  // Client-side routing fallback
-  app.get("*", (_req, res) => {
+  // Client-side routing fallback (app.use avoids path-to-regexp wildcard syntax)
+  app.use((_req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
