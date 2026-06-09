@@ -95,6 +95,9 @@
     "vitest": "^4.1.0"
   },
   "packageManager": "pnpm@10.26.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "pnpm": {
     "patchedDependencies": {
       "wouter@3.7.1": "patches/wouter@3.7.1.patch"
