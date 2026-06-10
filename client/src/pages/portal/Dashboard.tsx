@@ -6,6 +6,7 @@ import { PortalLayout } from "@/components/portal/PortalLayout";
 import { OverviewTab } from "@/components/portal/dashboard/OverviewTab";
 import { SopsTab } from "@/components/portal/dashboard/SopsTab";
 import { WorkspaceTab } from "@/components/portal/dashboard/WorkspaceTab";
+import { ActivityTab } from "@/components/portal/dashboard/ActivityTab";
 import { usePortalAuth } from "@/contexts/PortalAuthContext";
 import { portalApi } from "@/lib/portal-api";
 
@@ -81,6 +82,9 @@ export default function Dashboard() {
             <TabsTrigger value="workspace" className="flex-1 sm:flex-none">
               Build status
             </TabsTrigger>
+            <TabsTrigger value="activity" className="flex-1 sm:flex-none">
+              Activity
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="mt-4">
@@ -99,6 +103,10 @@ export default function Dashboard() {
               status={me.workspaceStatus}
               intakeSubmitted={me.intakeSubmitted}
             />
+          </TabsContent>
+
+          <TabsContent value="activity" className="mt-4">
+            <ActivityTab />
           </TabsContent>
         </Tabs>
       </div>

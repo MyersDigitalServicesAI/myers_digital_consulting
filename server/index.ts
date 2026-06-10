@@ -9,12 +9,15 @@ import { stripeWebhookHandler } from "./webhooks/stripe.ts";
 import { startScheduler } from "./scheduler/index.ts";
 import { createPortalRouter } from "./routes/portal.ts";
 import { webhookAuth } from "./middleware/webhook-auth.ts";
+import { initSentry, setupSentryErrorHandler } from "./lib/alerts.ts";
 import { isStripeConfigured } from "./lib/stripe.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function startServer() {
+  initSentry();
+
   const app = express();
   const server = createServer(app);
 
@@ -84,6 +87,9 @@ async function startServer() {
   app.use((_req, res) => {
     res.sendFile(path.join(staticPath, "index.html"));
   });
+
+  // Sentry's Express error handler must come after all routes
+  setupSentryErrorHandler(app);
 
   const port = process.env.PORT || 3000;
 
