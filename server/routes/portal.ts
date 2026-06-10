@@ -9,6 +9,11 @@ import {
 } from "../middleware/portal-auth.ts";
 import { createDirectorAgent } from "../agents/director.ts";
 import { createBillingRouter } from "./billing.ts";
+import {
+  sendEmail,
+  buildInviteEmail,
+  buildSopsReadyEmail,
+} from "../lib/email.ts";
 import type {
   OnboardingFormData,
   AdminProvisionRequest,
@@ -330,11 +335,77 @@ export function createPortalRouter(): Router {
     const baseUrl = process.env.APP_URL ?? "https://myersdigitalconsulting.com";
     const joinUrl = `${baseUrl}/portal/join?token=${token}`;
 
+    // Invite email — fire-and-forget; the joinUrl in the response is the
+    // fallback when email isn't configured.
+    const invite = buildInviteEmail({
+      companyName,
+      contactName: contactName ?? null,
+      joinUrl,
+    });
+    const emailResult = await sendEmail({
+      to: contactEmail,
+      subject: invite.subject,
+      html: invite.html,
+    });
+
     res.json({
       tenantId: tenant.id,
       slug: tenant.slug,
       joinUrl,
       token,
+      emailSent: emailResult.sent,
+    });
+  });
+
+  // ─── Admin overview — tenants, workspace progress, agent spend ──────────────
+
+  router.get("/admin/overview", adminAuth, async (_req, res) => {
+    if (!isSupabaseConfigured()) {
+      res.status(503).json({ error: "Portal not configured" });
+      return;
+    }
+
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const startOfWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    const [tenantsRes, wsRes, runsRes] = await Promise.all([
+      supabaseAdmin
+        .from("tenants")
+        .select("*")
+        .order("created_at", { ascending: false }),
+      supabaseAdmin.from("workspace_status").select("*"),
+      supabaseAdmin
+        .from("agent_runs")
+        .select("cost_usd, success, created_at")
+        .gte("created_at", startOfWeek.toISOString()),
+    ]);
+
+    if (tenantsRes.error) {
+      res.status(500).json({ error: tenantsRes.error.message });
+      return;
+    }
+
+    const wsByTenant = new Map(
+      (wsRes.data ?? []).map(w => [w.tenant_id as string, w])
+    );
+    const runs = runsRes.data ?? [];
+    const sum = (rows: typeof runs) =>
+      rows.reduce((s, r) => s + Number(r.cost_usd ?? 0), 0);
+
+    res.json({
+      tenants: (tenantsRes.data ?? []).map(t => ({
+        ...t,
+        workspaceStatus: wsByTenant.get(t.id as string) ?? null,
+      })),
+      agentSpend: {
+        todayUsd: sum(
+          runs.filter(r => new Date(r.created_at as string) >= startOfDay)
+        ),
+        weekUsd: sum(runs),
+        runsThisWeek: runs.length,
+        failuresThisWeek: runs.filter(r => r.success === false).length,
+      },
     });
   });
 
@@ -373,10 +444,12 @@ async function generateForClient(
 ): Promise<void> {
   const tenantRes = await supabaseAdmin
     .from("tenants")
-    .select("company_name")
+    .select("company_name, contact_email")
     .eq("id", tenantId)
     .single();
   const companyName = tenantRes.data?.company_name ?? intake.businessName;
+  const contactEmail = (tenantRes.data?.contact_email as string | null) ?? null;
+  let generatedSopCount = 0;
 
   // Generate SOPs
   const sopTask = `Generate 8 client-specific Standard Operating Procedures for ${companyName}.
@@ -415,6 +488,7 @@ Each SOP content should be 300-500 words of actionable step-by-step instructions
           .from("workspace_status")
           .update({ sops_generated_at: new Date().toISOString() })
           .eq("tenant_id", tenantId);
+        generatedSopCount = sopRows.length;
 
         console.log(
           `[portal] Generated ${sopRows.length} SOPs for ${companyName}`
@@ -458,5 +532,20 @@ biggest_leverage: The single highest-ROI automation or system improvement (1-2 s
     }
   } catch (err) {
     console.error("[portal] Profile generation error:", err);
+  }
+
+  // Notify the client once their deliverables exist (no-op if email unset)
+  if (generatedSopCount > 0 && contactEmail) {
+    const baseUrl = process.env.APP_URL ?? "https://myersdigitalconsulting.com";
+    const ready = buildSopsReadyEmail({
+      companyName,
+      dashboardUrl: `${baseUrl}/portal/dashboard`,
+      sopCount: generatedSopCount,
+    });
+    await sendEmail({
+      to: contactEmail,
+      subject: ready.subject,
+      html: ready.html,
+    });
   }
 }

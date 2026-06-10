@@ -6,6 +6,7 @@ import type {
   OnboardingFormData,
   AdminProvisionRequest,
   AdminProvisionResponse,
+  AdminOverviewResponse,
 } from "@shared/portal.types";
 import type {
   BillingInterval,
@@ -55,7 +56,9 @@ export const portalApi = {
     return apiFetch(`/validate-token?token=${encodeURIComponent(token)}`);
   },
 
-  linkAccount(joinToken: string): Promise<{ linked: boolean; tenantId?: string }> {
+  linkAccount(
+    joinToken: string
+  ): Promise<{ linked: boolean; tenantId?: string }> {
     return apiFetch("/link-account", {
       method: "POST",
       body: JSON.stringify({ joinToken }),
@@ -97,6 +100,12 @@ export const portalApi = {
 
   createBillingPortalSession(): Promise<PortalSessionResponse> {
     return apiFetch("/billing/portal-session", { method: "POST" });
+  },
+
+  adminOverview(adminSecret: string): Promise<AdminOverviewResponse> {
+    return apiFetch("/admin/overview", {
+      headers: { "x-admin-secret": adminSecret },
+    });
   },
 
   adminProvision(
