@@ -8,6 +8,7 @@ import { createWebhookRouter } from "./webhooks/index.ts";
 import { stripeWebhookHandler } from "./webhooks/stripe.ts";
 import { startScheduler } from "./scheduler/index.ts";
 import { createPortalRouter } from "./routes/portal.ts";
+import { webhookAuth } from "./middleware/webhook-auth.ts";
 import { isStripeConfigured } from "./lib/stripe.ts";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,8 +31,16 @@ async function startServer() {
 
   app.use(express.json({ limit: "10mb" })); // large limit for transcripts
 
-  // AIOS webhook endpoints
-  app.use("/webhooks", createWebhookRouter());
+  // AIOS webhook endpoints — secret-gated (these dispatch Anthropic-billed
+  // agents) and rate-limited. Stripe is excluded: it's mounted above with
+  // its own signature verification.
+  const webhookLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use("/webhooks", webhookLimiter, webhookAuth, createWebhookRouter());
 
   // AIOS Client Portal API (rate-limited)
   const portalLimiter = rateLimit({
@@ -42,14 +51,24 @@ async function startServer() {
   });
   app.use("/api/portal", portalLimiter, createPortalRouter());
 
-  // Health check
-  app.get("/health", (_req, res) => {
+  // Health check. Integration config detail only for admins — it's a
+  // reconnaissance map for anyone else.
+  app.get("/health", (req, res) => {
+    const isAdmin =
+      !!process.env.PORTAL_ADMIN_SECRET &&
+      req.headers["x-admin-secret"] === process.env.PORTAL_ADMIN_SECRET;
     res.json({
       status: "ok",
       aios: "running",
-      anthropic: process.env.ANTHROPIC_API_KEY ? "configured" : "missing",
-      notion: process.env.NOTION_API_KEY ? "configured" : "missing",
-      stripe: isStripeConfigured() ? "configured" : "missing",
+      ...(isAdmin && {
+        anthropic: process.env.ANTHROPIC_API_KEY ? "configured" : "missing",
+        notion: process.env.NOTION_API_KEY ? "configured" : "missing",
+        stripe: isStripeConfigured() ? "configured" : "missing",
+        webhookAuth: process.env.AIOS_WEBHOOK_SECRET ? "configured" : "missing",
+        supabase: process.env.SUPABASE_SERVICE_ROLE_KEY
+          ? "configured"
+          : "missing",
+      }),
     });
   });
 

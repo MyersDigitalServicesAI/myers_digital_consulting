@@ -1,6 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "fs";
 import { resolve } from "path";
+import {
+  supabaseAdmin,
+  isSupabaseConfigured,
+} from "../../lib/supabase-admin.ts";
 
 export interface AgentResult {
   success: boolean;
@@ -43,13 +47,13 @@ export class BaseAgent {
     const skillPath = resolve(
       process.cwd(),
       "aios/skills",
-      this.config.skillPath,
+      this.config.skillPath
     );
     try {
       return readFileSync(skillPath, "utf-8");
     } catch {
       console.warn(
-        `[${this.config.name}] Skill not found at ${skillPath}, using default prompt`,
+        `[${this.config.name}] Skill not found at ${skillPath}, using default prompt`
       );
       return `You are the ${this.config.name} agent for Myers Digital Consulting. Act as a senior executive in your domain and provide actionable analysis and decisions.`;
     }
@@ -57,13 +61,52 @@ export class BaseAgent {
 
   protected registerTool(
     tool: Anthropic.Tool,
-    executor: (input: Record<string, unknown>) => Promise<unknown>,
+    executor: (input: Record<string, unknown>) => Promise<unknown>
   ): void {
     this.tools.push(tool);
     this.toolExecutors.set(tool.name, executor);
   }
 
+  /**
+   * Audit trail: persist every run to agent_runs (fire-and-forget — a
+   * logging failure must never fail the run). No-op when Supabase isn't
+   * configured (tests, local dev without env).
+   */
+  private recordRun(
+    task: string,
+    result: AgentResult,
+    iterations: number,
+    durationMs: number
+  ): void {
+    if (!isSupabaseConfigured()) return;
+    void supabaseAdmin
+      .from("agent_runs")
+      .insert({
+        agent: this.config.name,
+        model: this.config.model ?? "claude-sonnet-4-6",
+        task: task.slice(0, 500),
+        success: result.success,
+        error: result.error ?? null,
+        output_preview: result.output.slice(0, 1000) || null,
+        iterations,
+        tool_call_count: result.toolCalls.length,
+        input_tokens: result.tokenUsage.inputTokens,
+        output_tokens: result.tokenUsage.outputTokens,
+        cost_usd: result.tokenUsage.totalCost,
+        duration_ms: durationMs,
+      })
+      .then(({ error }) => {
+        if (error) {
+          console.warn(
+            `[${this.config.name}] failed to record run:`,
+            error.message
+          );
+        }
+      });
+  }
+
   async run(task: string, context?: string): Promise<AgentResult> {
+    const startedAt = Date.now();
     const userContent = context
       ? `CONTEXT:\n${context}\n\nTASK:\n${task}`
       : task;
@@ -76,7 +119,7 @@ export class BaseAgent {
     let totalOutputTokens = 0;
 
     console.log(
-      `[${this.config.name}] Starting: ${task.slice(0, 100)}${task.length > 100 ? "..." : ""}`,
+      `[${this.config.name}] Starting: ${task.slice(0, 100)}${task.length > 100 ? "..." : ""}`
     );
 
     for (let iteration = 0; iteration < 15; iteration++) {
@@ -95,26 +138,32 @@ export class BaseAgent {
       messages.push({ role: "assistant", content: response.content });
 
       const toolUseBlocks = response.content.filter(
-        (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
+        (b): b is Anthropic.ToolUseBlock => b.type === "tool_use"
       );
 
       if (toolUseBlocks.length === 0 || response.stop_reason === "end_turn") {
         const textBlock = response.content.find(
-          (b): b is Anthropic.TextBlock => b.type === "text",
+          (b): b is Anthropic.TextBlock => b.type === "text"
         );
         const isOpus = (this.config.model ?? "").includes("opus");
         const totalCost =
-          totalInputTokens * (isOpus ? 5 : 3) / 1_000_000 +
-          totalOutputTokens * (isOpus ? 25 : 15) / 1_000_000;
+          (totalInputTokens * (isOpus ? 5 : 3)) / 1_000_000 +
+          (totalOutputTokens * (isOpus ? 25 : 15)) / 1_000_000;
         console.log(
-          `[${this.config.name}] Completed (${iteration + 1} turns, $${totalCost.toFixed(4)})`,
+          `[${this.config.name}] Completed (${iteration + 1} turns, $${totalCost.toFixed(4)})`
         );
-        return {
+        const result: AgentResult = {
           success: true,
           output: textBlock?.text ?? "",
           toolCalls,
-          tokenUsage: { inputTokens: totalInputTokens, outputTokens: totalOutputTokens, totalCost },
+          tokenUsage: {
+            inputTokens: totalInputTokens,
+            outputTokens: totalOutputTokens,
+            totalCost,
+          },
         };
+        this.recordRun(task, result, iteration + 1, Date.now() - startedAt);
+        return result;
       }
 
       const toolResults: Anthropic.ToolResultBlockParam[] = [];
@@ -125,9 +174,7 @@ export class BaseAgent {
 
         if (executor) {
           try {
-            result = await executor(
-              block.input as Record<string, unknown>,
-            );
+            result = await executor(block.input as Record<string, unknown>);
           } catch (err) {
             result = { error: `Tool execution failed: ${String(err)}` };
           }
@@ -148,14 +195,19 @@ export class BaseAgent {
     }
 
     const totalCost =
-      totalInputTokens * (5 / 1_000_000) +
-      totalOutputTokens * (25 / 1_000_000);
-    return {
+      totalInputTokens * (5 / 1_000_000) + totalOutputTokens * (25 / 1_000_000);
+    const result: AgentResult = {
       success: false,
       output: "",
       toolCalls,
-      tokenUsage: { inputTokens: totalInputTokens, outputTokens: totalOutputTokens, totalCost },
+      tokenUsage: {
+        inputTokens: totalInputTokens,
+        outputTokens: totalOutputTokens,
+        totalCost,
+      },
       error: "Max iterations reached without completion",
     };
+    this.recordRun(task, result, 15, Date.now() - startedAt);
+    return result;
   }
 }
