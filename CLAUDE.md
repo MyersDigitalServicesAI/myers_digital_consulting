@@ -36,7 +36,7 @@ server/            Express 5, ESM, imports use explicit .ts extensions
   webhooks/        /webhooks/* — external entry points that dispatch tasks to agents
   scheduler/       node-cron jobs that run agents on a schedule
   middleware/      portal-auth.ts (Supabase JWT → tenant/role), admin auth via PORTAL_ADMIN_SECRET
-  lib/             supabase-admin (service role), stripe, billing-plans, email (Resend; no-op when unconfigured)
+  lib/             supabase-admin (service role), stripe, billing-plans, email (Resend; no-op when unconfigured), alerts (Sentry + Slack ops pings; no-op when unconfigured)
 shared/            Types/constants used by both client and server (plan catalog in billing.ts)
 aios/              Agent system prompts (skills/**/SKILL.md), SOPs, business knowledge
 aios-template/     Sanitized AIOS template for client deployments
@@ -59,7 +59,7 @@ Path aliases: `@` → `client/src`, `@shared` → `shared` (configured in both v
 - All other `/webhooks/*` routes require the `AIOS_WEBHOOK_SECRET` shared secret (`x-aios-secret` header or `?secret=`), enforced by `server/middleware/webhook-auth.ts`. Production fails closed if the env var is unset; dev allows unauthenticated calls with a warning.
 - Agent-dispatching webhooks respond immediately and run agents via `setImmediate` (callers like GHL/Zapier expect fast acks).
 - The scheduler starts unless `AIOS_SCHEDULER=disabled` — keep it disabled in dev/test or cron jobs will call the Anthropic API.
-- Every `BaseAgent.run()` is recorded to the `agent_runs` table (cost, tokens, success/error) — fire-and-forget, skipped when Supabase isn't configured.
+- Every `BaseAgent.run()` is recorded to the `agent_runs` table (cost, tokens, success/error, optional `tenant_id` for the client activity feed) — fire-and-forget, skipped when Supabase isn't configured. Failed runs also fire a Slack ops alert (15-min cooldown per agent+error) and a Sentry event via `server/lib/alerts.ts`.
 - Agent spend is budget-capped: `AIOS_MAX_RUN_COST_USD` (default $5) stops a runaway tool loop mid-run; `AIOS_DAILY_BUDGET_USD` (default $50, UTC, computed from `agent_runs`) refuses new runs once crossed. System prompts and the conversation prefix are prompt-cached (`cache_control`) across loop iterations. `AIOS_DIRECTOR_MODEL` overrides the Director's model (default `claude-opus-4-8`).
 
 ### Portal & billing

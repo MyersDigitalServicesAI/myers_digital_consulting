@@ -5,6 +5,7 @@ import {
   supabaseAdmin,
   isSupabaseConfigured,
 } from "../../lib/supabase-admin.ts";
+import { alertAgentFailure } from "../../lib/alerts.ts";
 
 export interface AgentResult {
   success: boolean;
@@ -116,8 +117,12 @@ export class BaseAgent {
     task: string,
     result: AgentResult,
     iterations: number,
-    durationMs: number
+    durationMs: number,
+    tenantId?: string
   ): void {
+    if (!result.success && result.error) {
+      alertAgentFailure(this.config.name, task, result.error);
+    }
     if (!isSupabaseConfigured()) return;
     void supabaseAdmin
       .from("agent_runs")
@@ -134,6 +139,7 @@ export class BaseAgent {
         output_tokens: result.tokenUsage.outputTokens,
         cost_usd: result.tokenUsage.totalCost,
         duration_ms: durationMs,
+        tenant_id: tenantId ?? null,
       })
       .then(({ error }) => {
         if (error) {
@@ -158,8 +164,13 @@ export class BaseAgent {
     return data.reduce((sum, row) => sum + Number(row.cost_usd ?? 0), 0);
   }
 
-  async run(task: string, context?: string): Promise<AgentResult> {
+  async run(
+    task: string,
+    context?: string,
+    meta?: { tenantId?: string }
+  ): Promise<AgentResult> {
     const startedAt = Date.now();
+    const tenantId = meta?.tenantId;
 
     // Global kill switch: once today's recorded spend crosses the daily
     // budget, refuse new runs until midnight UTC.
@@ -178,7 +189,7 @@ export class BaseAgent {
         tokenUsage: { inputTokens: 0, outputTokens: 0, totalCost: 0 },
         error,
       };
-      this.recordRun(task, result, 0, Date.now() - startedAt);
+      this.recordRun(task, result, 0, Date.now() - startedAt, tenantId);
       return result;
     }
 
@@ -257,7 +268,13 @@ export class BaseAgent {
             totalCost,
           },
         };
-        this.recordRun(task, result, iteration + 1, Date.now() - startedAt);
+        this.recordRun(
+          task,
+          result,
+          iteration + 1,
+          Date.now() - startedAt,
+          tenantId
+        );
         return result;
       }
 
@@ -277,7 +294,13 @@ export class BaseAgent {
           },
           error,
         };
-        this.recordRun(task, result, iteration + 1, Date.now() - startedAt);
+        this.recordRun(
+          task,
+          result,
+          iteration + 1,
+          Date.now() - startedAt,
+          tenantId
+        );
         return result;
       }
 
@@ -327,7 +350,7 @@ export class BaseAgent {
       },
       error: "Max iterations reached without completion",
     };
-    this.recordRun(task, result, 15, Date.now() - startedAt);
+    this.recordRun(task, result, 15, Date.now() - startedAt, tenantId);
     return result;
   }
 }

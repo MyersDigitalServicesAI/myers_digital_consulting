@@ -14,6 +14,7 @@ import {
   buildInviteEmail,
   buildSopsReadyEmail,
 } from "../lib/email.ts";
+import { reportError } from "../lib/alerts.ts";
 import type {
   OnboardingFormData,
   AdminProvisionRequest,
@@ -272,6 +273,43 @@ export function createPortalRouter(): Router {
     }
   );
 
+  // Client-facing activity feed — sanitized agent runs for this tenant only
+  // (no task text, errors, or cost: those are internal).
+  router.get(
+    "/activity",
+    portalAuth as never,
+    requireActiveTenant as never,
+    async (req, res) => {
+      const pr = req as PortalRequest;
+      const weekAgo = new Date(
+        Date.now() - 7 * 24 * 60 * 60 * 1000
+      ).toISOString();
+
+      const [runsRes, weekCountRes] = await Promise.all([
+        supabaseAdmin
+          .from("agent_runs")
+          .select("id, agent, success, duration_ms, created_at")
+          .eq("tenant_id", pr.portalTenantId)
+          .order("created_at", { ascending: false })
+          .limit(50),
+        supabaseAdmin
+          .from("agent_runs")
+          .select("id", { count: "exact", head: true })
+          .eq("tenant_id", pr.portalTenantId)
+          .gte("created_at", weekAgo),
+      ]);
+
+      if (runsRes.error) {
+        res.status(500).json({ error: "Failed to fetch activity" });
+        return;
+      }
+      res.json({
+        runs: runsRes.data ?? [],
+        runsThisWeek: weekCountRes.count ?? 0,
+      });
+    }
+  );
+
   // ─── Admin endpoints ─────────────────────────────────────────────────────────
 
   router.post("/admin/provision", adminAuth, async (req, res) => {
@@ -464,7 +502,9 @@ Each SOP content should be 300-500 words of actionable step-by-step instructions
 
   try {
     const director = createDirectorAgent();
-    const result = await director.run(sopTask, JSON.stringify(intake));
+    const result = await director.run(sopTask, JSON.stringify(intake), {
+      tenantId,
+    });
 
     if (result.success && result.output) {
       const jsonMatch = result.output.match(/\[[\s\S]*\]/);
@@ -496,7 +536,7 @@ Each SOP content should be 300-500 words of actionable step-by-step instructions
       }
     }
   } catch (err) {
-    console.error("[portal] SOP generation error:", err);
+    reportError("portal.sop-generation", err);
   }
 
   // Generate company profile
@@ -510,7 +550,9 @@ biggest_leverage: The single highest-ROI automation or system improvement (1-2 s
 
   try {
     const director = createDirectorAgent();
-    const result = await director.run(profileTask, JSON.stringify(intake));
+    const result = await director.run(profileTask, JSON.stringify(intake), {
+      tenantId,
+    });
 
     if (result.success && result.output) {
       const jsonMatch = result.output.match(/\{[\s\S]*\}/);
@@ -531,7 +573,7 @@ biggest_leverage: The single highest-ROI automation or system improvement (1-2 s
       }
     }
   } catch (err) {
-    console.error("[portal] Profile generation error:", err);
+    reportError("portal.profile-generation", err);
   }
 
   // Notify the client once their deliverables exist (no-op if email unset)

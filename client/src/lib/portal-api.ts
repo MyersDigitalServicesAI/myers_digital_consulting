@@ -7,6 +7,7 @@ import type {
   AdminProvisionRequest,
   AdminProvisionResponse,
   AdminOverviewResponse,
+  ActivityResponse,
 } from "@shared/portal.types";
 import type {
   BillingInterval,
@@ -82,6 +83,10 @@ export const portalApi = {
 
   workspaceStatus(): Promise<{ workspaceStatus: WorkspaceStatus | null }> {
     return apiFetch("/workspace-status");
+  },
+
+  activity(): Promise<ActivityResponse> {
+    return apiFetch("/activity");
   },
 
   billingStatus(): Promise<BillingStatusResponse> {

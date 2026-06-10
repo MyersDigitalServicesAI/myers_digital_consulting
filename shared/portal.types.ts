@@ -122,6 +122,19 @@ export interface AdminProvisionResponse {
   emailSent: boolean;
 }
 
+export interface ActivityRun {
+  id: string;
+  agent: string;
+  success: boolean;
+  duration_ms: number | null;
+  created_at: string;
+}
+
+export interface ActivityResponse {
+  runs: ActivityRun[];
+  runsThisWeek: number;
+}
+
 export interface AdminTenantOverview extends Tenant {
   workspaceStatus: WorkspaceStatus | null;
 }
