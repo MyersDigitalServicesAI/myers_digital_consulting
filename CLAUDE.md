@@ -36,7 +36,7 @@ server/            Express 5, ESM, imports use explicit .ts extensions
   webhooks/        /webhooks/* — external entry points that dispatch tasks to agents
   scheduler/       node-cron jobs that run agents on a schedule
   middleware/      portal-auth.ts (Supabase JWT → tenant/role), admin auth via PORTAL_ADMIN_SECRET
-  lib/             supabase-admin (service role), stripe, billing-plans (price ID resolution)
+  lib/             supabase-admin (service role), stripe, billing-plans, email (Resend; no-op when unconfigured)
 shared/            Types/constants used by both client and server (plan catalog in billing.ts)
 aios/              Agent system prompts (skills/**/SKILL.md), SOPs, business knowledge
 aios-template/     Sanitized AIOS template for client deployments
@@ -68,7 +68,8 @@ Path aliases: `@` → `client/src`, `@shared` → `shared` (configured in both v
 - Subscription enforcement: content routes (`/sops`, `/workspace-status`, `/onboarding/submit`) also pass through `requireActiveTenant`, which returns 402 for `paused` tenants (the Stripe webhook sets `status: "paused"` on cancellation). `/me` and `/billing/*` stay accessible so a lapsed client can re-subscribe; `PortalGuard` redirects paused tenants to `/portal/billing`.
 - Tenancy: `tenants` table drives portal state (`status`, `plan`, `paid`, subscription fields). Stripe webhook events are recorded in `billing_events` for idempotency.
 - Plan display data lives in `shared/billing.ts`; Stripe price IDs resolve in `server/lib/billing-plans.ts` (live IDs by default, override with `STRIPE_PRICE_<PLAN>_<INTERVAL>` env vars for test mode).
-- Client routes under `/portal/*` are guarded by `PortalGuard` (see `client/src/App.tsx`).
+- Client routes under `/portal/*` are guarded by `PortalGuard` (see `client/src/App.tsx`). `/portal/admin` is the operator console — gated by `PORTAL_ADMIN_SECRET` (entered in the UI, sent as `x-admin-secret`), not Supabase auth.
+- Transactional email (`server/lib/email.ts`, Resend REST API): client invites on admin provision, payment-failed dunning from the Stripe webhook, SOPs-ready notification after intake generation. Every send is a graceful no-op when `RESEND_API_KEY`/`EMAIL_FROM` are unset.
 
 ### Deployment
 

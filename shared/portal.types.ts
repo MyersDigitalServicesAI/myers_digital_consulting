@@ -119,4 +119,19 @@ export interface AdminProvisionResponse {
   slug: string;
   joinUrl: string;
   token: string;
+  emailSent: boolean;
+}
+
+export interface AdminTenantOverview extends Tenant {
+  workspaceStatus: WorkspaceStatus | null;
+}
+
+export interface AdminOverviewResponse {
+  tenants: AdminTenantOverview[];
+  agentSpend: {
+    todayUsd: number;
+    weekUsd: number;
+    runsThisWeek: number;
+    failuresThisWeek: number;
+  };
 }
