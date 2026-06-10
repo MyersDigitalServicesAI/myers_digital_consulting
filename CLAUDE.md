@@ -56,12 +56,16 @@ Path aliases: `@` → `client/src`, `@shared` → `shared` (configured in both v
 ### Request flow gotchas
 
 - The Stripe webhook (`/webhooks/stripe`) is mounted with `express.raw` **before** `express.json()` in `server/index.ts` — signature verification needs the raw body. Don't reorder middleware.
+- All other `/webhooks/*` routes require the `AIOS_WEBHOOK_SECRET` shared secret (`x-aios-secret` header or `?secret=`), enforced by `server/middleware/webhook-auth.ts`. Production fails closed if the env var is unset; dev allows unauthenticated calls with a warning.
 - Agent-dispatching webhooks respond immediately and run agents via `setImmediate` (callers like GHL/Zapier expect fast acks).
 - The scheduler starts unless `AIOS_SCHEDULER=disabled` — keep it disabled in dev/test or cron jobs will call the Anthropic API.
+- Every `BaseAgent.run()` is recorded to the `agent_runs` table (cost, tokens, success/error) — fire-and-forget, skipped when Supabase isn't configured.
+- Agent spend is budget-capped: `AIOS_MAX_RUN_COST_USD` (default $5) stops a runaway tool loop mid-run; `AIOS_DAILY_BUDGET_USD` (default $50, UTC, computed from `agent_runs`) refuses new runs once crossed. System prompts and the conversation prefix are prompt-cached (`cache_control`) across loop iterations. `AIOS_DIRECTOR_MODEL` overrides the Director's model (default `claude-opus-4-8`).
 
 ### Portal & billing
 
 - Auth: Supabase (client uses `VITE_SUPABASE_*` anon key; server uses `SUPABASE_SERVICE_ROLE_KEY` which bypasses RLS). `portalAuth` middleware resolves JWT → user → tenant membership.
+- Subscription enforcement: content routes (`/sops`, `/workspace-status`, `/onboarding/submit`) also pass through `requireActiveTenant`, which returns 402 for `paused` tenants (the Stripe webhook sets `status: "paused"` on cancellation). `/me` and `/billing/*` stay accessible so a lapsed client can re-subscribe; `PortalGuard` redirects paused tenants to `/portal/billing`.
 - Tenancy: `tenants` table drives portal state (`status`, `plan`, `paid`, subscription fields). Stripe webhook events are recorded in `billing_events` for idempotency.
 - Plan display data lives in `shared/billing.ts`; Stripe price IDs resolve in `server/lib/billing-plans.ts` (live IDs by default, override with `STRIPE_PRICE_<PLAN>_<INTERVAL>` env vars for test mode).
 - Client routes under `/portal/*` are guarded by `PortalGuard` (see `client/src/App.tsx`).
@@ -77,4 +81,4 @@ Path aliases: `@` → `client/src`, `@shared` → `shared` (configured in both v
 - pnpm has a patched dependency (`patches/wouter@3.7.1.patch`) and version overrides in package.json — don't remove them casually.
 - Prettier is the formatter (`.prettierrc`); no ESLint config exists.
 - `aios/CLAUDE.md` and `aios-template/CLAUDE.md` are runtime instructions for the AIOS Director agent product, **not** guidance for working in this repo.
-- Supabase migrations in `supabase/migrations/` are applied manually to the remote project (`aios-platform-prod`); migration files note when/where they were applied.
+- Supabase migrations in `supabase/migrations/` are applied manually to the remote project (`aios-platform-prod`); migration files note when/where they were applied. `00000000000000_baseline.sql` is the full schema as deployed (idempotent) — to rebuild an environment, run it first, then the dated migrations except `20260609_add_billing.sql` (already folded into the baseline).

@@ -4,6 +4,7 @@ import { supabaseAdmin, isSupabaseConfigured } from "../lib/supabase-admin.ts";
 import {
   portalAuth,
   adminAuth,
+  requireActiveTenant,
   type PortalRequest,
 } from "../middleware/portal-auth.ts";
 import { createDirectorAgent } from "../agents/director.ts";
@@ -34,7 +35,9 @@ export function createPortalRouter(): Router {
 
     const { data, error } = await supabaseAdmin
       .from("onboarding_links")
-      .select("tenant_id, expires_at, used, tenants(company_name, contact_email)")
+      .select(
+        "tenant_id, expires_at, used, tenants(company_name, contact_email)"
+      )
       .eq("token", token)
       .single();
 
@@ -51,7 +54,11 @@ export function createPortalRouter(): Router {
       return;
     }
 
-    const tenant = (data.tenants as unknown as { company_name: string; contact_email: string }) ?? {};
+    const tenant =
+      (data.tenants as unknown as {
+        company_name: string;
+        contact_email: string;
+      }) ?? {};
     res.json({
       valid: true,
       tenantId: data.tenant_id,
@@ -140,99 +147,125 @@ export function createPortalRouter(): Router {
 
     res.json({
       tenant: tenantRes.data,
-      member: { tenant_id: pr.portalTenantId, user_id: pr.portalUserId, role: pr.portalRole },
+      member: {
+        tenant_id: pr.portalTenantId,
+        user_id: pr.portalUserId,
+        role: pr.portalRole,
+      },
       workspaceStatus: wsRes.data ?? null,
       companyProfile: profileRes.data ?? null,
       intakeSubmitted: (intakeRes.data?.length ?? 0) > 0,
     });
   });
 
-  router.post("/onboarding/submit", portalAuth as never, async (req, res) => {
-    const pr = req as PortalRequest;
-    const intake = req.body as OnboardingFormData;
+  router.post(
+    "/onboarding/submit",
+    portalAuth as never,
+    requireActiveTenant as never,
+    async (req, res) => {
+      const pr = req as PortalRequest;
+      const intake = req.body as OnboardingFormData;
 
-    // Save intake response
-    const { error: insertErr } = await supabaseAdmin.from("intake_responses").insert({
-      tenant_id: pr.portalTenantId,
-      answers: intake,
-      departments: intake.departments ?? [],
-      submitted_at: new Date().toISOString(),
-    });
+      // Save intake response
+      const { error: insertErr } = await supabaseAdmin
+        .from("intake_responses")
+        .insert({
+          tenant_id: pr.portalTenantId,
+          answers: intake,
+          departments: intake.departments ?? [],
+          submitted_at: new Date().toISOString(),
+        });
 
-    if (insertErr) {
-      res.status(500).json({ error: "Failed to save intake response" });
-      return;
+      if (insertErr) {
+        res.status(500).json({ error: "Failed to save intake response" });
+        return;
+      }
+
+      // Update workspace status
+      await supabaseAdmin.from("workspace_status").upsert({
+        tenant_id: pr.portalTenantId,
+        intake_submitted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+
+      // Update tenant status to active
+      await supabaseAdmin
+        .from("tenants")
+        .update({ status: "active" })
+        .eq("id", pr.portalTenantId)
+        .eq("status", "onboarding");
+
+      res.json({ success: true });
+
+      // Fire SOP generation + company profile in background
+      setImmediate(() => {
+        generateForClient(pr.portalTenantId, intake).catch(err =>
+          console.error("[portal] SOP generation failed:", err)
+        );
+      });
     }
+  );
 
-    // Update workspace status
-    await supabaseAdmin.from("workspace_status").upsert({
-      tenant_id: pr.portalTenantId,
-      intake_submitted_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
+  router.get(
+    "/sops",
+    portalAuth as never,
+    requireActiveTenant as never,
+    async (req, res) => {
+      const pr = req as PortalRequest;
+      const { data, error } = await supabaseAdmin
+        .from("sops")
+        .select("id, department, title, status, generated_at")
+        .eq("tenant_id", pr.portalTenantId)
+        .order("generated_at", { ascending: false });
 
-    // Update tenant status to active
-    await supabaseAdmin
-      .from("tenants")
-      .update({ status: "active" })
-      .eq("id", pr.portalTenantId)
-      .eq("status", "onboarding");
-
-    res.json({ success: true });
-
-    // Fire SOP generation + company profile in background
-    setImmediate(() => {
-      generateForClient(pr.portalTenantId, intake).catch((err) =>
-        console.error("[portal] SOP generation failed:", err)
-      );
-    });
-  });
-
-  router.get("/sops", portalAuth as never, async (req, res) => {
-    const pr = req as PortalRequest;
-    const { data, error } = await supabaseAdmin
-      .from("sops")
-      .select("id, department, title, status, generated_at")
-      .eq("tenant_id", pr.portalTenantId)
-      .order("generated_at", { ascending: false });
-
-    if (error) {
-      res.status(500).json({ error: "Failed to fetch SOPs" });
-      return;
+      if (error) {
+        res.status(500).json({ error: "Failed to fetch SOPs" });
+        return;
+      }
+      res.json({ sops: data ?? [] });
     }
-    res.json({ sops: data ?? [] });
-  });
+  );
 
-  router.get("/sops/:id", portalAuth as never, async (req, res) => {
-    const pr = req as unknown as PortalRequest;
-    const { data, error } = await supabaseAdmin
-      .from("sops")
-      .select("*")
-      .eq("id", req.params.id)
-      .eq("tenant_id", pr.portalTenantId)
-      .single();
+  router.get(
+    "/sops/:id",
+    portalAuth as never,
+    requireActiveTenant as never,
+    async (req, res) => {
+      const pr = req as unknown as PortalRequest;
+      const { data, error } = await supabaseAdmin
+        .from("sops")
+        .select("*")
+        .eq("id", req.params.id)
+        .eq("tenant_id", pr.portalTenantId)
+        .single();
 
-    if (error || !data) {
-      res.status(404).json({ error: "SOP not found" });
-      return;
+      if (error || !data) {
+        res.status(404).json({ error: "SOP not found" });
+        return;
+      }
+      res.json({ sop: data });
     }
-    res.json({ sop: data });
-  });
+  );
 
-  router.get("/workspace-status", portalAuth as never, async (req, res) => {
-    const pr = req as PortalRequest;
-    const { data, error } = await supabaseAdmin
-      .from("workspace_status")
-      .select("*")
-      .eq("tenant_id", pr.portalTenantId)
-      .single();
+  router.get(
+    "/workspace-status",
+    portalAuth as never,
+    requireActiveTenant as never,
+    async (req, res) => {
+      const pr = req as PortalRequest;
+      const { data, error } = await supabaseAdmin
+        .from("workspace_status")
+        .select("*")
+        .eq("tenant_id", pr.portalTenantId)
+        .single();
 
-    if (error) {
-      res.json({ workspaceStatus: null });
-      return;
+      if (error) {
+        res.json({ workspaceStatus: null });
+        return;
+      }
+      res.json({ workspaceStatus: data });
     }
-    res.json({ workspaceStatus: data });
-  });
+  );
 
   // ─── Admin endpoints ─────────────────────────────────────────────────────────
 
@@ -246,7 +279,9 @@ export function createPortalRouter(): Router {
       req.body as AdminProvisionRequest;
 
     if (!companyName || !contactEmail || !plan) {
-      res.status(400).json({ error: "companyName, contactEmail, plan required" });
+      res
+        .status(400)
+        .json({ error: "companyName, contactEmail, plan required" });
       return;
     }
 
@@ -270,12 +305,16 @@ export function createPortalRouter(): Router {
       .single();
 
     if (tenantErr || !tenant) {
-      res.status(500).json({ error: tenantErr?.message ?? "Failed to create tenant" });
+      res
+        .status(500)
+        .json({ error: tenantErr?.message ?? "Failed to create tenant" });
       return;
     }
 
     const token = nanoid(32);
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    const expiresAt = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000
+    ).toISOString();
 
     await supabaseAdmin.from("onboarding_links").insert({
       token,
@@ -363,7 +402,7 @@ Each SOP content should be 300-500 words of actionable step-by-step instructions
           content: string;
         }>;
 
-        const sopRows = sops.map((s) => ({
+        const sopRows = sops.map(s => ({
           tenant_id: tenantId,
           department: s.department,
           title: s.title,
@@ -377,7 +416,9 @@ Each SOP content should be 300-500 words of actionable step-by-step instructions
           .update({ sops_generated_at: new Date().toISOString() })
           .eq("tenant_id", tenantId);
 
-        console.log(`[portal] Generated ${sopRows.length} SOPs for ${companyName}`);
+        console.log(
+          `[portal] Generated ${sopRows.length} SOPs for ${companyName}`
+        );
       }
     }
   } catch (err) {

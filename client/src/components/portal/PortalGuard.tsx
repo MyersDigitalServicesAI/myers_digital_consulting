@@ -20,6 +20,16 @@ export function PortalGuard({ children }: { children: ReactNode }) {
       return;
     }
 
+    // Paused = subscription lapsed/canceled. Billing is the only usable page;
+    // the server rejects content routes with 402 in this state anyway.
+    if (
+      me.tenant.status === "paused" &&
+      window.location.pathname !== "/portal/billing"
+    ) {
+      setLocation("/portal/billing");
+      return;
+    }
+
     if (
       me.tenant.status === "onboarding" &&
       !me.intakeSubmitted &&

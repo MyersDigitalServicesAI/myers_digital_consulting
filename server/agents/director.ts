@@ -11,9 +11,7 @@ export function registerAgent(name: string, factory: AgentFactory): void {
   AGENT_REGISTRY[name] = factory;
 }
 
-async function routeToAgent(
-  input: Record<string, unknown>,
-): Promise<unknown> {
+async function routeToAgent(input: Record<string, unknown>): Promise<unknown> {
   const { agent, task, context } = input as {
     agent: string;
     task: string;
@@ -49,7 +47,9 @@ export class DirectorAgent extends BaseAgent {
       name: "Director",
       skillPath: "director/SKILL.md",
       maxTokens: 16384,
-      model: "claude-opus-4-8",
+      // Opus for routing/synthesis quality; set AIOS_DIRECTOR_MODEL to
+      // claude-sonnet-4-6 to cut Director cost ~40% per token.
+      model: process.env.AIOS_DIRECTOR_MODEL ?? "claude-opus-4-8",
     });
 
     registerStandardTools(this);
@@ -109,7 +109,7 @@ export class DirectorAgent extends BaseAgent {
           required: ["agent", "task"],
         },
       },
-      routeToAgent,
+      routeToAgent
     );
   }
 }
