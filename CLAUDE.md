@@ -60,6 +60,7 @@ Path aliases: `@` → `client/src`, `@shared` → `shared` (configured in both v
 - Agent-dispatching webhooks respond immediately and run agents via `setImmediate` (callers like GHL/Zapier expect fast acks).
 - The scheduler starts unless `AIOS_SCHEDULER=disabled` — keep it disabled in dev/test or cron jobs will call the Anthropic API.
 - Every `BaseAgent.run()` is recorded to the `agent_runs` table (cost, tokens, success/error) — fire-and-forget, skipped when Supabase isn't configured.
+- Agent spend is budget-capped: `AIOS_MAX_RUN_COST_USD` (default $5) stops a runaway tool loop mid-run; `AIOS_DAILY_BUDGET_USD` (default $50, UTC, computed from `agent_runs`) refuses new runs once crossed. System prompts and the conversation prefix are prompt-cached (`cache_control`) across loop iterations. `AIOS_DIRECTOR_MODEL` overrides the Director's model (default `claude-opus-4-8`).
 
 ### Portal & billing
 
