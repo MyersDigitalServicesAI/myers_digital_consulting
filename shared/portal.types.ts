@@ -119,4 +119,32 @@ export interface AdminProvisionResponse {
   slug: string;
   joinUrl: string;
   token: string;
+  emailSent: boolean;
+}
+
+export interface ActivityRun {
+  id: string;
+  agent: string;
+  success: boolean;
+  duration_ms: number | null;
+  created_at: string;
+}
+
+export interface ActivityResponse {
+  runs: ActivityRun[];
+  runsThisWeek: number;
+}
+
+export interface AdminTenantOverview extends Tenant {
+  workspaceStatus: WorkspaceStatus | null;
+}
+
+export interface AdminOverviewResponse {
+  tenants: AdminTenantOverview[];
+  agentSpend: {
+    todayUsd: number;
+    weekUsd: number;
+    runsThisWeek: number;
+    failuresThisWeek: number;
+  };
 }

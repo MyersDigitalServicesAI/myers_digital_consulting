@@ -15,6 +15,7 @@ import Onboarding from "./pages/portal/Onboarding";
 import Dashboard from "./pages/portal/Dashboard";
 import SopViewer from "./pages/portal/SopViewer";
 import Billing from "./pages/portal/Billing";
+import Admin from "./pages/portal/Admin";
 
 function Router() {
   return (
@@ -25,6 +26,9 @@ function Router() {
       <Route path="/portal/login" component={PortalLogin} />
       <Route path="/portal/join" component={PortalJoin} />
       <Route path="/portal/auth/callback" component={AuthCallback} />
+
+      {/* Admin — authenticated by PORTAL_ADMIN_SECRET, not Supabase */}
+      <Route path="/portal/admin" component={Admin} />
 
       {/* Portal — protected */}
       <Route path="/portal/onboarding">

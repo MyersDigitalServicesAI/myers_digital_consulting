@@ -4,6 +4,7 @@ import { getStripe, isStripeConfigured } from "../lib/stripe.ts";
 import { supabaseAdmin, isSupabaseConfigured } from "../lib/supabase-admin.ts";
 import { notifySlack } from "../lib/notify.ts";
 import { PLANS, isPlanKey, isBillingInterval } from "../../shared/billing.ts";
+import { sendEmail, buildPaymentFailedEmail } from "../lib/email.ts";
 
 // Subscription statuses that grant portal access. past_due keeps access during
 // the dunning window; Stripe cancels the subscription if retries are exhausted.
@@ -30,17 +31,26 @@ export function getPeriodEnd(subscription: Stripe.Subscription): string | null {
 }
 
 /** Pre-basil: invoice.subscription; basil+: invoice.parent.subscription_details. */
-export function getInvoiceSubscriptionId(invoice: Stripe.Invoice): string | null {
+export function getInvoiceSubscriptionId(
+  invoice: Stripe.Invoice
+): string | null {
   const inv = invoice as unknown as {
     subscription?: string | { id: string } | null;
-    parent?: { subscription_details?: { subscription?: string | { id: string } | null } | null } | null;
+    parent?: {
+      subscription_details?: {
+        subscription?: string | { id: string } | null;
+      } | null;
+    } | null;
   };
-  const raw = inv.subscription ?? inv.parent?.subscription_details?.subscription;
+  const raw =
+    inv.subscription ?? inv.parent?.subscription_details?.subscription;
   if (!raw) return null;
   return typeof raw === "string" ? raw : raw.id;
 }
 
-function asId(value: string | { id: string } | null | undefined): string | null {
+function asId(
+  value: string | { id: string } | null | undefined
+): string | null {
   if (!value) return null;
   return typeof value === "string" ? value : value.id;
 }
@@ -68,7 +78,9 @@ export async function deriveTenantUpdate(
           stripe_customer_id: asId(session.customer),
           stripe_subscription_id: asId(session.subscription),
           ...(isPlanKey(plan) ? { plan } : {}),
-          ...(isBillingInterval(interval) ? { billing_interval: interval } : {}),
+          ...(isBillingInterval(interval)
+            ? { billing_interval: interval }
+            : {}),
           paid: true,
           subscription_status: "active",
           cancel_at_period_end: false,
@@ -92,7 +104,9 @@ export async function deriveTenantUpdate(
           cancel_at_period_end: sub.cancel_at_period_end ?? false,
           current_period_end: getPeriodEnd(sub),
           paid: PAID_STATUSES.has(sub.status),
-          ...(isBillingInterval(sub.items?.data?.[0]?.price?.recurring?.interval)
+          ...(isBillingInterval(
+            sub.items?.data?.[0]?.price?.recurring?.interval
+          )
             ? { billing_interval: sub.items.data[0].price.recurring?.interval }
             : {}),
         },
@@ -121,7 +135,9 @@ export async function deriveTenantUpdate(
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
       if (!getInvoiceSubscriptionId(invoice)) return null;
-      const customerId = asId(invoice.customer as string | { id: string } | null);
+      const customerId = asId(
+        invoice.customer as string | { id: string } | null
+      );
       const tenantId = customerId
         ? await deps.findTenantIdByCustomer(customerId)
         : null;
@@ -133,7 +149,9 @@ export async function deriveTenantUpdate(
     case "invoice.paid": {
       const invoice = event.data.object as Stripe.Invoice;
       if (!getInvoiceSubscriptionId(invoice)) return null;
-      const customerId = asId(invoice.customer as string | { id: string } | null);
+      const customerId = asId(
+        invoice.customer as string | { id: string } | null
+      );
       const tenantId = customerId
         ? await deps.findTenantIdByCustomer(customerId)
         : null;
@@ -272,11 +290,13 @@ export async function stripeWebhookHandler(
 
   // Idempotency: the event id is the primary key, so a duplicate delivery
   // fails the insert and is acknowledged without reprocessing.
-  const { error: insertErr } = await supabaseAdmin.from("billing_events").insert({
-    id: event.id,
-    type: event.type,
-    payload: { livemode: event.livemode, created: event.created },
-  });
+  const { error: insertErr } = await supabaseAdmin
+    .from("billing_events")
+    .insert({
+      id: event.id,
+      type: event.type,
+      payload: { livemode: event.livemode, created: event.created },
+    });
   if (insertErr) {
     if (insertErr.code === "23505") {
       res.json({ received: true, duplicate: true });
@@ -311,6 +331,35 @@ export async function stripeWebhookHandler(
           console.error("[stripe-webhook] automation error:", err)
         );
       });
+
+      // Dunning notice — after the ack so Stripe isn't kept waiting.
+      // No-op when email isn't configured.
+      if (event.type === "invoice.payment_failed") {
+        const tenantId = update.tenantId;
+        setImmediate(async () => {
+          try {
+            const { data } = await supabaseAdmin
+              .from("tenants")
+              .select("company_name, contact_email")
+              .eq("id", tenantId)
+              .single();
+            if (!data?.contact_email) return;
+            const baseUrl =
+              process.env.APP_URL ?? "https://myersdigitalconsulting.com";
+            const mail = buildPaymentFailedEmail({
+              companyName: data.company_name as string,
+              billingUrl: `${baseUrl}/portal/billing`,
+            });
+            await sendEmail({
+              to: data.contact_email as string,
+              subject: mail.subject,
+              html: mail.html,
+            });
+          } catch (err) {
+            console.error("[stripe-webhook] payment-failed email error:", err);
+          }
+        });
+      }
     }
 
     res.json({ received: true });
