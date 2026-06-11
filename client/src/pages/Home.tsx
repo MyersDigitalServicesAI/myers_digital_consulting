@@ -1,3 +1,9 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -131,6 +137,45 @@ const DELIVERABLES = [
   "Ongoing monthly support included with all retainer plans",
 ];
 
+const NAV_LINKS = [
+  { id: "how-it-works", label: "How It Works" },
+  { id: "agents", label: "Agents" },
+  { id: "pricing", label: "Pricing" },
+  { id: "faq", label: "FAQ" },
+  { id: "contact", label: "Contact" },
+];
+
+const FAQ = [
+  {
+    q: "Is this just ChatGPT with a fancy wrapper?",
+    a: "No — different category. ChatGPT is a conversation: it waits for you to ask it something and forgets your business between sessions. AIOS is a system: it runs on a schedule (daily KPI digests at 7am, weekly reports on Monday, content drafted Tuesday), keeps long-term memory in 7 live Notion databases, and actually executes — sending Slack alerts, updating GHL pipelines, publishing content, and firing 27 Zapier automations without you in the loop.",
+  },
+  {
+    q: "What do I actually have to do each week?",
+    a: "One thing: the Wednesday review window. You approve or edit the week's content and any flagged decisions — usually 20–30 minutes. Everything else runs without you. Lead follow-up, reporting, ad monitoring, and bookkeeping never wait on your calendar.",
+  },
+  {
+    q: "How long until I'm live?",
+    a: "7–10 business days from kickoff. That's the full build: all agents configured to your business, Notion databases populated with your data, Zapier automations wired and tested, platforms connected, and your voice layer trained. No months-long onboarding.",
+  },
+  {
+    q: "Do I need GoHighLevel?",
+    a: "GHL is the platform AIOS runs on. If you already have it, we plug straight into your account. If you don't, we provision and configure it as part of your setup — it's included in the build, not an extra project on your plate.",
+  },
+  {
+    q: "What does it cost to run after setup?",
+    a: "About $1.83/day in AI costs to run every agent — and the weekly cost report shows you the exact number, every Monday. Compare that to the $13,000–$23,000/month the equivalent human team costs and the math does the selling.",
+  },
+  {
+    q: "What happens when the 5 founding spots are gone?",
+    a: "Every tier goes up by $1,000/month — permanently — and again every 5 clients after that. Your rate locks the day you sign and never increases, even as new clients pay more. That's not manufactured scarcity; it's how the business model works, stated transparently.",
+  },
+  {
+    q: "Can I own the system without a monthly retainer?",
+    a: "Yes — the Build-Out Only option ($12,500 one-time). You get the full AIOS built for your business plus complete handover documentation, and you run it yourself. No retainer, no ongoing commitment.",
+  },
+];
+
 const ICP = [
   {
     icon: TrendingUp,
@@ -178,13 +223,13 @@ export default function Home() {
             </div>
 
             <div className="hidden md:flex items-center gap-8">
-              {["how-it-works", "agents", "pricing", "contact"].map((id) => (
+              {NAV_LINKS.map((link) => (
                 <button
-                  key={id}
-                  onClick={() => scrollTo(id)}
-                  className="text-muted-foreground hover:text-primary transition-colors capitalize"
+                  key={link.id}
+                  onClick={() => scrollTo(link.id)}
+                  className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  {id === "how-it-works" ? "How It Works" : id.charAt(0).toUpperCase() + id.slice(1)}
+                  {link.label}
                 </button>
               ))}
               <Button onClick={() => scrollTo("contact")} className="glow-cyan-hover">
@@ -203,13 +248,13 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               className="md:hidden pt-4 pb-2 flex flex-col gap-3"
             >
-              {["how-it-works", "agents", "pricing", "contact"].map((id) => (
+              {NAV_LINKS.map((link) => (
                 <button
-                  key={id}
-                  onClick={() => scrollTo(id)}
+                  key={link.id}
+                  onClick={() => scrollTo(link.id)}
                   className="text-left py-2 text-muted-foreground hover:text-primary transition-colors"
                 >
-                  {id === "how-it-works" ? "How It Works" : id.charAt(0).toUpperCase() + id.slice(1)}
+                  {link.label}
                 </button>
               ))}
               <Button onClick={() => scrollTo("contact")} className="w-full glow-cyan-hover">
@@ -985,6 +1030,70 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── FAQ ── */}
+      <section id="faq" className="py-24">
+        <div className="container mx-auto px-4">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="inline-block px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium mb-4">
+              Straight Answers
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              Questions You're{" "}
+              <span className="text-primary">Already Asking</span>
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              No fluff. Here's exactly how it works, what it costs, and what's expected of you.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto"
+          >
+            <Accordion type="single" collapsible className="space-y-3">
+              {FAQ.map((item, i) => (
+                <AccordionItem
+                  key={item.q}
+                  value={`faq-${i}`}
+                  className="rounded-lg border border-border bg-card px-5 last:border-b"
+                >
+                  <AccordionTrigger className="text-left font-semibold hover:text-primary hover:no-underline">
+                    {item.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                    {item.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="text-center mt-10"
+          >
+            <p className="text-sm text-muted-foreground mb-4">
+              Still have a question? Bring it to the demo — 30 minutes, no pitch deck.
+            </p>
+            <Button size="lg" onClick={() => scrollTo("contact")} className="glow-cyan-hover">
+              Book Your Free Demo <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── CONTACT / CTA ── */}
       <section id="contact" className="py-24 bg-card/30">
         <div className="container mx-auto px-4">
@@ -1067,9 +1176,9 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              {["how-it-works", "agents", "pricing", "contact"].map((id) => (
-                <button key={id} onClick={() => scrollTo(id)} className="hover:text-primary transition-colors">
-                  {id === "how-it-works" ? "How It Works" : id.charAt(0).toUpperCase() + id.slice(1)}
+              {NAV_LINKS.map((link) => (
+                <button key={link.id} onClick={() => scrollTo(link.id)} className="hover:text-primary transition-colors">
+                  {link.label}
                 </button>
               ))}
             </div>
