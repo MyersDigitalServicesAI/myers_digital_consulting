@@ -2,29 +2,26 @@ import { describe, expect, it } from "vitest";
 import { checkoutSchema } from "./billing.ts";
 
 describe("checkout request validation", () => {
-  it("accepts a valid plan and interval", () => {
-    const result = checkoutSchema.safeParse({ plan: "growth", interval: "year" });
-    expect(result.success).toBe(true);
-  });
-
-  it("defaults the interval to month", () => {
-    const result = checkoutSchema.parse({ plan: "starter" });
-    expect(result.interval).toBe("month");
+  it("accepts every valid plan", () => {
+    for (const plan of ["starter", "growth", "full_stack"]) {
+      expect(checkoutSchema.safeParse({ plan }).success).toBe(true);
+    }
   });
 
   it("rejects unknown plans", () => {
     expect(checkoutSchema.safeParse({ plan: "free" }).success).toBe(false);
   });
 
-  it("rejects unknown intervals", () => {
-    expect(
-      checkoutSchema.safeParse({ plan: "starter", interval: "day" }).success
-    ).toBe(false);
+  it("rejects a missing plan", () => {
+    expect(checkoutSchema.safeParse({}).success).toBe(false);
+  });
+
+  it("ignores extra fields like the retired interval", () => {
+    const result = checkoutSchema.parse({ plan: "starter", interval: "year" });
+    expect(result).toEqual({ plan: "starter" });
   });
 
   it("rejects injection-shaped input", () => {
-    expect(
-      checkoutSchema.safeParse({ plan: { $ne: null }, interval: "month" }).success
-    ).toBe(false);
+    expect(checkoutSchema.safeParse({ plan: { $ne: null } }).success).toBe(false);
   });
 });

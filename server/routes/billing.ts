@@ -7,12 +7,14 @@ import { portalAuth, type PortalRequest } from "../middleware/portal-auth.ts";
 import type {
   BillingInvoiceSummary,
   BillingStatusResponse,
+  PlanKey,
 } from "../../shared/billing.ts";
 import type { Tenant } from "../../shared/portal.types.ts";
 
+// The public offer is monthly-only (founding pricing) with a one-time setup
+// fee — there is no annual interval at checkout.
 export const checkoutSchema = z.object({
   plan: z.enum(["starter", "growth", "full_stack"]),
-  interval: z.enum(["month", "year"]).default("month"),
 });
 
 function appUrl(): string {
@@ -61,6 +63,53 @@ async function ensureStripeCustomer(tenant: Tenant): Promise<string> {
   return customer.id;
 }
 
+export function tenantHasActiveSubscription(tenant: Tenant): boolean {
+  return Boolean(
+    tenant.stripe_subscription_id &&
+      ["active", "trialing", "past_due"].includes(tenant.subscription_status ?? "")
+  );
+}
+
+/**
+ * Create a Stripe Checkout session for a tenant: monthly subscription plus the
+ * one-time setup fee. The setup fee is skipped for returning customers (a
+ * previous subscription means their AIOS was already built).
+ */
+export async function createCheckoutSessionUrl(
+  tenant: Tenant,
+  plan: PlanKey
+): Promise<string | null> {
+  const stripe = getStripe();
+  const customerId = await ensureStripeCustomer(tenant);
+  const metadata = { tenant_id: tenant.id, plan, interval: "month" };
+  const isReturningCustomer = Boolean(tenant.stripe_subscription_id);
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "subscription",
+    customer: customerId,
+    line_items: [
+      { price: resolvePriceId(plan, "month"), quantity: 1 },
+      ...(isReturningCustomer
+        ? []
+        : [{ price: resolvePriceId(plan, "setup"), quantity: 1 }]),
+    ],
+    subscription_data: { metadata },
+    metadata,
+    allow_promotion_codes: true,
+    billing_address_collection: "required",
+    ...(process.env.STRIPE_AUTOMATIC_TAX === "true"
+      ? {
+          automatic_tax: { enabled: true },
+          customer_update: { address: "auto" as const },
+        }
+      : {}),
+    success_url: `${appUrl()}/portal/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${appUrl()}/portal/billing?checkout=cancelled`,
+  });
+
+  return session.url ?? null;
+}
+
 export function createBillingRouter(): Router {
   const router = Router();
 
@@ -76,10 +125,10 @@ export function createBillingRouter(): Router {
 
     const parsed = checkoutSchema.safeParse(req.body);
     if (!parsed.success) {
-      res.status(400).json({ error: "Invalid plan or interval" });
+      res.status(400).json({ error: "Invalid plan" });
       return;
     }
-    const { plan, interval } = parsed.data;
+    const { plan } = parsed.data;
 
     const pr = req as PortalRequest;
     const tenant = await getTenant(pr.portalTenantId);
@@ -88,10 +137,7 @@ export function createBillingRouter(): Router {
       return;
     }
 
-    if (
-      tenant.stripe_subscription_id &&
-      ["active", "trialing", "past_due"].includes(tenant.subscription_status ?? "")
-    ) {
+    if (tenantHasActiveSubscription(tenant)) {
       res.status(409).json({
         error:
           "An active subscription already exists. Use the billing portal to change plans.",
@@ -100,33 +146,12 @@ export function createBillingRouter(): Router {
     }
 
     try {
-      const stripe = getStripe();
-      const customerId = await ensureStripeCustomer(tenant);
-      const metadata = { tenant_id: tenant.id, plan, interval };
-
-      const session = await stripe.checkout.sessions.create({
-        mode: "subscription",
-        customer: customerId,
-        line_items: [{ price: resolvePriceId(plan, interval), quantity: 1 }],
-        subscription_data: { metadata },
-        metadata,
-        allow_promotion_codes: true,
-        billing_address_collection: "required",
-        ...(process.env.STRIPE_AUTOMATIC_TAX === "true"
-          ? {
-              automatic_tax: { enabled: true },
-              customer_update: { address: "auto" as const },
-            }
-          : {}),
-        success_url: `${appUrl()}/portal/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${appUrl()}/portal/billing?checkout=cancelled`,
-      });
-
-      if (!session.url) {
+      const url = await createCheckoutSessionUrl(tenant, plan);
+      if (!url) {
         res.status(502).json({ error: "Stripe did not return a checkout URL" });
         return;
       }
-      res.json({ url: session.url });
+      res.json({ url });
     } catch (err) {
       console.error("[billing] checkout error:", err);
       res.status(500).json({ error: "Failed to create checkout session" });

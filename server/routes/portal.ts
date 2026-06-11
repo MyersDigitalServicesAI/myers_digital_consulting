@@ -7,10 +7,17 @@ import {
   type PortalRequest,
 } from "../middleware/portal-auth.ts";
 import { createDirectorAgent } from "../agents/director.ts";
-import { createBillingRouter } from "./billing.ts";
+import {
+  createBillingRouter,
+  createCheckoutSessionUrl,
+  tenantHasActiveSubscription,
+} from "./billing.ts";
+import { isStripeConfigured } from "../lib/stripe.ts";
+import { isPlanKey } from "../../shared/billing.ts";
 import type {
   OnboardingFormData,
   AdminProvisionRequest,
+  Tenant,
 } from "../../shared/portal.types.ts";
 
 export function createPortalRouter(): Router {
@@ -297,6 +304,51 @@ export function createPortalRouter(): Router {
       joinUrl,
       token,
     });
+  });
+
+  // Generate a Stripe Checkout link for a tenant — for emailing a prospect a
+  // direct "pay here" link before they ever sign in to the portal.
+  router.post("/admin/checkout-link", adminAuth, async (req, res) => {
+    if (!isSupabaseConfigured()) {
+      res.status(503).json({ error: "Portal not configured" });
+      return;
+    }
+    if (!isStripeConfigured()) {
+      res.status(503).json({ error: "Billing not configured" });
+      return;
+    }
+
+    const { tenantId, plan } = req.body as { tenantId?: string; plan?: string };
+    if (!tenantId || !isPlanKey(plan)) {
+      res.status(400).json({ error: "tenantId and a valid plan are required" });
+      return;
+    }
+
+    const { data: tenant } = await supabaseAdmin
+      .from("tenants")
+      .select("*")
+      .eq("id", tenantId)
+      .single();
+    if (!tenant) {
+      res.status(404).json({ error: "Tenant not found" });
+      return;
+    }
+    if (tenantHasActiveSubscription(tenant as Tenant)) {
+      res.status(409).json({ error: "Tenant already has an active subscription" });
+      return;
+    }
+
+    try {
+      const url = await createCheckoutSessionUrl(tenant as Tenant, plan);
+      if (!url) {
+        res.status(502).json({ error: "Stripe did not return a checkout URL" });
+        return;
+      }
+      res.json({ url, plan, tenantId });
+    } catch (err) {
+      console.error("[portal] admin checkout-link error:", err);
+      res.status(500).json({ error: "Failed to create checkout link" });
+    }
   });
 
   router.patch("/admin/workspace/:tenantId", adminAuth, async (req, res) => {

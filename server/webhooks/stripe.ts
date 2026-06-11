@@ -2,7 +2,8 @@ import type { Request, Response } from "express";
 import type Stripe from "stripe";
 import { getStripe, isStripeConfigured } from "../lib/stripe.ts";
 import { supabaseAdmin, isSupabaseConfigured } from "../lib/supabase-admin.ts";
-import { isPlanKey, isBillingInterval } from "../../shared/billing.ts";
+import { notifySlack } from "../lib/notify.ts";
+import { PLANS, isPlanKey, isBillingInterval } from "../../shared/billing.ts";
 
 // Subscription statuses that grant portal access. past_due keeps access during
 // the dunning window; Stripe cancels the subscription if retries are exhausted.
@@ -169,6 +170,70 @@ const supabaseDeps: StripeEventDeps = {
 };
 
 /**
+ * Fire-and-forget follow-ups after a tenant billing update: Slack alerts for
+ * money events, and the Director closed-won onboarding chain on a new
+ * subscription. Runs off the request path — failures are logged, never
+ * surfaced to Stripe (the webhook has already been acknowledged).
+ */
+export async function runBillingAutomations(
+  event: Stripe.Event,
+  tenantId: string
+): Promise<void> {
+  const { data: tenant } = await supabaseAdmin
+    .from("tenants")
+    .select("company_name, plan, contact_email")
+    .eq("id", tenantId)
+    .maybeSingle();
+  const company = (tenant?.company_name as string | undefined) ?? tenantId;
+  const planKey = tenant?.plan as string | undefined;
+  const planName = isPlanKey(planKey) ? PLANS[planKey].name : (planKey ?? "unknown plan");
+
+  switch (event.type) {
+    case "checkout.session.completed": {
+      await notifySlack(`💰 New AIOS subscription: ${company} — ${planName}`);
+
+      // Kick off the closed-won onboarding chain (same flow as
+      // POST /webhooks/sales/closed-won). Dynamic import keeps the agents
+      // framework out of this module's import graph for unit tests.
+      if (process.env.ANTHROPIC_API_KEY) {
+        try {
+          const { createDirectorAgent } = await import("../agents/director.ts");
+          const director = createDirectorAgent();
+          await director.run(
+            `New client closed via Stripe Checkout: ${company} subscribed to ${planName}. Route to Sales agent to fire the SAL-04 → DEL-02 onboarding chain, then route to Operations to provision the GHL sub-account. The setup fee and first month were already collected through Stripe — no invoice needed.`,
+            JSON.stringify({
+              client_name: company,
+              package_tier: planKey,
+              contact_email: tenant?.contact_email ?? null,
+            })
+          );
+        } catch (err) {
+          console.error("[stripe-webhook] closed-won automation error:", err);
+        }
+      }
+      return;
+    }
+
+    case "invoice.payment_failed": {
+      await notifySlack(
+        `⚠️ Payment failed: ${company} (${planName}) is now past_due. Stripe will retry; they keep access during dunning.`
+      );
+      return;
+    }
+
+    case "customer.subscription.deleted": {
+      await notifySlack(
+        `🚫 Subscription canceled: ${company} (${planName}). Tenant paused.`
+      );
+      return;
+    }
+
+    default:
+      return;
+  }
+}
+
+/**
  * Express handler for POST /webhooks/stripe.
  * Must be mounted with express.raw({ type: "application/json" }) BEFORE any
  * JSON body parser — signature verification needs the exact raw payload.
@@ -240,6 +305,12 @@ export async function stripeWebhookHandler(
       console.log(
         `[stripe-webhook] ${event.type} → tenant ${update.tenantId} updated`
       );
+
+      setImmediate(() => {
+        runBillingAutomations(event, update.tenantId).catch((err) =>
+          console.error("[stripe-webhook] automation error:", err)
+        );
+      });
     }
 
     res.json({ received: true });

@@ -760,6 +760,12 @@ export default function Home() {
             <p className="text-sm text-muted-foreground mt-3">
               5 founding spots. Once they're gone, the price goes up permanently.
             </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Already a client?{" "}
+              <a href="/portal/billing" className="text-primary hover:underline">
+                Manage your subscription in the portal
+              </a>
+            </p>
           </motion.div>
         </div>
       </section>

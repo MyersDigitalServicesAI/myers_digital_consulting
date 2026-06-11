@@ -1,5 +1,6 @@
 // Plan catalog for the AIOS subscription.
-// Mirrors the live Stripe products: Foundation / Operator / Architect.
+// Mirrors the public founding-client offer on the website (Home.tsx #pricing)
+// and the live Stripe products: AIOS — Starter / Growth / Full Stack.
 // Plan keys match the values stored in tenants.plan.
 
 export type PlanKey = "starter" | "growth" | "full_stack";
@@ -9,10 +10,10 @@ export interface PlanDefinition {
   key: PlanKey;
   name: string;
   tagline: string;
-  /** USD cents */
+  /** Monthly subscription, USD cents */
   monthlyAmount: number;
-  /** USD cents */
-  annualAmount: number;
+  /** One-time setup fee charged at first checkout, USD cents */
+  setupAmount: number;
   features: string[];
   highlighted?: boolean;
 }
@@ -22,42 +23,45 @@ export const PLAN_KEYS: PlanKey[] = ["starter", "growth", "full_stack"];
 export const PLANS: Record<PlanKey, PlanDefinition> = {
   starter: {
     key: "starter",
-    name: "AIOS — Foundation",
-    tagline: "Entry tier. Tailored SOPs and an intake-driven operations architecture.",
-    monthlyAmount: 250_000,
-    annualAmount: 2_500_000,
+    name: "AIOS — Starter",
+    tagline:
+      "Owners who want visibility and automation without the full content machine.",
+    monthlyAmount: 149_700,
+    setupAmount: 350_000,
     features: [
-      "Client-specific SOP library",
-      "Intake-driven operations architecture",
-      "Core department coverage",
-      "Ongoing portal access",
+      "Director + CRM + Analytics",
+      "Meeting Transcript Agent",
+      "GEO/SEO Auditor",
+      "Bookkeeping Categorizer",
     ],
   },
   growth: {
     key: "growth",
-    name: "AIOS — Operator",
-    tagline: "Mid tier. Expanded department coverage and priority generation.",
-    monthlyAmount: 500_000,
-    annualAmount: 5_000_000,
+    name: "AIOS — Growth",
+    tagline: "Businesses generating leads and content who want it all automated.",
+    monthlyAmount: 299_700,
+    setupAmount: 500_000,
     features: [
-      "Everything in Foundation",
-      "Expanded department coverage",
-      "Deeper automation recommendations",
-      "Priority SOP generation",
+      "Everything in Starter",
+      "Marketing + Content Calendar",
+      "Social Media Manager",
+      "Meta Ads + Transcript Miner",
+      "Newsletter Writer + Ad Builder",
     ],
     highlighted: true,
   },
   full_stack: {
     key: "full_stack",
-    name: "AIOS — Architect",
-    tagline: "Top tier. Full operations architecture with white-glove support.",
-    monthlyAmount: 750_000,
-    annualAmount: 7_500_000,
+    name: "AIOS — Full Stack",
+    tagline:
+      "Agency owners and high-volume service businesses who want total autonomy.",
+    monthlyAmount: 499_700,
+    setupAmount: 750_000,
     features: [
-      "Everything in Operator",
-      "Full operations architecture",
-      "All departments activated",
-      "White-glove implementation support",
+      "All 22 agents active",
+      "Complete automation stack",
+      "All platforms wired",
+      "Full Zapier + GHL integration",
     ],
   },
 };

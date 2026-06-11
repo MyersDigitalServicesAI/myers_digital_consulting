@@ -8,7 +8,6 @@ import type {
   AdminProvisionResponse,
 } from "@shared/portal.types";
 import type {
-  BillingInterval,
   BillingStatusResponse,
   CheckoutSessionResponse,
   PlanKey,
@@ -85,13 +84,10 @@ export const portalApi = {
     return apiFetch("/billing/status");
   },
 
-  createCheckout(
-    plan: PlanKey,
-    interval: BillingInterval
-  ): Promise<CheckoutSessionResponse> {
+  createCheckout(plan: PlanKey): Promise<CheckoutSessionResponse> {
     return apiFetch("/billing/checkout", {
       method: "POST",
-      body: JSON.stringify({ plan, interval }),
+      body: JSON.stringify({ plan }),
     });
   },
 
