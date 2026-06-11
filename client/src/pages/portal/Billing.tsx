@@ -14,12 +14,10 @@ import { portalApi } from "@/lib/portal-api";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
 import {
   PLANS,
   PLAN_KEYS,
   formatUsd,
-  type BillingInterval,
   type BillingStatusResponse,
   type PlanKey,
 } from "@shared/billing";
@@ -37,7 +35,6 @@ export default function Billing() {
   const [, setLocation] = useLocation();
   const [searchParams] = useSearchParams();
   const [billing, setBilling] = useState<BillingStatusResponse | null>(null);
-  const [annual, setAnnual] = useState(false);
   const [busyPlan, setBusyPlan] = useState<PlanKey | null>(null);
   const [portalBusy, setPortalBusy] = useState(false);
 
@@ -78,10 +75,9 @@ export default function Billing() {
   }, [searchParams]);
 
   async function startCheckout(plan: PlanKey) {
-    const interval: BillingInterval = annual ? "year" : "month";
     setBusyPlan(plan);
     try {
-      const { url } = await portalApi.createCheckout(plan, interval);
+      const { url } = await portalApi.createCheckout(plan);
       window.location.href = url;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to start checkout");
@@ -200,20 +196,14 @@ export default function Billing() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-sm">Choose your plan</h2>
-              <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-                Monthly
-                <Switch checked={annual} onCheckedChange={setAnnual} />
-                <span>
-                  Annual{" "}
-                  <span className="text-cyan-400 text-xs">2 months free</span>
-                </span>
-              </label>
+              <span className="text-xs text-cyan-400">
+                Founding client pricing — rate locked forever
+              </span>
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
               {PLAN_KEYS.map((key) => {
                 const plan = PLANS[key];
-                const amount = annual ? plan.annualAmount : plan.monthlyAmount;
                 return (
                   <Card
                     key={key}
@@ -237,11 +227,12 @@ export default function Billing() {
                     <CardContent className="space-y-4">
                       <div>
                         <span className="text-2xl font-bold">
-                          {formatUsd(amount)}
+                          {formatUsd(plan.monthlyAmount)}
                         </span>
-                        <span className="text-muted-foreground text-sm">
-                          /{annual ? "yr" : "mo"}
-                        </span>
+                        <span className="text-muted-foreground text-sm">/mo</span>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          + {formatUsd(plan.setupAmount)} one-time setup
+                        </p>
                       </div>
                       <ul className="space-y-1.5">
                         {plan.features.map((f) => (

@@ -7,17 +7,17 @@ afterEach(() => {
 });
 
 describe("resolvePriceId", () => {
-  it("returns a live price id for every plan/interval combination", () => {
+  it("returns a live price id for every plan, monthly and setup", () => {
     for (const plan of PLAN_KEYS) {
-      for (const interval of ["month", "year"] as const) {
-        expect(resolvePriceId(plan, interval)).toMatch(/^price_/);
+      for (const kind of ["month", "setup"] as const) {
+        expect(resolvePriceId(plan, kind)).toMatch(/^price_/);
       }
     }
   });
 
   it("returns distinct price ids across all combinations", () => {
     const ids = PLAN_KEYS.flatMap((plan) =>
-      (["month", "year"] as const).map((interval) => resolvePriceId(plan, interval))
+      (["month", "setup"] as const).map((kind) => resolvePriceId(plan, kind))
     );
     expect(new Set(ids).size).toBe(ids.length);
   });
@@ -25,15 +25,18 @@ describe("resolvePriceId", () => {
   it("prefers environment overrides (e.g. test-mode prices)", () => {
     process.env.STRIPE_PRICE_STARTER_MONTH = "price_test_override";
     expect(resolvePriceId("starter", "month")).toBe("price_test_override");
-    expect(resolvePriceId("starter", "year")).toMatch(/^price_1/);
+    expect(resolvePriceId("starter", "setup")).toMatch(/^price_1/);
   });
 });
 
 describe("plan catalog", () => {
-  it("annual pricing equals ten months (two months free)", () => {
-    for (const plan of Object.values(PLANS)) {
-      expect(plan.annualAmount).toBe(plan.monthlyAmount * 10);
-    }
+  it("matches the public founding-client offer", () => {
+    expect(PLANS.starter.monthlyAmount).toBe(149_700);
+    expect(PLANS.starter.setupAmount).toBe(350_000);
+    expect(PLANS.growth.monthlyAmount).toBe(299_700);
+    expect(PLANS.growth.setupAmount).toBe(500_000);
+    expect(PLANS.full_stack.monthlyAmount).toBe(499_700);
+    expect(PLANS.full_stack.setupAmount).toBe(750_000);
   });
 
   it("validates plan keys strictly", () => {
@@ -43,7 +46,8 @@ describe("plan catalog", () => {
   });
 
   it("formats USD amounts from cents", () => {
-    expect(formatUsd(250_000)).toBe("$2,500");
+    expect(formatUsd(350_000)).toBe("$3,500");
+    expect(formatUsd(149_700)).toBe("$1,497");
     expect(formatUsd(123_45)).toBe("$123.45");
   });
 });
