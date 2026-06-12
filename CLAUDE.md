@@ -73,8 +73,7 @@ Path aliases: `@` → `client/src`, `@shared` → `shared` (configured in both v
 
 ### Deployment
 
-- **Railway** runs the full server (`railway.toml`: build via pnpm, healthcheck `/health`).
-- **Vercel** and **GitHub Pages** (`.github/workflows/deploy.yml`) serve static client-only builds — server features (portal API, webhooks, agents) only work on Railway.
+- **Railway** is the sole production target: it runs the full server (`railway.toml`: build via pnpm, healthcheck `/health`), serves the built client from `dist/public`, and auto-deploys on every push to `main`. `myersdigitalconsulting.com` points at it.
 
 ## Conventions
 
