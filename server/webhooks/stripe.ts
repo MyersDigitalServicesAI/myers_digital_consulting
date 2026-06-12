@@ -4,7 +4,12 @@ import { getStripe, isStripeConfigured } from "../lib/stripe.ts";
 import { supabaseAdmin, isSupabaseConfigured } from "../lib/supabase-admin.ts";
 import { notifySlack } from "../lib/notify.ts";
 import { PLANS, isPlanKey, isBillingInterval } from "../../shared/billing.ts";
-import { sendEmail, buildPaymentFailedEmail } from "../lib/email.ts";
+import { nanoid } from "nanoid";
+import {
+  sendEmail,
+  buildInviteEmail,
+  buildPaymentFailedEmail,
+} from "../lib/email.ts";
 
 // Subscription statuses that grant portal access. past_due keeps access during
 // the dunning window; Stripe cancels the subscription if retries are exhausted.
@@ -84,6 +89,9 @@ export async function deriveTenantUpdate(
           paid: true,
           subscription_status: "active",
           cancel_at_period_end: false,
+          // Payment is approval — self-serve checkouts create the tenant
+          // unapproved, and this is what unlocks portal content for them.
+          approved_by_admin: true,
         },
       };
     }
@@ -188,6 +196,56 @@ const supabaseDeps: StripeEventDeps = {
 };
 
 /**
+ * Portal invite for a self-serve buyer: if the tenant has no members yet,
+ * create an onboarding link (+ workspace_status row) and email it. No-op for
+ * tenants whose users already joined the portal.
+ */
+async function sendSelfServeInvite(
+  tenantId: string,
+  opts: {
+    company: string;
+    contactEmail: string | null;
+    contactName: string | null;
+  }
+): Promise<void> {
+  try {
+    const { count } = await supabaseAdmin
+      .from("tenant_members")
+      .select("user_id", { count: "exact", head: true })
+      .eq("tenant_id", tenantId);
+    if ((count ?? 0) > 0 || !opts.contactEmail) return;
+
+    const token = nanoid(32);
+    const expiresAt = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000
+    ).toISOString();
+    await supabaseAdmin.from("onboarding_links").insert({
+      token,
+      tenant_id: tenantId,
+      expires_at: expiresAt,
+      used: false,
+    });
+    await supabaseAdmin
+      .from("workspace_status")
+      .upsert({ tenant_id: tenantId }, { onConflict: "tenant_id", ignoreDuplicates: true });
+
+    const baseUrl = process.env.APP_URL ?? "https://myersdigitalconsulting.com";
+    const invite = buildInviteEmail({
+      companyName: opts.company,
+      contactName: opts.contactName,
+      joinUrl: `${baseUrl}/portal/join?token=${token}`,
+    });
+    await sendEmail({
+      to: opts.contactEmail,
+      subject: invite.subject,
+      html: invite.html,
+    });
+  } catch (err) {
+    console.error("[stripe-webhook] self-serve invite error:", err);
+  }
+}
+
+/**
  * Fire-and-forget follow-ups after a tenant billing update: Slack alerts for
  * money events, and the Director closed-won onboarding chain on a new
  * subscription. Runs off the request path — failures are logged, never
@@ -199,7 +257,7 @@ export async function runBillingAutomations(
 ): Promise<void> {
   const { data: tenant } = await supabaseAdmin
     .from("tenants")
-    .select("company_name, plan, contact_email")
+    .select("company_name, plan, contact_email, contact_name")
     .eq("id", tenantId)
     .maybeSingle();
   const company = (tenant?.company_name as string | undefined) ?? tenantId;
@@ -209,6 +267,16 @@ export async function runBillingAutomations(
   switch (event.type) {
     case "checkout.session.completed": {
       await notifySlack(`💰 New AIOS subscription: ${company} — ${planName}`);
+
+      // Self-serve buyers have no portal account yet — issue an invite link
+      // so payment leads straight into onboarding. Admin-provisioned tenants
+      // already received theirs at provision time (they have members or a
+      // pending link by then, but a duplicate link is harmless: single-use each).
+      await sendSelfServeInvite(tenantId, {
+        company,
+        contactEmail: (tenant?.contact_email as string | null) ?? null,
+        contactName: (tenant?.contact_name as string | null) ?? null,
+      });
 
       // Kick off the closed-won onboarding chain (same flow as
       // POST /webhooks/sales/closed-won). Dynamic import keeps the agents

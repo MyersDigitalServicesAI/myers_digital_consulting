@@ -8,6 +8,7 @@ import { createWebhookRouter } from "./webhooks/index.ts";
 import { stripeWebhookHandler } from "./webhooks/stripe.ts";
 import { startScheduler } from "./scheduler/index.ts";
 import { createPortalRouter } from "./routes/portal.ts";
+import { createPublicRouter } from "./routes/public.ts";
 import { webhookAuth } from "./middleware/webhook-auth.ts";
 import { initSentry, setupSentryErrorHandler } from "./lib/alerts.ts";
 import { isStripeConfigured } from "./lib/stripe.ts";
@@ -53,6 +54,16 @@ async function startServer() {
     legacyHeaders: false,
   });
   app.use("/api/portal", portalLimiter, createPortalRouter());
+
+  // Public site API (self-serve checkout, founding-spots counter) — no auth,
+  // so rate-limit tighter than the portal.
+  const publicLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 60,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use("/api/public", publicLimiter, createPublicRouter());
 
   // Health check. Integration config detail only for admins — it's a
   // reconnaissance map for anyone else.
