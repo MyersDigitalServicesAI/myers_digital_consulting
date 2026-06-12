@@ -4,6 +4,10 @@ import axios from "axios";
  * Transactional email via Resend (https://resend.com — plain REST, no SDK).
  * Configured with RESEND_API_KEY + EMAIL_FROM; every send is a graceful
  * no-op when unconfigured so email is never load-bearing.
+ *
+ * EMAIL_FROM must be on a verified Resend domain — providers reject
+ * unverifiable senders like gmail.com. Set EMAIL_REPLY_TO to route client
+ * replies to an inbox (e.g. a Gmail address) instead.
  */
 
 export function isEmailConfigured(): boolean {
@@ -33,6 +37,9 @@ export async function sendEmail(opts: {
       {
         from: process.env.EMAIL_FROM,
         to: [opts.to],
+        ...(process.env.EMAIL_REPLY_TO
+          ? { reply_to: [process.env.EMAIL_REPLY_TO] }
+          : {}),
         subject: opts.subject,
         html: opts.html,
       },
