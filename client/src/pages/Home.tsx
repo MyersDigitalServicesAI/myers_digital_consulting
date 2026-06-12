@@ -116,13 +116,6 @@ const PRICING = [
   },
 ];
 
-const PRICE_TIERS = [
-  { slots: "Clients 1–5 (NOW)", starter: "$1,497", growth: "$2,997", full: "$4,997", current: true },
-  { slots: "Clients 6–10", starter: "$2,497", growth: "$3,997", full: "$5,997", current: false },
-  { slots: "Clients 11–15", starter: "$3,497", growth: "$4,997", full: "$6,997", current: false },
-  { slots: "Clients 16–20", starter: "$4,497", growth: "$5,997", full: "$7,997", current: false },
-];
-
 const DELIVERABLES = [
   "Full AIOS build — all 22 agents configured to your business",
   "7 Notion databases set up and populated with your data",
@@ -705,7 +698,7 @@ export default function Home() {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-16"
           >
             <span className="inline-block px-4 py-2 rounded-full bg-accent/20 border border-accent/40 text-accent text-sm font-bold mb-4">
               Founding Client Pricing — First 5 Spots Only
@@ -717,41 +710,6 @@ export default function Home() {
               These prices are locked for the{" "}
               <strong className="text-foreground">first 5 clients only</strong>. Every 5 new clients, every price increases by $1,000 — permanently. Early clients lock their rate forever.
             </p>
-          </motion.div>
-
-          {/* Price escalation table */}
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto mb-16 rounded-xl border border-border overflow-hidden"
-          >
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-card border-b border-border">
-                  <th className="text-left p-4 font-semibold">Client Slots</th>
-                  <th className="text-center p-4 font-semibold">Starter</th>
-                  <th className="text-center p-4 font-semibold">Growth</th>
-                  <th className="text-center p-4 font-semibold">Full Stack</th>
-                </tr>
-              </thead>
-              <tbody>
-                {PRICE_TIERS.map((row) => (
-                  <tr key={row.slots} className={`border-b border-border ${row.current ? "bg-primary/10" : ""}`}>
-                    <td className={`p-4 font-semibold ${row.current ? "text-primary" : "text-muted-foreground"}`}>
-                      {row.slots} {row.current && "🔒"}
-                    </td>
-                    <td className={`p-4 text-center font-mono ${row.current ? "text-primary font-bold" : "text-muted-foreground"}`}>{row.starter}/mo</td>
-                    <td className={`p-4 text-center font-mono ${row.current ? "text-primary font-bold" : "text-muted-foreground"}`}>{row.growth}/mo</td>
-                    <td className={`p-4 text-center font-mono ${row.current ? "text-primary font-bold" : "text-muted-foreground"}`}>{row.full}/mo</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="p-4 bg-card text-center text-xs text-muted-foreground">
-              Your price locks at the tier you join. It never goes up for you — even as we raise prices for new clients.
-            </div>
           </motion.div>
 
           {/* Tier cards */}
