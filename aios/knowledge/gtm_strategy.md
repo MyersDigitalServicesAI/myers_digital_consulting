@@ -222,7 +222,7 @@ ChatGPT waits for you to ask it something.
 AIOS runs on a schedule — daily KPI digests at 7am, weekly reports on Monday, newsletter drafts on Tuesday, follow-up sequences triggered the moment a lead comes in.
 
 ChatGPT has no memory of your business.
-AIOS has 7 Notion databases storing your client registry, decision log, SOPs, KPI history, and automation records — updated in real time by every agent.
+AIOS has 8 Notion databases storing your client registry, decision log, SOPs, KPI history, and automation records — updated in real time by every agent.
 
 ChatGPT can't send a Slack message, update a GHL pipeline, post to Instagram, fire a Zapier workflow, or generate an invoice.
 AIOS does all of that — with 25 Zapier webhooks, live Meta and LinkedIn APIs, and direct Slack integration.
@@ -249,7 +249,7 @@ The specialists execute — CRM, Finance, Marketing, Operations, Analytics, and 
 
 **Layer 2: The Memory**
 Notion acts as the long-term memory.
-7 databases track everything: client registry, decisions made, KPIs over time, SOPs, automation logs.
+8 databases track everything: client registry, decisions made, KPIs over time, SOPs, automation logs.
 Every agent reads from it before acting. Every significant decision gets written back.
 Nothing gets lost between sessions.
 

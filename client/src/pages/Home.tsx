@@ -118,13 +118,13 @@ const PRICING = [
 
 const DELIVERABLES = [
   "Full AIOS build — all 22 agents configured to your business",
-  "7 Notion databases set up and populated with your data",
-  "27 Zapier automations wired, tested, and live",
+  "8 Notion databases set up and populated with your data",
+  "25 Zapier automations wired, tested, and live",
   "GHL webhook integration connected and verified",
   "Slack notifications for every alert and decision",
   "LinkedIn, Instagram, Facebook, Twitter connected",
   "Meta Ads + Google Ads monitoring active from day one",
-  "26 SOPs documenting every automation in plain language",
+  "31 SOPs documenting every automation in plain language",
   "Weekly cost report so you always know your exact ROI",
   "Your voice layer — every output sounds like you, not AI",
   "Ongoing monthly support included with all retainer plans",
@@ -141,7 +141,7 @@ const NAV_LINKS = [
 const FAQ = [
   {
     q: "Is this just ChatGPT with a fancy wrapper?",
-    a: "No — different category. ChatGPT is a conversation: it waits for you to ask it something and forgets your business between sessions. AIOS is a system: it runs on a schedule (daily KPI digests at 7am, weekly reports on Monday, content drafted Tuesday), keeps long-term memory in 7 live Notion databases, and actually executes — sending Slack alerts, updating GHL pipelines, publishing content, and firing 27 Zapier automations without you in the loop.",
+    a: "No — different category. ChatGPT is a conversation: it waits for you to ask it something and forgets your business between sessions. AIOS is a system: it runs on a schedule (daily KPI digests at 7am, weekly reports on Monday, content drafted Tuesday), keeps long-term memory in 8 live Notion databases, and actually executes — sending Slack alerts, updating GHL pipelines, publishing content, and firing 25 Zapier automations without you in the loop.",
   },
   {
     q: "What do I actually have to do each week?",
@@ -267,7 +267,7 @@ export default function Home() {
           <div className="max-w-4xl">
             <motion.div variants={fadeUp} initial="hidden" animate="show" custom={0}>
               <span className="inline-block px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium mb-6">
-                22 AI Agents · One Operating System · Zero Manual Overhead
+                22 AI Agents · One Operating System · 30 Minutes a Week
               </span>
             </motion.div>
 
@@ -289,7 +289,7 @@ export default function Home() {
               custom={2}
               className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-3xl"
             >
-              The Myers Digital AI Operating System runs your content, ads, CRM, finance, analytics, and operations — 24/7 — for less than a Netflix subscription per day.
+              The Myers Digital AI Operating System runs your content, ads, CRM, finance, analytics, and operations — 24/7 — for less than a cup of coffee per day in AI running costs.
             </motion.p>
 
             <motion.p
@@ -334,8 +334,8 @@ export default function Home() {
               {[
                 { val: "22", label: "AI Agents" },
                 { val: "$1.83", label: "Per Day" },
-                { val: "300x", label: "ROI" },
-                { val: "10 days", label: "Go Live" },
+                { val: "150–300x", label: "ROI" },
+                { val: "7–10", label: "Days to Go Live" },
               ].map((s) => (
                 <div key={s.label} className="text-center">
                   <div className="text-2xl font-bold text-primary font-mono">{s.val}</div>
@@ -456,7 +456,7 @@ export default function Home() {
                 icon: FileText,
                 layer: "The Memory",
                 tool: "Notion",
-                desc: "7 live databases storing every decision, KPI, interaction, SOP, and client record. Your business knowledge, always accessible.",
+                desc: "8 live databases storing every decision, KPI, interaction, SOP, and client record. Your business knowledge, always accessible.",
                 color: "text-accent",
                 bg: "bg-accent/10",
               },
@@ -464,7 +464,7 @@ export default function Home() {
                 icon: Zap,
                 layer: "The Hands",
                 tool: "Zapier + GHL",
-                desc: "Fires 27+ automations, routes leads, sends notifications, publishes content, and tracks revenue — all without human input.",
+                desc: "Fires 25 automations, routes leads, sends notifications, publishes content, and tracks revenue — all without human input.",
                 color: "text-primary",
                 bg: "bg-primary/10",
               },
@@ -572,7 +572,7 @@ export default function Home() {
               <span className="text-primary">While You Sleep</span>
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              12 webhook endpoints. 27 Zapier automations. Always on.
+              17 webhook endpoints. 25 Zapier automations. Always on.
             </p>
           </motion.div>
 
@@ -602,7 +602,7 @@ export default function Home() {
           >
             <strong className="text-primary">Always on:</strong>{" "}
             <span className="text-muted-foreground">
-              12 webhook endpoints fire in real-time for lead routing, CRM updates, and Slack alerts — no cron job delays, no missed triggers.
+              17 webhook endpoints fire in real-time for lead routing, CRM updates, and Slack alerts — no cron job delays, no missed triggers.
             </span>
           </motion.div>
         </div>
@@ -626,8 +626,8 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 mb-16 max-w-4xl mx-auto">
             {[
               { icon: DollarSign, val: "$1.83", label: "Per Day", desc: "Total cost to run all 22 agents via Claude API" },
-              { icon: TrendingUp, val: "$23K", label: "Human Team Cost", desc: "What the equivalent human team costs per month" },
-              { icon: Rocket, val: "300x", label: "ROI", desc: "Return on every dollar spent — 150–300x depending on tier" },
+              { icon: TrendingUp, val: "$13–23K", label: "Human Team Cost", desc: "What the equivalent human team costs per month" },
+              { icon: Rocket, val: "150–300x", label: "ROI", desc: "Return on every dollar spent, depending on your tier" },
             ].map((s, i) => (
               <motion.div
                 key={s.label}
@@ -680,7 +680,7 @@ export default function Home() {
                   ))}
                   <tr className="bg-primary/10">
                     <td className="p-4 font-bold text-primary">Myers Digital AIOS</td>
-                    <td className="p-4 font-bold text-primary">$2,997–$4,997</td>
+                    <td className="p-4 font-bold text-primary">$1,497–$4,997</td>
                     <td className="p-4 font-bold text-primary">Everything</td>
                   </tr>
                 </tbody>
@@ -704,7 +704,7 @@ export default function Home() {
               Founding Client Pricing — First 5 Spots Only
             </span>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Three Tiers. <span className="text-primary">One Decision.</span>
+              Four Options. <span className="text-primary">One Decision.</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               These prices are locked for the{" "}
@@ -1074,7 +1074,7 @@ export default function Home() {
                 {[
                   { icon: Bot, text: "30-Minute Demo — See your exact automation stack mapped out live" },
                   { icon: DollarSign, text: "Founding Pricing — Lock in the lowest price this system will ever be" },
-                  { icon: Rocket, text: "Go Live in 10 Days — Full build, tested and running within two weeks" },
+                  { icon: Rocket, text: "Go Live in 7–10 Business Days — full build, tested and running within two weeks" },
                 ].map((item) => (
                   <div key={item.text} className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
