@@ -23,7 +23,9 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { CheckoutDialog } from "@/components/CheckoutDialog";
+import { FOUNDING_SPOTS, PLANS, type PlanKey } from "@shared/billing";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -70,8 +72,17 @@ const SCHEDULE = [
   { time: "1st of Month", task: "Bookkeeping reminder + full Monthly P&L generated" },
 ];
 
-const PRICING = [
+const PRICING: {
+  key: PlanKey | null;
+  name: string;
+  price: string;
+  setup: string;
+  highlight: boolean;
+  agents: string[];
+  best: string;
+}[] = [
   {
+    key: "starter",
     name: "Starter",
     price: "$1,497",
     setup: "$3,500",
@@ -80,6 +91,7 @@ const PRICING = [
     best: "Owners who want visibility and automation without the full content machine.",
   },
   {
+    key: "growth",
     name: "Growth",
     price: "$2,997",
     setup: "$5,000",
@@ -94,6 +106,7 @@ const PRICING = [
     best: "Businesses generating leads and content who want it all automated.",
   },
   {
+    key: "full_stack",
     name: "Full Stack",
     price: "$4,997",
     setup: "$7,500",
@@ -107,6 +120,7 @@ const PRICING = [
     best: "Agency owners and high-volume service businesses who want total autonomy.",
   },
   {
+    key: null,
     name: "Build-Out Only",
     price: "$12,500",
     setup: "One-time",
@@ -192,16 +206,76 @@ const ICP = [
   },
 ];
 
+// Structured data for rich search results — single source: the FAQ and plan
+// catalog above, so it can't drift from the visible page.
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Myers Digital Consulting",
+      url: "https://myersdigitalconsulting.com",
+      logo: "https://myersdigitalconsulting.com/favicon.svg",
+    },
+    {
+      "@type": "Service",
+      name: "Myers Digital AIOS",
+      serviceType: "AI business automation",
+      provider: { "@type": "Organization", name: "Myers Digital Consulting" },
+      description:
+        "An AI Operating System of 22 agents that runs content, ads, CRM, finance, analytics, and operations for service businesses.",
+      offers: Object.values(PLANS).map((p) => ({
+        "@type": "Offer",
+        name: p.name,
+        price: (p.monthlyAmount / 100).toFixed(0),
+        priceCurrency: "USD",
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: FAQ.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ],
+};
+
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [checkoutPlan, setCheckoutPlan] = useState<PlanKey | null>(null);
+  const [spotsLeft, setSpotsLeft] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/public/founding-spots")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { left?: number } | null) => {
+        if (typeof data?.left === "number") setSpotsLeft(data.left);
+      })
+      .catch(() => {});
+  }, []);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
   };
 
+  const spotsBadge =
+    spotsLeft === null
+      ? `Founding Client Pricing — First ${FOUNDING_SPOTS} Spots Only`
+      : spotsLeft > 0
+        ? `Founding Client Pricing — ${spotsLeft} of ${FOUNDING_SPOTS} Spots Left`
+        : "Founding Spots Filled — Current Pricing Shown";
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
+      <CheckoutDialog plan={checkoutPlan} onClose={() => setCheckoutPlan(null)} />
+
       {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="container mx-auto px-4 py-4">
@@ -701,7 +775,7 @@ export default function Home() {
             className="text-center mb-16"
           >
             <span className="inline-block px-4 py-2 rounded-full bg-accent/20 border border-accent/40 text-accent text-sm font-bold mb-4">
-              Founding Client Pricing — First 5 Spots Only
+              {spotsBadge}
             </span>
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
               Four Options. <span className="text-primary">One Decision.</span>
@@ -741,6 +815,22 @@ export default function Home() {
                         </li>
                       ))}
                     </ul>
+                    {tier.key ? (
+                      <Button
+                        onClick={() => setCheckoutPlan(tier.key)}
+                        className={`w-full mb-4 ${tier.highlight ? "glow-cyan glow-cyan-hover" : "glow-cyan-hover"}`}
+                      >
+                        Start Now <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => scrollTo("contact")}
+                        variant="outline"
+                        className="w-full mb-4 border-primary/30 hover:bg-primary/10"
+                      >
+                        Book a Demo
+                      </Button>
+                    )}
                     <p className="text-xs text-muted-foreground border-t border-border pt-4">
                       <strong className="text-foreground">Best for:</strong> {tier.best}
                     </p>
@@ -1058,7 +1148,11 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
               <span className="inline-block px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium mb-4">
-                5 Founding Spots Available
+                {spotsLeft !== null && spotsLeft > 0
+                  ? `${spotsLeft} Founding Spot${spotsLeft === 1 ? "" : "s"} Available`
+                  : spotsLeft === 0
+                    ? "Founding Spots Filled"
+                    : `${FOUNDING_SPOTS} Founding Spots Available`}
               </span>
               <h2 className="text-3xl md:text-5xl font-bold mb-6">
                 Your Business Can{" "}

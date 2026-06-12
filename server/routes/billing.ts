@@ -17,7 +17,7 @@ export const checkoutSchema = z.object({
   plan: z.enum(["starter", "growth", "full_stack"]),
 });
 
-function appUrl(): string {
+export function appUrl(): string {
   return (process.env.APP_URL ?? "https://myersdigitalconsulting.com").replace(
     /\/$/,
     ""
@@ -77,7 +77,8 @@ export function tenantHasActiveSubscription(tenant: Tenant): boolean {
  */
 export async function createCheckoutSessionUrl(
   tenant: Tenant,
-  plan: PlanKey
+  plan: PlanKey,
+  urls?: { successUrl?: string; cancelUrl?: string }
 ): Promise<string | null> {
   const stripe = getStripe();
   const customerId = await ensureStripeCustomer(tenant);
@@ -103,8 +104,10 @@ export async function createCheckoutSessionUrl(
           customer_update: { address: "auto" as const },
         }
       : {}),
-    success_url: `${appUrl()}/portal/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${appUrl()}/portal/billing?checkout=cancelled`,
+    success_url:
+      urls?.successUrl ??
+      `${appUrl()}/portal/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: urls?.cancelUrl ?? `${appUrl()}/portal/billing?checkout=cancelled`,
   });
 
   return session.url ?? null;

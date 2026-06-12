@@ -20,6 +20,9 @@ export interface PlanDefinition {
 
 export const PLAN_KEYS: PlanKey[] = ["starter", "growth", "full_stack"];
 
+/** Founding-client offer: pricing is locked for this many clients. */
+export const FOUNDING_SPOTS = 5;
+
 export const PLANS: Record<PlanKey, PlanDefinition> = {
   starter: {
     key: "starter",

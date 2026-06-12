@@ -8,6 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { PortalAuthProvider } from "./contexts/PortalAuthContext";
 import { PortalGuard } from "./components/portal/PortalGuard";
 import Home from "./pages/Home";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import PortalLogin from "./pages/portal/PortalLogin";
 import PortalJoin from "./pages/portal/PortalJoin";
 import AuthCallback from "./pages/portal/AuthCallback";
@@ -21,6 +22,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/checkout/success" component={CheckoutSuccess} />
 
       {/* Portal — public */}
       <Route path="/portal/login" component={PortalLogin} />
