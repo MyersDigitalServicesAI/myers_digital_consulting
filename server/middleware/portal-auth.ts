@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { supabaseAdmin, isSupabaseConfigured } from "../lib/supabase-admin.ts";
+import { secretsMatch } from "./webhook-auth.ts";
 
 export interface PortalRequest extends Request {
   portalUserId: string;
@@ -142,7 +143,9 @@ export function adminAuth(
     return;
   }
   const provided = req.headers["x-admin-secret"];
-  if (provided !== secret) {
+  // Constant-time comparison — the admin secret guards the full operator
+  // console, so avoid leaking length/contents via early-exit timing.
+  if (typeof provided !== "string" || !secretsMatch(provided, secret)) {
     res.status(401).json({ error: "Invalid admin secret" });
     return;
   }

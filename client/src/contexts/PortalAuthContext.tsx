@@ -1,7 +1,9 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
@@ -31,7 +33,7 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
   const [me, setMe] = useState<PortalMeResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
-  async function loadMe(currentSession: Session | null) {
+  const loadMe = useCallback(async (currentSession: Session | null) => {
     if (!currentSession) {
       setMe(null);
       setLoading(false);
@@ -45,7 +47,7 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -69,18 +71,26 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function signOut() {
+  const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     setSession(null);
     setMe(null);
-  }
+  }, []);
 
-  async function refreshMe() {
+  const refreshMe = useCallback(async () => {
     await loadMe(session);
-  }
+  }, [session, loadMe]);
+
+  // Memoize so the context value is stable across renders — otherwise every
+  // provider render re-renders all consumers and rebuilds their effects (e.g.
+  // the Dashboard's 30s SOP-polling interval).
+  const value = useMemo(
+    () => ({ session, me, loading, signOut, refreshMe }),
+    [session, me, loading, signOut, refreshMe]
+  );
 
   return (
-    <PortalAuthContext.Provider value={{ session, me, loading, signOut, refreshMe }}>
+    <PortalAuthContext.Provider value={value}>
       {children}
     </PortalAuthContext.Provider>
   );

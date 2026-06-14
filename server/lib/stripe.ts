@@ -13,6 +13,11 @@ export function getStripe(): Stripe {
       throw new Error("STRIPE_SECRET_KEY is not set");
     }
     client = new Stripe(key, {
+      // Pin to the version this SDK bundles and types against, so the account's
+      // dashboard default can't shift the webhook payload shape out from under
+      // the compatibility shims in webhooks/stripe.ts. Keep this in sync with
+      // the SDK's bundled ApiVersion on upgrades.
+      apiVersion: "2026-05-27.dahlia",
       appInfo: { name: "Myers Digital AIOS Portal" },
     });
   }

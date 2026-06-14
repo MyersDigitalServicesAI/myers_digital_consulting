@@ -506,10 +506,29 @@ export function createPortalRouter(): Router {
     }
 
     const { tenantId } = req.params;
-    const updates = {
-      ...req.body,
+
+    // Allowlist the columns an admin can set — never spread req.body straight
+    // into the update (that would let any column on the row be overwritten).
+    const ALLOWED_FIELDS = [
+      "notion_workspace",
+      "databases_built",
+      "ghl_configured",
+      "zapier_core_active",
+      "agents_configured",
+      "voice_training_complete",
+      "system_test_passed",
+      "go_live_confirmed",
+      "intake_submitted_at",
+      "sops_generated_at",
+    ] as const;
+
+    const body = (req.body ?? {}) as Record<string, unknown>;
+    const updates: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
-    } as Record<string, unknown>;
+    };
+    for (const field of ALLOWED_FIELDS) {
+      if (field in body) updates[field] = body[field];
+    }
 
     const { error } = await supabaseAdmin
       .from("workspace_status")
