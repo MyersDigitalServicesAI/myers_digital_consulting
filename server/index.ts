@@ -94,13 +94,35 @@ async function startServer() {
 
   app.use(express.static(staticPath));
 
-  // Client-side routing fallback (app.use avoids path-to-regexp wildcard syntax)
-  app.use((_req, res) => {
+  // Client-side routing fallback (app.use avoids path-to-regexp wildcard syntax).
+  // Unknown API/webhook paths return JSON 404s instead of the SPA shell so
+  // clients parsing JSON get a sensible error rather than an HTML document.
+  app.use((req, res) => {
+    if (req.path.startsWith("/api/") || req.path.startsWith("/webhooks/")) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
   // Sentry's Express error handler must come after all routes
   setupSentryErrorHandler(app);
+
+  // Final error handler — guarantees JSON (and no stack-trace leak) for any
+  // unhandled throw, even when Sentry is unconfigured (its handler is a no-op
+  // then and would otherwise fall through to Express's default HTML handler).
+  app.use(
+    (
+      err: unknown,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction
+    ) => {
+      console.error("[server] unhandled error:", err);
+      if (res.headersSent) return;
+      res.status(500).json({ error: "Internal server error" });
+    }
+  );
 
   const port = process.env.PORT || 3000;
 

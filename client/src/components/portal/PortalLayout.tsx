@@ -6,22 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   LayoutDashboard,
-  FileText,
   CreditCard,
   LogOut,
   Zap,
   ChevronRight,
 } from "lucide-react";
 
+// SOPs live as a tab inside the dashboard, so there's no standalone /portal/sops
+// route to link to here (only /portal/sops/:id for a single SOP).
 const NAV_ITEMS = [
   { path: "/portal/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  { path: "/portal/sops", icon: FileText, label: "SOPs" },
   { path: "/portal/billing", icon: CreditCard, label: "Billing" },
 ];
 
 interface Props {
   children: ReactNode;
-  activeTab?: "dashboard" | "sops" | "workspace";
 }
 
 export function PortalLayout({ children }: Props) {

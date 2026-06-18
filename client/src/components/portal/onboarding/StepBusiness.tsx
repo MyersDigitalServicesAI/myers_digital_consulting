@@ -41,6 +41,13 @@ export function StepBusiness() {
     formState: { errors },
   } = useFormContext<OnboardingFormData>();
 
+  // These are controlled Selects, so they aren't registered by spreading
+  // register() onto a native input. Register them explicitly so their required
+  // rule is enforced by the wizard's trigger() gate before advancing/submitting.
+  register("industry", { required: true });
+  register("monthlyRevenue", { required: true });
+  register("teamSize", { required: true });
+
   return (
     <div className="space-y-5">
       <div>
@@ -90,7 +97,9 @@ export function StepBusiness() {
         <Label>Industry *</Label>
         <Select
           value={watch("industry")}
-          onValueChange={(v) => setValue("industry", v)}
+          onValueChange={(v) =>
+            setValue("industry", v, { shouldValidate: true })
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Select your industry" />
@@ -103,6 +112,7 @@ export function StepBusiness() {
             ))}
           </SelectContent>
         </Select>
+        {errors.industry && <p className="text-destructive text-xs">Required</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -110,7 +120,9 @@ export function StepBusiness() {
           <Label>Monthly revenue *</Label>
           <Select
             value={watch("monthlyRevenue")}
-            onValueChange={(v) => setValue("monthlyRevenue", v)}
+            onValueChange={(v) =>
+              setValue("monthlyRevenue", v, { shouldValidate: true })
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="Select range" />
@@ -123,13 +135,18 @@ export function StepBusiness() {
               ))}
             </SelectContent>
           </Select>
+          {errors.monthlyRevenue && (
+            <p className="text-destructive text-xs">Required</p>
+          )}
         </div>
 
         <div className="space-y-1.5">
           <Label>Team size *</Label>
           <Select
             value={watch("teamSize")}
-            onValueChange={(v) => setValue("teamSize", v)}
+            onValueChange={(v) =>
+              setValue("teamSize", v, { shouldValidate: true })
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder="Select size" />
@@ -142,6 +159,9 @@ export function StepBusiness() {
               ))}
             </SelectContent>
           </Select>
+          {errors.teamSize && (
+            <p className="text-destructive text-xs">Required</p>
+          )}
         </div>
       </div>
     </div>
